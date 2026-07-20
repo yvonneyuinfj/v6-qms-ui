@@ -1,0 +1,139 @@
+<template>
+  <div></div>
+  <a-modal :visible="notCommon" :footer="false" :closable="false">
+    <div style="display: flex ;justify-content: space-around;margin: 50px">
+      <a-button class="jumpButton" type="primary" @click="httpheaderLogin">正常登录</a-button>
+      <a-button class="jumpButton" @click="jumpBackSys">{{ userTypeName }}</a-button>
+    </div>
+  </a-modal>
+</template>
+<script lang="ts" setup>
+import { localStorage } from '@/utils/local-storage';
+import { useUserStore, RESET_CURRENT_USER } from '@/store/user';
+import { SSO_TYPE, USER_TYPE } from '@/store/app';
+import {
+  httpheaderLoginRequest,
+  httpheaderGetSanYuanType,
+  httpheaderLoginRequest2
+} from '@/api/avic/system/SingleSignOnApi';
+
+const { proxy } = getCurrentInstance();
+const paramName = 'username_';
+const redirect_url = 'redirect_url';
+const type = 'userType';
+const userStore = useUserStore();
+const notCommon = ref(false);
+const userTypeName = ref('');
+const passwordName = ref('');
+
+onBeforeMount(() => {
+  httpheaderLogin();
+});
+
+async function httpheaderLogin() {
+  // 清除token
+  userStore[RESET_CURRENT_USER]();
+  // 记单点登录类型
+  localStorage.set(SSO_TYPE, 'httpheaderLogin');
+  localStorage.set(USER_TYPE, proxy.$route.query[type]);
+
+  try {
+    let param = proxy.$route.query[paramName];
+    let loginType = proxy.$route.query['loginType'] || '';
+    if (param) {
+      const loginParam = {
+        username_: param,
+        encryptFlag: '1'
+      };
+      /**
+       *  三元登录
+       *
+       *  by 孙思文  2024/5/20
+       * **/
+      if (notCommon.value === false && !loginType) {
+        const response = await httpheaderGetSanYuanType(loginParam);
+        const { code, data } = response;
+        if (code === '200') {
+          if (data.type != 'common') {
+            userTypeName.value = data.type;
+            passwordName.value = data.sanyuan;
+            notCommon.value = true;
+            return;
+          }
+        }
+      }
+      if (loginType) {
+        const response = await httpheaderLoginRequest2(loginParam);
+        const { code, data } = response;
+        if (code === '200') {
+          userStore.SET_TOKEN(data.token);
+          if (proxy.$route.fullPath.indexOf(redirect_url) > -1) {
+            proxy.$router.push(
+              decodeURIComponent(proxy.$route.fullPath.split(redirect_url + '=')[1])
+            );
+          } else {
+            proxy.$router.push('/');
+          }
+        } else {
+          proxy.$router.push({
+            name: 'login'
+          });
+        }
+      } else {
+        const response = await httpheaderLoginRequest(loginParam);
+        const { code, data } = response;
+        if (code === '200') {
+          userStore.SET_TOKEN(data.token);
+          if (proxy.$route.fullPath.indexOf(redirect_url) > -1) {
+            proxy.$router.push(
+              decodeURIComponent(proxy.$route.fullPath.split(redirect_url + '=')[1])
+            );
+          } else {
+            proxy.$router.push('/');
+          }
+        } else {
+          proxy.$router.push({
+            name: 'login'
+          });
+        }
+      }
+      // const response = await httpheaderLoginRequest(loginParam);
+      // const response = await httpheaderLoginRequest(`${paramName}=${param}`);
+      // const { code, data } = response;
+      // if (code === '200') {
+      //   userStore.SET_TOKEN(data.token);
+      //   if (proxy.$route.fullPath.indexOf(redirect_url) > -1) {
+      //     proxy.$router.push(
+      //         decodeURIComponent(proxy.$route.fullPath.split(redirect_url + '=')[1])
+      //     );
+      //   } else {
+      //     proxy.$router.push('/');
+      //   }
+      // } else {
+      //   proxy.$router.push({
+      //     name: 'login'
+      //   });
+      // }
+    } else {
+      throw new Error(`缺少参数${paramName}`);
+    }
+  } catch (error) {
+    proxy.$router.push({
+      name: 'login'
+    });
+  }
+}
+
+function jumpBackSys() {
+  //userTypeName.value
+  const localhost = window.location.href.split('http://')[1].split('/')[0].split(':')[0];
+  window.open('http://' + localhost + ':3001' + '/httpheaderLogin?username_=' + passwordName.value, '_self');
+}
+
+</script>
+<style lang="less" scoped>
+.jumpButton {
+  width: 150px;
+  border-radius: 10px;
+}
+</style>

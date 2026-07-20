@@ -1,0 +1,2 @@
+yarn serve:prod
+pause
