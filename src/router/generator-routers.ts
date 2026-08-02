@@ -87,7 +87,7 @@ export const generator = (
   routeMap.map(item => {
     const { title, hideChildrenInMenu, attribute01, icon, menuMark, menuMarkName, url } =
       item.meta || {};
-    const target = attribute01 !== 'mainframe' ? '_blank' : undefined;
+    const target = attribute01 === '_blank' ? '_blank' : undefined;
     let component = '';
     if (url) {
       component = target !== '_blank' ? IFRAME_VIEW : null;

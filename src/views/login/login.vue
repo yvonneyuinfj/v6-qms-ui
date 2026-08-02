@@ -64,7 +64,7 @@
                       登 录
                     </a-button>
                     <p style="color: #909399; text-align: center; margin: 0">
-                      技术支持：信息技术中心
+                      技术支持：体系与工程数智部 工业软件研究室
                     </p>
                   </a-form-item>
                 </a-form>
@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="footer">
-        <div class="copyright">&copy; 2023 中国航发动力所-信息技术中心 版权所有</div>
+        <div class="copyright">&copy; 2023 中国航发动力所 版权所有</div>
       </div>
       <ChangePassword v-if="showChangePwd" :userInfo="modelRef" @close="showChangePwd = false" />
       <LicenseUpload v-if="showUploadModal" @close="showUploadModal = false" />

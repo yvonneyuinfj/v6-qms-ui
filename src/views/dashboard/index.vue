@@ -18,8 +18,7 @@
         margin: 0 -8px -8px -8px;
       "
     >
-      <span style="margin-right: 16px">中国航发动力所-信息技术中心 版权所有</span>
-      <!-- <span>技术支持：信息技术中心</span> -->
+      <span style="margin-right: 16px">中国航发动力所 版权所有</span>
     </div>
   </div>
 </template>
