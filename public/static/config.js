@@ -1,10 +1,10 @@
 window.$config = {
   /** 控制台地址,配置该地址后默认开启根据用户跳转控制台 */
   consolePath: '',
-  appName: '协同运营平台v1.0',
-  secretLevel: '公开',
+  appName: '质量管理系统v1.0',
+  secretLevel: '机密',
   /** 菜单过滤关键词 */
-  menuFilterKeyWord: '',
+  menuFilterKeyWord: 'QMS',
   /** 表格默认参数配置 */
   table: {
     /** 表格大小 */

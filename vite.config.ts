@@ -16,7 +16,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     },
     plugins: createVitePlugins(env, isBuild),
     build: {
-      outDir: 'html',
+      outDir: 'htmlQMS',
       cssCodeSplit: false,
       chunkSizeWarningLimit: 2048,
       rollupOptions: {
@@ -72,19 +72,19 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       }
     },
     server: {
-      port: 18088,
+      port: 18091,
       host: true,
       proxy:
         /* env.VITE_HTTP_MOCK === 'true'
       ? undefined
       : */
         {
-          // 日程安排
-          // '/api/myportal/meeting': {
-          //   target: 'http://127.0.0.1:10100',
-          //   ws: false,
-          //   changeOrigin: true
-          // },
+          // 质量管理服务
+          '/api/myportal/qms': {
+            target: 'http://127.0.0.1:10103',
+            ws: false,
+            changeOrigin: true
+          },
           '/api': {
             target: 'http://127.0.0.1:10001',
             ws: false,
