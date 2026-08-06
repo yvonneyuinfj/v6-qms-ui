@@ -1,6 +1,7 @@
 import type { ConfigEnv, UserConfig } from 'vite';
 import { loadEnv } from 'vite';
-import path, { resolve } from 'path';
+import * as path from 'path';
+import { resolve } from 'path';
 import createVitePlugins from './vite/plugins';
 
 export default ({ command, mode }: ConfigEnv): UserConfig => {
@@ -75,9 +76,9 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       port: 18091,
       host: true,
       proxy:
-        /* env.VITE_HTTP_MOCK === 'true'
-      ? undefined
-      : */
+      /* env.VITE_HTTP_MOCK === 'true'
+    ? undefined
+    : */
         {
           // 质量管理服务
           '/api/myportal/qms': {

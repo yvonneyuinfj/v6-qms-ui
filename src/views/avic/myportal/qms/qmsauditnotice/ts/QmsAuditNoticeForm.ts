@@ -24,9 +24,6 @@ export function useQmsAuditNoticeForm({ props: props, emit: emit }) {
     secretLevel: [
       { required: true, message: '密级不能为空', trigger: 'change' }
     ],
-    treeSort: [
-      { required: true, message: '本级排序不能为空', trigger: 'change' }
-    ]
   };
   const layout = {
     labelCol: { flex: '0 0 140px' },
@@ -138,11 +135,24 @@ export function useQmsAuditNoticeForm({ props: props, emit: emit }) {
   }
   /** 设置添加表单的初始值 */
   function initForm() {
+    initFormData();
     // 初始化光标定位
     nextTick(() => {
       closeFlowLoading(props.bpmInstanceObject);
     });
   }
+  const initFormData = ()=>{
+    if(props.planObj!==null){
+      const planObj = props.planObj;
+      form.value.planId = planObj.id;
+      form.value.auditeeDeptId = planObj.auditeeDeptId;
+      form.value.auditeeDeptCode = planObj.auditeeDeptCode;
+      form.value.auditeeDeptName = planObj.auditeeDeptName;
+      form.value.auditorId = planObj.auditorId;
+      form.value.auditorCode = planObj.auditorCode;
+      form.value.auditorName = planObj.auditorName;
+    }
+  };
   /** 校验通过后，读取要启动的流程模板 */
   function getBpmDefine() {
     // 附件密级校验

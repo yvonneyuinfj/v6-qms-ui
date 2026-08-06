@@ -2,8 +2,11 @@ import request from '@/utils/request';
 import type { BaseTreeModel, TreeNodeModel, ResponseBaseData } from '@/api/model/baseModel';
 
 export const basePath = '/myportal/qms/qmsqualityobjectives';
+
 /** 质量目标台账表 */
 export interface QmsQualityObjectiveDto extends BaseTreeModel {
+  /** 目标来源 */
+  objectiveSource?: string;
   /** 目标编码 */
   objectiveCode?: string;
   /** 考核/衡量指标 */
@@ -145,19 +148,20 @@ export interface QmsQualityObjectiveDto extends BaseTreeModel {
   /** 交付物 */
   expectedDeliverable?: string;
 }
+
 //根据parentId获取子节点
-export function getQmsQualityObjectiveNode (level: number, parentId: string): Promise<ResponseBaseData<TreeNodeModel[]>> {
-  return request.get(basePath + '/get-treegrid/'+level+'/'+parentId+'/v1');
+export function getQmsQualityObjectiveNode(level: number, parentId: string): Promise<ResponseBaseData<TreeNodeModel[]>> {
+  return request.get(basePath + '/get-treegrid/' + level + '/' + parentId + '/v1');
 }
 
 //树列表查询
-export function searchQmsQualityObjective (params: any): Promise<ResponseBaseData<TreeNodeModel>> {
+export function searchQmsQualityObjective(params: any): Promise<ResponseBaseData<TreeNodeModel>> {
   return request.post(basePath + '/search-treegrid/v1', params);
 }
 
 //展开树
 export function expandQmsQualityObjective(treeId: string): Promise<ResponseBaseData<TreeNodeModel[]>> {
-  return request.get(basePath + '/expandTree/'+treeId+'/v1');
+  return request.get(basePath + '/expandTree/' + treeId + '/v1');
 }
 
 //保存表单数据
@@ -166,20 +170,20 @@ export function saveQmsQualityObjective(form: QmsQualityObjectiveDto): Promise<R
 }
 
 //根据id集合删除数据
-export function delQmsQualityObjective (ids: string): Promise<ResponseBaseData<any>>  {
+export function delQmsQualityObjective(ids: string): Promise<ResponseBaseData<any>> {
   return request.delete(basePath + '/delete-by-id/' + ids + '/v1', {});
 }
 
 //获取表单数据
-export function getQmsQualityObjective (id: string): Promise<ResponseBaseData<QmsQualityObjectiveDto>> {
+export function getQmsQualityObjective(id: string): Promise<ResponseBaseData<QmsQualityObjectiveDto>> {
   return request.get(basePath + '/get/' + id + '/v1');
 }
 
-export function getTreeSortById (pid: string): Promise<ResponseBaseData<number>> {
+export function getTreeSortById(pid: string): Promise<ResponseBaseData<number>> {
   return request.get(basePath + '/get-new-tree-sort/' + pid + '/v1');
 }
 
-export function getQmsQualityObjectiveByParentId (pid: string): Promise<ResponseBaseData<QmsQualityObjectiveDto>> {
+export function getQmsQualityObjectiveByParentId(pid: string): Promise<ResponseBaseData<QmsQualityObjectiveDto>> {
   return request.get(basePath + '/getByPid/' + pid + '/v1');
 }
 

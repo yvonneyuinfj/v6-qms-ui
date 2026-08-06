@@ -11,7 +11,7 @@
         <span>{{ tempTitle || oneTitle || title || '业务基础平台' }}{{ secondTitle }}</span>
       </template>
       <div :class="{ column: !horizontal }" v-if="!collapsed" style="">
-        <span :style="mainTitleStyle">
+        <span :style="mainTitleStyle" class="app-title">
           {{ tempTitle || oneTitle || title || '业务基础平台' }}
         </span>
         <span v-if="secondTitle" :style="minorTitleStyle">
@@ -78,6 +78,13 @@ const tempTitle = window.$config.appName;
     text-overflow: ellipsis;
     color: #fff;
     padding-right: 30px;
+    .app-title{
+      display: block;
+      font-size: 16px;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.0;
+    }
   }
 }
 </style>

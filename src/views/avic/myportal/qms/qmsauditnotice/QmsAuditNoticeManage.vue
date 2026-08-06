@@ -452,6 +452,9 @@
         @refresh="getList"
       >
         <template #toolBarLeft>
+          <div class="aecc-leftbar-title">质量体系审核实施通知单</div>
+        </template>
+        <template #toolBarRight>
           <a-space>
             <a-button
               v-hasPermi="['qmsAuditNotice:add']"
@@ -496,29 +499,20 @@
               ghost
               @click="handleExport">
               <template #icon>
-                 <export-outlined />
+                <export-outlined />
               </template>
               导出
             </a-button>
           </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-space>
-            <AvicBpmFilter
-              :allFileAuth="['qmsAuditNotice:all']"
-              :myFileAuth="['qmsAuditNotice:my']"
-              :defaultBpmType = 'queryForm.bpmType'
-              :defaultBpmState = 'queryForm.bpmState'
-              @change="changeBpmFilter"
-            />
-            <a-input-search
-              class="opt-btn-commonsearch"
-              style="width: 200px"
-              placeholder="请输入审核计划ID或通知单编号;系统生成"
-              :allow-clear="true"
-              @search="handleKeyWordQuery"
-            />
-          </a-space>
+          <!--<a-space>-->
+          <!--  <AvicBpmFilter-->
+          <!--    :allFileAuth="['qmsAuditNotice:all']"-->
+          <!--    :myFileAuth="['qmsAuditNotice:my']"-->
+          <!--    :defaultBpmType = 'queryForm.bpmType'-->
+          <!--    :defaultBpmState = 'queryForm.bpmState'-->
+          <!--    @change="changeBpmFilter"-->
+          <!--  />-->
+          <!--</a-space>-->
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex === 'id'">

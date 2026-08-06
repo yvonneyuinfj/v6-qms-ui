@@ -15,7 +15,7 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item label="所属年度">
+            <a-form-item label="所属年份">
               <a-select
                 v-model:value="queryForm.forYear"
                 :get-popup-container="triggerNode => triggerNode.parentNode"
@@ -284,7 +284,7 @@ const columns = [
     title: '考核指标',
     dataIndex: 'objectiveName',
     ellipsis: true,
-    width: 250,
+    minWidth: 250,
     resizable: true,
     align: 'left'
   },
@@ -321,10 +321,18 @@ const columns = [
     align: 'center'
   },
   {
-    title: '目标层级',
+    title: '目标来源',
+    dataIndex: 'objectiveSource',
+    ellipsis: true,
+    width: 120,
+    resizable: true,
+    align: 'center'
+  },
+  {
+    title: '层级',
     dataIndex: 'objectiveLevelName',
     ellipsis: true,
-    width: 100,
+    width: 80,
     resizable: true,
     align: 'center'
   },

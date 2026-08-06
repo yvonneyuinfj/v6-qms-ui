@@ -55,17 +55,15 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <!--考核/衡量指标-->
-          <a-col v-bind="colLayout.cols2">
-            <a-form-item name="objectiveName" label="考核指标" has-feedback>
+          <!--目标来源-->
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="objectiveSource" label="目标来源" has-feedback>
               <a-input
-                v-model:value="form.objectiveName"
-                :maxLength="256"
-                placeholder="请输入考核/衡量指标"
+                v-model:value="form.objectiveSource"
+                placeholder="请输入目标来源"
               />
             </a-form-item>
           </a-col>
-
           <!--统计周期-->
           <a-col v-bind="colLayout.cols">
             <a-form-item name="dataStatCycle" label="统计周期">
@@ -85,25 +83,14 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <!--密级-->
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="secretLevel" label="密级" has-feedback>
-              <a-select
-                v-model:value="form.secretLevel"
-                :get-popup-container="triggerNode => triggerNode.parentNode"
-                option-filter-prop="children"
-                :show-search="true"
-                :allow-clear="true"
-                placeholder="请选择密级"
-              >
-                <a-select-option
-                  v-for="item in secretLevelList"
-                  :key="item.sysLookupTlId"
-                  :value="item.lookupCode"
-                >
-                  {{ item.lookupName }}
-                </a-select-option>
-              </a-select>
+          <!--考核/衡量指标-->
+          <a-col v-bind="colLayout.cols2">
+            <a-form-item name="objectiveName" label="考核指标" has-feedback>
+              <a-input
+                v-model:value="form.objectiveName"
+                :maxLength="256"
+                placeholder="请输入考核/衡量指标"
+              />
             </a-form-item>
           </a-col>
           <!--指标说明-->
@@ -173,6 +160,27 @@
                 :step="1"
                 placeholder="请输入本级排序"
               />
+            </a-form-item>
+          </a-col>
+          <!--密级-->
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="secretLevel" label="密级" has-feedback>
+              <a-select
+                v-model:value="form.secretLevel"
+                :get-popup-container="triggerNode => triggerNode.parentNode"
+                option-filter-prop="children"
+                :show-search="true"
+                :allow-clear="true"
+                placeholder="请选择密级"
+              >
+                <a-select-option
+                  v-for="item in secretLevelList"
+                  :key="item.sysLookupTlId"
+                  :value="item.lookupCode"
+                >
+                  {{ item.lookupName }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols2">

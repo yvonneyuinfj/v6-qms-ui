@@ -1,9 +1,10 @@
 import request from '@/utils/request';
-import type { BaseTreeModel, TreeNodeModel, ResponseBaseData } from '@/api/model/baseModel';
-
-export const basePath = '/myportal/qms/qmsauditplans';
+import type { BaseBeanModel, ResponsePageData, ResponseBaseData, QueryParamModel } from '@/api/model/baseModel';
+import type { downloadParam } from '@/utils/download-util';
+import { downloadSysFile } from '@/utils/download-util';
+const basePath = '/myportal/qms/qmsauditplans';
 /** 年度内审计划及执行主表 */
-export interface QmsAuditPlanDto extends BaseTreeModel {
+export interface QmsAuditPlanDto extends BaseBeanModel {
   /** 审核计划计划编号 */
   planCode?: string;
   /** 审核活动名称 */
@@ -68,47 +69,40 @@ export interface QmsAuditPlanDto extends BaseTreeModel {
   attribute09?: string;
   /** 扩展字段_10 */
   attribute10?: string;
-  /** 父节点ID */
-  parentId?: string;
-  /** 全路径 */
-  treePath?: string;
-  /** 节点层级 */
-  treeLevel?: number;
-  /** 本级排序 */
-  treeSort?: number;
-  /** 全级排序 */
-  treeSorts?: string;
-  /** 是否叶子节点 */
-  treeLeaf?: string;
-}
-//根据parentId获取子节点
-export function getQmsAuditPlanNode (level: number, parentId: string): Promise<ResponseBaseData<TreeNodeModel[]>> {
-  return request.get(basePath + '/get-treegrid/'+level+'/'+parentId+'/v1');
+  /** 审核时间 */
+  auditTime?: any;
+  auditTimeBegin?: any;
+  auditTimeEnd?: any;
 }
 
-//树列表查询
-export function searchQmsAuditPlan (params: any): Promise<ResponseBaseData<TreeNodeModel>> {
-  return request.post(basePath + '/search-treegrid/v1', params);
+/** 获取分页数据 */
+export function listQmsAuditPlanByPage (
+  param: QueryParamModel
+): Promise<ResponsePageData<QmsAuditPlanDto>> {
+  return request.post(basePath + '/search-by-page/v1', param);
 }
 
-//展开树
-export function expandQmsAuditPlan(treeId: string): Promise<ResponseBaseData<TreeNodeModel[]>> {
-  return request.get(basePath + '/expandTree/'+treeId+'/v1');
-}
-
-//保存表单数据
-export function saveQmsAuditPlan(form: QmsAuditPlanDto): Promise<ResponseBaseData<any>> {
-  return request.post(basePath + '/save/v1', form);
-}
-
-//根据id集合删除数据
-export function delQmsAuditPlan (ids: string): Promise<ResponseBaseData<any>>  {
-  return request.delete(basePath + '/delete-by-id/' + ids + '/v1', {});
-}
-
-//获取表单数据
+/** 根据id加载数据 */
 export function getQmsAuditPlan (id: string): Promise<ResponseBaseData<QmsAuditPlanDto>> {
   return request.get(basePath + '/get/' + id + '/v1');
 }
 
+/** 保存表单数据 */
+export function saveQmsAuditPlan (form: QmsAuditPlanDto): Promise<ResponseBaseData<any>> {
+  return request.post(basePath + '/save/v1', form);
+}
 
+/** 根据id集合删除数据 */
+export function delQmsAuditPlan (ids: [string]): Promise<ResponseBaseData<any>> {
+  return request.delete(basePath + '/delete-by-ids/v1', { data: ids });
+}
+
+/** 导出Excel */
+export function exportExcel (param: any) {
+  const download = {
+    url: basePath + '/exportData/v1',
+    data: param,
+    method: 'post'
+  } as downloadParam;
+  return downloadSysFile(download);
+}

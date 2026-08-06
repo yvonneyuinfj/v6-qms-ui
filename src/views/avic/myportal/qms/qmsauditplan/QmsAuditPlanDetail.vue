@@ -11,11 +11,10 @@
       <a-form
         ref="formRef"
         :model="form"
-        :rules="rules"
         v-bind="layout"
         layout="horizontal"
-      >
-        <a-row  :gutter="16">
+       >
+        <a-row :gutter="16">
           <a-col v-bind="colLayout.cols">
             <a-form-item name="planCode" label="审核计划计划编号">
               <a-input v-model:value="form.planCode" :auto-focus="true" disabled />
@@ -149,25 +148,11 @@ min="0"
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item name="parentId" label="父级分类">
-              <AvicTreeSelect
-                v-model:value="form.parentId"
-                ref="treeSelectRef"
-                :baseUrl="baseUrl"
-                :parentId="parentId"
-                :parentTitle="parentTitle"
-                :disabled="true"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="treeSort" label="本级排序">
-              <a-input-number
-                v-model:value="form.treeSort"
-min="0"
-                :max="999999999999"
-                :precision="0"
-                :step="1"
+            <a-form-item name="auditTime" label="审核时间">
+              <a-date-picker
+                v-model:value="form.auditTime"
+                format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD"
                 disabled
               />
             </a-form-item>
@@ -188,50 +173,31 @@ min="0"
       </a-form>
     </a-spin>
     <template #footer>
-      <a-button
-        type="primary"
-        ghost
-        title="返回"
-        @click="closeModal"
-      >
-        返回
-      </a-button>
+      <a-button title="返回" type="primary" ghost @click="closeModal">返回</a-button>
     </template>
   </AvicModal>
 </template>
 <script lang="ts" setup>
-import { useQmsAuditPlanForm, emits } from './ts/QmsAuditPlanForm'; //引入表单ts
+import { useQmsAuditPlanForm, emits } from './ts/QmsAuditPlanForm'; // 引入表单ts
 const props = defineProps({
   formId: {
     type: String,
     default: ''
-  },
-  parentId: {
-    type: String,
-    required: true
-  },
-  parentTitle: {
-    type: String,
-    required: true
-  },
-  defaultTreeLevel: {
-    type: Number,
-    default: 1
   }
 });
 const emit = defineEmits(emits);
 const {
   form,
   formRef,
-  rules,
   layout,
   colLayout,
   loading,
   secretLevelList,
-  baseUrl,
   closeModal
 } = useQmsAuditPlanForm({
   props: props,
   emit: emit
 });
 </script>
+
+

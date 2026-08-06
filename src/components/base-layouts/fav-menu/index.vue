@@ -10,38 +10,38 @@
       <template #icon>
         <avic-icon svg="avic-home-4-fill" />
       </template>
-      我的首页
+      首页
     </a-menu-item>
-    <a-sub-menu key="fav">
-      <template #icon>
-        <avic-icon svg="avic-bookmark-3-fill" />
-      </template>
-      <template #title>我的收藏</template>
-      <template v-for="favMenu in collectedMenuList" :key="favMenu.path">
-        <a-menu-item
-          :title="t(favMenu.meta?.title ? favMenu.meta.title : '未标题')"
-          :class="showType"
-        >
-          <template #icon>
-            <avic-icon
-              v-if="favMenu.meta?.icon !== undefined"
-              :svg="favMenu.meta.icon"
-              :key="favMenu.meta.icon"
-            />
-          </template>
-          {{ t(favMenu.meta?.title ? favMenu.meta.title : '未标题') }}
-          <a-tag v-if="favMenu.meta.menuMarkName" color="rgba(255,80,80,.9)">
-            {{ t(favMenu.meta.menuMarkName) }}
-          </a-tag>
-          <avic-icon
-            class="menu-star"
-            svg="avic-star-fill"
-            title="取消收藏"
-            @click.stop="handleUncollect(favMenu.meta.id)"
-          />
-        </a-menu-item>
-      </template>
-    </a-sub-menu>
+    <!--<a-sub-menu key="fav">-->
+    <!--  <template #icon>-->
+    <!--    <avic-icon svg="avic-bookmark-3-fill" />-->
+    <!--  </template>-->
+    <!--  <template #title>我的收藏</template>-->
+    <!--  <template v-for="favMenu in collectedMenuList" :key="favMenu.path">-->
+    <!--    <a-menu-item-->
+    <!--      :title="t(favMenu.meta?.title ? favMenu.meta.title : '未标题')"-->
+    <!--      :class="showType"-->
+    <!--    >-->
+    <!--      <template #icon>-->
+    <!--        <avic-icon-->
+    <!--          v-if="favMenu.meta?.icon !== undefined"-->
+    <!--          :svg="favMenu.meta.icon"-->
+    <!--          :key="favMenu.meta.icon"-->
+    <!--        />-->
+    <!--      </template>-->
+    <!--      {{ t(favMenu.meta?.title ? favMenu.meta.title : '未标题') }}-->
+    <!--      <a-tag v-if="favMenu.meta.menuMarkName" color="rgba(255,80,80,.9)">-->
+    <!--        {{ t(favMenu.meta.menuMarkName) }}-->
+    <!--      </a-tag>-->
+    <!--      <avic-icon-->
+    <!--        class="menu-star"-->
+    <!--        svg="avic-star-fill"-->
+    <!--        title="取消收藏"-->
+    <!--        @click.stop="handleUncollect(favMenu.meta.id)"-->
+    <!--      />-->
+    <!--    </a-menu-item>-->
+    <!--  </template>-->
+    <!--</a-sub-menu>-->
   </a-menu>
 </template>
 <script lang="ts" setup>
