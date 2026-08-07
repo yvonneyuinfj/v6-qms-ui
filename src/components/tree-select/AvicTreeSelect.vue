@@ -25,7 +25,7 @@
     >
       <template #suffix>
         <!-- <AvicIcon svg="avic-app-channel" @click="handleTrigger" /> -->
-        <avic-icon svg="avic-component-tree" @click="handleTrigger" color="#86909c" />
+        <avic-icon svg="avic-component-tree" @click="handleTrigger" color="#86909c"/>
       </template>
     </a-input>
     <template #overlay>
@@ -64,7 +64,7 @@
                 <span v-else>{{ dataRef.title }}</span>
               </template>
               <template #icon="{ dataRef }">
-                <avic-icon v-if="dataRef.isLeaf" svg="avic-file-fill" color="#3370ff" />
+                <avic-icon v-if="dataRef.isLeaf" svg="avic-file-fill" color="#3370ff"/>
                 <avic-icon
                   v-if="!dataRef.expanded && !dataRef.isLeaf"
                   svg="avic-folder-3-fill"
@@ -78,7 +78,7 @@
               </template>
             </a-tree>
             <template v-else>
-              <a-empty :image="simpleImage" />
+              <a-empty :image="simpleImage"/>
             </template>
           </div>
         </a-spin>
@@ -90,6 +90,7 @@
 import { getTreeData, searchTree } from '@/api/avic/system/AvicTreeSelectApi';
 import { getExpandedKeys, getAllExpandedKeys, setNodeSlots } from '@/utils/tree-util';
 import { Empty } from 'ant-design-vue';
+
 const { proxy } = getCurrentInstance();
 const props = defineProps({
   /** 树的后台服务地址 */
@@ -110,7 +111,8 @@ const props = defineProps({
   dropdownStyle: {
     type: Object,
     required: false, //校验
-    default: () => {}
+    default: () => {
+    }
   },
   placeholder: { type: String, default: '请选择' },
   planTypeId: { type: String, default: '-1' }
@@ -172,12 +174,14 @@ watch(
     planTypeId.value = newValue;
   }
 );
+
 function initData(pid, ptitle) {
   showValue.value = ptitle;
   showValueList.value.push(ptitle);
   bindValue.value = pid;
   valueList.value = [pid]; //多选时使用
 }
+
 function getTreeList() {
   loading.value = true;
   const expandLevel = 2;
@@ -200,9 +204,11 @@ function getTreeList() {
       loading.value = false;
     });
 }
+
 function reloadTreeData() {
   treeData.value = [];
 }
+
 /**
  * 树节点查询
  * @param {Object} value
@@ -229,6 +235,7 @@ function handleSearchTree(value) {
   })*/
   searchValue.value = value;
 }
+
 /**
  * 异步加载树节点
  * @param {Object} treeNode
@@ -247,9 +254,11 @@ function onLoadData(treeNode) {
     });
   });
 }
+
 function onExpand(_expandedKeys) {
   expandedKeys.value = _expandedKeys;
 }
+
 function handleInput(e) {
   // 允许清空且点击清空图标时清空数据
   if (!showValue.value && e.type === 'click') {
@@ -265,6 +274,7 @@ function handleInput(e) {
     showValue.value = props.parentTitle;
   }
 }
+
 function handleTrigger(e) {
   if (treeData.value.length == 0) {
     getTreeList();
@@ -274,6 +284,7 @@ function handleTrigger(e) {
     visible.value = !visible.value;
   }
 }
+
 /**
  * 树选中事件
  */
@@ -287,6 +298,8 @@ function selectNode(_selectedKeys, { node }) {
     visible.value = false;
     (bindValue.value = node.dataRef.id), (showValue.value = node.dataRef.title);
     selectedKeys.value = _selectedKeys;
+    $emit('select', node.dataRef);
+    // $emit('change', node.dataRef.id, node.dataRef.title);
   } else {
     //选择前节点选中状态
     const selected = node.selected;
@@ -302,6 +315,7 @@ function selectNode(_selectedKeys, { node }) {
     selectedKeys.value = _selectedKeys;
   }
 }
+
 defineExpose({
   reloadTreeData,
   initData

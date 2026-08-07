@@ -493,6 +493,11 @@
       >
         <template #toolBarLeft>
           <a-space>
+            <div class="aecc-leftbar-title">质量问题归零成果反哺</div>
+          </a-space>
+        </template>
+        <template #toolBarRight>
+          <a-space>
             <a-button
               v-hasPermi="['qmsQualityProblemFeedback:add']"
               title="添加"
@@ -536,28 +541,24 @@
               ghost
               @click="handleExport">
               <template #icon>
-                 <export-outlined />
+                <export-outlined />
               </template>
               导出
             </a-button>
-          </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-space>
-            <AvicBpmFilter
-              :allFileAuth="['qmsQualityProblemFeedback:all']"
-              :myFileAuth="['qmsQualityProblemFeedback:my']"
-              :defaultBpmType = 'queryForm.bpmType'
-              :defaultBpmState = 'queryForm.bpmState'
-              @change="changeBpmFilter"
-            />
-            <a-input-search
-              class="opt-btn-commonsearch"
-              style="width: 200px"
-              placeholder="请输入反哺编号或所属年份"
-              :allow-clear="true"
-              @search="handleKeyWordQuery"
-            />
+            <!--<AvicBpmFilter-->
+            <!--  :allFileAuth="['qmsQualityProblemFeedback:all']"-->
+            <!--  :myFileAuth="['qmsQualityProblemFeedback:my']"-->
+            <!--  :defaultBpmType = 'queryForm.bpmType'-->
+            <!--  :defaultBpmState = 'queryForm.bpmState'-->
+            <!--  @change="changeBpmFilter"-->
+            <!--/>-->
+            <!--<a-input-search-->
+            <!--  class="opt-btn-commonsearch"-->
+            <!--  style="width: 200px"-->
+            <!--  placeholder="请输入反哺编号或所属年份"-->
+            <!--  :allow-clear="true"-->
+            <!--  @search="handleKeyWordQuery"-->
+            <!--/>-->
           </a-space>
         </template>
         <template #bodyCell="{ column, text, record, index }">
@@ -612,76 +613,6 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '反哺编号',
-    dataIndex: 'feedbackCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '所属年份',
-    dataIndex: 'forYear',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '来源问题ID',
-    dataIndex: 'sourceProblemId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '来源更新时间',
-    dataIndex: 'sourceUpdateTime',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '最近同步时间',
-    dataIndex: 'syncTime',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '来源系统CODE',
-    dataIndex: 'sourceSystemCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '质量问题编号',
-    dataIndex: 'problemCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '来源问题状态',
-    dataIndex: 'sourceStatus',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '问题名称',
     dataIndex: 'problemName',
     ellipsis: true,
@@ -691,20 +622,11 @@ const columns = [
     align: 'left'
   },
   {
-    title: '问题类型',
-    dataIndex: 'problemType',
+    title: '问题编号',
+    dataIndex: 'problemCode',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '问题分类',
-    dataIndex: 'problemCategory',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
     align: 'left'
   },
@@ -713,15 +635,7 @@ const columns = [
     dataIndex: 'model',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '发生时间',
-    dataIndex: 'occurrenceTime',
-    ellipsis: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
     align: 'center'
   },
@@ -729,212 +643,36 @@ const columns = [
     title: '归零时间',
     dataIndex: 'closeTime',
     ellipsis: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
     align: 'center'
-  },
-  {
-    title: '责任人ID',
-    dataIndex: 'responsibleStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人CODE',
-    dataIndex: 'responsibleStaffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
   },
   {
     title: '责任人',
     dataIndex: 'responsibleStaffName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任部门ID',
-    dataIndex: 'responsibleDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任部门CODE',
-    dataIndex: 'responsibleDeptCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '责任部门',
     dataIndex: 'responsibleDeptName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '归零报告ID',
-    dataIndex: 'closeReportId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '归零报告编号',
-    dataIndex: 'closeReportCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '归零报告名称',
-    dataIndex: 'closeReportName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '问题原因和机理',
-    dataIndex: 'causeMechanism',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '改进措施',
-    dataIndex: 'improvementMeasure',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '反哺维度',
-    dataIndex: 'feedbackDimension',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '是否启用反哺',
-    dataIndex: 'ynStartFeedback',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '反哺意见说明',
-    dataIndex: 'feedbackDesc',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '业务状态',
-    dataIndex: 'status',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程实例ID',
-    dataIndex: 'processInstanceId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程状态',
-    dataIndex: 'processStatus',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '提交时间',
-    dataIndex: 'submitTime',
-    ellipsis: true,
-    minWidth: 120,
+    width: 150,
     resizable: true,
     align: 'center'
   },
   {
-    title: '完成时间',
-    dataIndex: 'completeTime',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '是否已删除',
-    dataIndex: 'ynDeleted',
+    title: '归零报告',
+    dataIndex: 'closeReport',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
+    align: 'center'
   },
   {
     title: '流程状态',
@@ -948,14 +686,15 @@ const columns = [
     title: '流程当前步骤',
     dataIndex: 'activityalias_',
     width: 120,
+    align: 'center',
     fixed: 'right'
   },
   {
     title: '当前处理人',
     dataIndex: 'assigneenames_',
     ellipsis: true,
-    width: 130,
-    align: 'left',
+    width: 120,
+    align: 'center',
     fixed: 'right'
   }
 ];

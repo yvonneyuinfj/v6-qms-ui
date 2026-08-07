@@ -216,7 +216,7 @@ function loadMessageByCount(params) {
 function findReset(list) {
   let isReset = false;
   let isResetOBj = {};
-  list.map(item => {
+  list?.map(item => {
     if (item.attribute02 === 'Y') {
       isReset = true;
       isResetOBj = item;

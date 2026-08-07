@@ -92,7 +92,7 @@ export function getQmsAuditCheckDetail (id: string): Promise<ResponseBaseData<Qm
 }
 
 /** 保存表单数据 */
-export function saveQmsAuditCheckDetail (form: QmsAuditCheckDetailDto): Promise<ResponseBaseData<any>> {
+export function saveQmsAuditCheckDetail (form: Array<QmsAuditCheckDetailDto>): Promise<ResponseBaseData<any>> {
   return request.post(basePath + '/save/v1', form);
 }
 
