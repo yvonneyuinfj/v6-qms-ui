@@ -21,7 +21,7 @@
       :customRow="customRow"
       @change="handleTableChange"
     >
-      <template v-if="!props.readOnly" #toolBarLeft>
+      <template v-if="!props.readOnly" #toolBarRight>
         <a-space>
           <a-space>
             <a-button
@@ -31,7 +31,7 @@
               @click="handleAdd"
             >
               <template #icon>
-                <plus-outlined />
+                <plus-outlined/>
               </template>
               添加
             </a-button>
@@ -48,7 +48,7 @@
               "
             >
               <template #icon>
-                <delete-outlined />
+                <delete-outlined/>
               </template>
               删除
             </a-button>
@@ -56,42 +56,58 @@
         </a-space>
       </template>
       <template #bodyCell="{ column, record, index }">
-          <AvicRowEdit
-           v-if="['ncId','checkContent','conformityResult','remark','noticeId','parentId','clauseContent','adviceContent','clauseNo','sequenceCode','ynNc','auditorId','checkRecord','ynDeleted','auditorCode','planId','checkModel','auditorName','status'].includes(
+        <AvicRowEdit
+          v-if="['ncId','checkContent','remark','noticeId','parentId','clauseContent','adviceContent','clauseNo','sequenceCode','ynNc','auditorId','checkRecord','ynDeleted','auditorCode','planId','auditorName','status'].includes(
                column.dataIndex
               )"
-            :record="record"
-            :column="column.dataIndex"
-          >
-            <template #edit>
-              <a-input
-                v-model:value="record[column.dataIndex]"
-                :maxLength="512"
-                @input="$forceUpdate()"
-                style="width: 100%"
-                @blur="blurInput($event, record, column.dataIndex)"
-             >
-              </a-input>
-            </template>
-          </AvicRowEdit>
-        <!--<template v-if="column.dataIndex === 'id'">-->
-        <!--  {{ index + 1 + queryParam.pageParameter.rows * (queryParam.pageParameter.page - 1) }}-->
-        <!--</template>-->
-        <AvicRowEdit
-          v-else-if="column.dataIndex === 'index'"
           :record="record"
           :column="column.dataIndex"
         >
           <template #edit>
             <a-input
               v-model:value="record[column.dataIndex]"
-              style="width: 100%"
+              :maxLength="512"
               @input="$forceUpdate()"
+              style="width: 100%"
               @blur="blurInput($event, record, column.dataIndex)"
-              />
+            >
+            </a-input>
           </template>
         </AvicRowEdit>
-        <template v-else-if="column.dataIndex === 'action' && !props.readOnly">
+        <AvicRowEdit v-else-if="column.dataIndex === 'checkModel'" :record="record" :column="column.dataIndex">
+          <template #edit>
+            <a-select
+              ref="select"
+              mode="multiple"
+              v-model:value="record.attribute01"
+              :options="modelList"
+              :field-names="{ label: 'model', value: 'model'}"
+              style="width: 100%"
+              placeholder="下拉多选"
+              @change="(val)=>{record.checkModel=val.join(',');}"
+            ></a-select>
+          </template>
+        </AvicRowEdit>
+        <AvicRowEdit v-else-if="column.dataIndex === 'conformityResult'" :record="record" :column="column.dataIndex">
+          <template #edit>
+            <a-select
+              ref="select"
+              v-model:value="record.conformityResult"
+              style="width: 100%"
+              placeholder="下拉单选"
+            >
+              <a-select-option
+                v-for="item in conformityResultList"
+                :key="item.sysLookupTlId"
+                :value="item.lookupCode"
+              >
+                {{ item.lookupName }}
+              </a-select-option>
+            </a-select>
+          </template>
+        </AvicRowEdit>
+        <AvicRowEdit v-else-if="column.dataIndex === 'action' && !props.readOnly" :record="record"
+                     :column="column.dataIndex">
           <a-button
             class="inner-btn"
             type="link"
@@ -103,14 +119,15 @@
           >
             删除
           </a-button>
-        </template>
+        </AvicRowEdit>
       </template>
     </AvicTable>
   </div>
 </template>
 <script lang="ts" setup>
 import type { QmsAuditCheckDetailDto } from '@/api/avic/myportal/qms/QmsAuditCheckDetailApi'; // 引入模块DTO
-import { listQmsAuditCheckDetailByPage } from '@/api/avic/myportal/qms/QmsAuditCheckDetailApi'; // 引入模块API
+import { listQmsAuditCheckDetailByPage } from '@/api/avic/myportal/qms/QmsAuditCheckDetailApi';
+import { listQmsBasicModelList } from '@/api/avic/myportal/qms/QmsBasicModelInfoApi'; // 引入模块API
 
 const { proxy } = getCurrentInstance();
 const props = defineProps({
@@ -139,7 +156,7 @@ const columns = [
     dataIndex: 'clauseNo',
     key: 'clauseNo',
     ellipsis: true,
-    width: 100,
+    width: 80,
     resizable: true,
     align: 'center'
   },
@@ -157,7 +174,7 @@ const columns = [
     dataIndex: 'checkModel',
     key: 'checkModel',
     ellipsis: true,
-    width: 120,
+    minWidth: 120,
     resizable: true,
     align: 'center'
   },
@@ -175,7 +192,7 @@ const columns = [
     dataIndex: 'conformityResult',
     key: 'conformityResult',
     ellipsis: true,
-    width: 120,
+    width: 150,
     resizable: true,
     align: 'center'
   },
@@ -210,10 +227,10 @@ const loading = ref(false);
 const delLoading = ref(false);
 const totalPage = ref(0);
 const secretLevelList = ref([]); // 密级通用代码
-const validateRules = {
-}; // 必填列,便于保存和新增数据时校验
+const validateRules = {}; // 必填列,便于保存和新增数据时校验
 const deletedData = ref([]); // 前台删除数据的记录
-
+const lookupParams = [{ fieldName: 'confirmityResult', lookUpType: 'QMS_CHECK_CONFORMITY_RESULT' }];
+const conformityResultList = ref([]);
 // 非只读状态添加操作列
 if (!props.readOnly) {
   columns.push({
@@ -229,9 +246,21 @@ if (!props.readOnly) {
 onMounted(() => {
   // 加载表格数据
   getList();
+  // 加载型号数据
+  getModelList();
+  // 加载所需通用代码
+  getLookupList();
   // 获取当前用户对应的文档密级
   getUserFileSecretList();
 });
+
+/** 获取通用代码  */
+function getLookupList() {
+  proxy.$getLookupByType(lookupParams, result => {
+    conformityResultList.value = result.confirmityResult;
+  });
+}
+
 /** 查询数据  */
 function getList() {
   selectedRowKeys.value = []; // 清空选中
@@ -246,6 +275,9 @@ function getList() {
       loading.value = false;
       // 查询的初始数据,保存时做比对
       initialList.value = proxy.$lodash.cloneDeep(list.value);
+      list.value.forEach((record) => {
+        record.attribute01 = record.checkModel?.split(',');
+      });
     })
     .catch(() => {
       list.value = [];
@@ -253,12 +285,14 @@ function getList() {
       loading.value = false;
     });
 }
+
 /** 获取当前用户对应的文档密级 */
 function getUserFileSecretList() {
   proxy.$getUserFileSecretLevelList(result => {
     secretLevelList.value = result;
   });
 }
+
 /** 获取修改的数据 */
 function getChangedData() {
   deletedData.value.forEach(item => {
@@ -295,7 +329,7 @@ function handleAdd() {
     orderBy: '',
     parentId: '',
     editable: true, // true为编辑中, false为未编辑
-    treeSort:0
+    treeSort: 0
   };
   const newData = [...list.value];
   // 数据校验
@@ -309,6 +343,7 @@ function handleAdd() {
   newData.unshift(item);
   list.value = newData;
 }
+
 /** 编辑 */
 function handleEdit(record) {
   record.editable = true;
@@ -356,11 +391,13 @@ function customRow(record) {
     }
   };
 }
+
 /** 勾选复选框时触发 */
 function onSelectChange(rowKeys, rows) {
   selectedRowKeys.value = rowKeys;
   selectedRows.value = rows;
 }
+
 /** 表头排序 */
 function handleTableChange(pagination, _filters, sorter) {
   queryParam.pageParameter.page = pagination.current;
@@ -371,6 +408,7 @@ function handleTableChange(pagination, _filters, sorter) {
   }
   getList();
 }
+
 /**控件变更事件 */
 function changeControlValue(values, record, column) {
   let labels = [];
@@ -390,10 +428,12 @@ function changeControlValue(values, record, column) {
     record[column + 'Name'] = labels.join(',');
   }
 }
+
 /** 输入框的值失去焦点 */
 function blurInput(e, record, column) {
   proxy.$validateData(e.target.value, column, validateRules, record); // 校验数据
 }
+
 /** 批量数据校验 */
 function validateRecordData(records) {
   let flag = true;
@@ -405,6 +445,7 @@ function validateRecordData(records) {
   }
   return flag;
 }
+
 /** 校验并执行回调函数*/
 function validate(callback) {
   const changedData = proxy.$getChangeRecords(list, initialList);
@@ -420,6 +461,16 @@ function validate(callback) {
     }
   }
 }
+
+const modelList = ref([]);
+const getModelList = () => {
+  listQmsBasicModelList({}).then(res => {
+    console.log('modelList', res);
+    modelList.value = res.data;
+  });
+};
+const modelArr = ref([]);
+
 defineExpose({
   validate,
   getChangedData

@@ -1,5 +1,7 @@
 import type { QmsAuditCheckDetailDto } from '@/api/avic/myportal/qms/QmsAuditCheckDetailApi'; // 引入模块DTO
 import { getQmsAuditCheckDetail, saveQmsAuditCheckDetail } from '@/api/avic/myportal/qms/QmsAuditCheckDetailApi'; // 引入模块API
+import { listQmsBasicModelList } from '@/api/avic/myportal/qms/QmsBasicModelInfoApi';
+
 export const emits = ['reloadData', 'close'];
 
 export function useQmsAuditCheckDetailForm({
@@ -18,27 +20,47 @@ export function useQmsAuditCheckDetailForm({
     ]
   };
   const layout = {
-    labelCol: { flex: '0 0 140px' },
+    labelCol: { flex: '0 0 80px' },
     wrapperCol: { flex: '1 1 0' }
   };
   const colLayout = proxy.$colLayout2; // 调用布局公共方法
   const loading = ref(false);
   const uploadFile = ref(null); // 附件ref
   const secretLevelList = ref([]); // 密级通用代码
+  const lookupParams = [{ fieldName: 'confirmityResult', lookUpType: 'QMS_CHECK_CONFORMITY_RESULT' }];
+  const conformityResultList = ref([]);
 
   onMounted(() => {
     // 获取当前用户对应的文档密级
     getUserFileSecretList();
+    // 加载所需通用代码
+    getLookupList();
+
+    getModelList();
     if (props.formId) {
       // 编辑、详情页面加载数据
       getFormData(props.formId);
     }
   });
+  const modelList = ref([]);
+  const getModelList = () => {
+    listQmsBasicModelList({}).then(res => {
+      console.log('modelList', res);
+      modelList.value = res.data;
+    });
+  };
 
   /** 获取当前用户对应的文档密级 */
   function getUserFileSecretList() {
     proxy.$getUserFileSecretLevelList(result => {
       secretLevelList.value = result;
+    });
+  }
+
+  /** 获取通用代码  */
+  function getLookupList() {
+    proxy.$getLookupByType(lookupParams, result => {
+      conformityResultList.value = result.confirmityResult;
     });
   }
 
@@ -53,6 +75,7 @@ export function useQmsAuditCheckDetailForm({
         if (res.success) {
           form.value = res.data;
           // 处理数据
+          modelArr.value = form.value.checkModel?.split(',');
           loading.value = false;
         }
       })
@@ -125,6 +148,8 @@ export function useQmsAuditCheckDetailForm({
     emit('close');
   }
 
+  const modelArr = ref([]);
+
   return {
     form,
     formRef,
@@ -136,8 +161,12 @@ export function useQmsAuditCheckDetailForm({
     uploadFile,
     afterUploadEvent,
     saveForm,
-    closeModal
+    closeModal,
+    conformityResultList,
+    modelList,
+    modelArr
   };
 }
+
 
 

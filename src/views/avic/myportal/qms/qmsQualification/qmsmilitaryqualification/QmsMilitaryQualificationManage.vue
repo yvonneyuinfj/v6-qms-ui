@@ -5,10 +5,10 @@
       <a-form v-bind="layout" ref="formRef" :model="queryForm">
         <a-row :gutter="16">
           <a-col v-bind="colLayout.cols">
-            <a-form-item label="类型">
+            <a-form-item label="资质类型">
               <a-input
                 v-model:value="queryForm.qualificationTypeName"
-                placeholder="请输入类型"
+                placeholder="请输入资质类型"
                 :allow-clear="true"
                 @pressEnter="handleQuery"
               />
@@ -97,6 +97,17 @@
         <template #toolBarRight>
           <a-space>
             <a-button
+              v-hasPermi="['qmsMilitaryQualAddApply:add']"
+              title="增项申请"
+              type="primary"
+              @click="handleAddApply"
+            >
+              <template #icon>
+                <plus-outlined />
+              </template>
+              增项申请
+            </a-button>
+            <a-button
               v-hasPermi="['qmsMilitaryQualification:add']"
               title="添加"
               type="primary"
@@ -120,17 +131,17 @@
               </template>
               删除
             </a-button>
-            <a-button
-              v-hasPermi="['qmsMilitaryQualification:import']"
-              title="导入"
-              type="primary"
-              ghost
-              @click="handleImport">
-              <template #icon>
-                <import-outlined />
-              </template>
-              导入
-            </a-button>
+            <!--<a-button-->
+            <!--  v-hasPermi="['qmsMilitaryQualification:import']"-->
+            <!--  title="导入"-->
+            <!--  type="primary"-->
+            <!--  ghost-->
+            <!--  @click="handleImport">-->
+            <!--  <template #icon>-->
+            <!--    <import-outlined />-->
+            <!--  </template>-->
+            <!--  导入-->
+            <!--</a-button>-->
             <a-button
               v-hasPermi="['qmsMilitaryQualification:export']"
               title="导出"
@@ -233,7 +244,7 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '军工资质类型',
+    title: '资质类型',
     dataIndex: 'qualificationTypeName',
     ellipsis: true,
     sorter: true,
@@ -273,7 +284,16 @@ const columns = [
     sorter: true,
     width: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
+  },
+  {
+    title: '密级',
+    dataIndex: 'secretLevelName',
+    ellipsis: true,
+    sorter: true,
+    width: 120,
+    resizable: true,
+    align: 'center'
   },
   {
     title: '操作',
@@ -441,6 +461,10 @@ function handleTableChange (pagination, filters, sorter) {
   }
   getList();
 }
+
+const handleAddApply = () => {
+  proxy.$message.success('点击了增项申请按钮');
+};
 
 </script>
 

@@ -21,7 +21,7 @@ export interface QmsAuditPlanDto extends BaseBeanModel {
   auditeeDeptId?: string;
   /** 受审部门CODE */
   auditeeDeptCode?: string;
-  /** 受审部门 */
+  /** 受审核部门 */
   auditeeDeptName?: string;
   /** 审核依据 */
   auditBasis?: string;
@@ -35,7 +35,7 @@ export interface QmsAuditPlanDto extends BaseBeanModel {
   auditorId?: string;
   /** 审核员CODE */
   auditorCode?: string;
-  /** 审核员 */
+  /** 审核人员 */
   auditorName?: string;
   /** 计划状态 */
   planStatus?: string;

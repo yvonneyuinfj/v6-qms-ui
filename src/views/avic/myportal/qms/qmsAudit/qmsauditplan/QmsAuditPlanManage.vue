@@ -33,7 +33,7 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item label="审核员">
+            <a-form-item label="审核人员">
               <AvicCommonSelect
                 v-model:value="queryForm.auditorId"
                 type="userSelect"
@@ -201,6 +201,20 @@
               @click.stop="handleCheck(record)">
               检查单
             </a-button>
+            <a-button
+              v-hasPermi="['qmsAuditPlan:edit']"
+              type="link"
+              class="inner-btn"
+              @click.stop="handleRectify(record)">
+              整改项
+            </a-button>
+            <a-button
+              v-hasPermi="['qmsAuditPlan:edit']"
+              type="link"
+              class="inner-btn"
+              @click.stop="handleSummary(record)">
+              综述
+            </a-button>
           </template>
         </template>
       </AvicTable>
@@ -263,6 +277,7 @@
       :form-id="checkRecordFormId"
       @close="showCheckRecordDetailModal = false"
     />
+
   </div>
 </template>
 <script lang="ts" setup>
@@ -311,7 +326,7 @@ const columns = [
     title: '审核时间',
     dataIndex: 'auditTime',
     ellipsis: true,
-    width: 120,
+    width: 110,
     resizable: true,
     align: 'center'
   },
@@ -320,16 +335,16 @@ const columns = [
     dataIndex: 'modelProject',
     ellipsis: true,
     sorter: true,
-    width: 150,
+    width: 120,
     resizable: true,
     align: 'center'
   },
   {
-    title: '审核员',
+    title: '审核人员',
     dataIndex: 'auditorName',
     ellipsis: true,
     sorter: true,
-    width: 150,
+    width: 120,
     resizable: true,
     align: 'center'
   },
@@ -337,7 +352,7 @@ const columns = [
     title: '操作',
     dataIndex: 'action',
     ellipsis: true,
-    width: 180,
+    width: 300,
     align: 'center',
     fixed: 'right'
   }
@@ -507,6 +522,7 @@ function handleDelete(ids, type) {
 }
 
 const planObj = ref(null);
+
 /**
  * 通知单
  */
@@ -521,14 +537,6 @@ const handleNotice = (row) => {
   } else {
     showNoticeAddModal.value = true;
   }
-  // proxy.$confirm({
-  //   title: `确认要给【${row.auditeeDeptName}】发起审核通知单吗?`,
-  //   okText: '确定',
-  //   cancelText: '取消',
-  //   onOk: () => {
-  //     // console.log('给【${row.auditeeDeptName}】发送审核通知单');
-  //   }
-  // });
 };
 
 /**
@@ -583,6 +591,21 @@ const getYearList = () => {
   ];
   return yearList;
 };
+/**
+ * 整改项
+ * @param row
+ */
+const handleRectify = (row) => {
+  proxy.$message.success('点击了【'+ row.forYear+'年'+ row.auditeeDeptName +'审查】的整改项按钮');
+};
+/**
+ * 综述
+ * @param row
+ */
+const handleSummary = (row) => {
+  proxy.$message.success('点击了【'+ row.forYear+'年'+ row.auditeeDeptName +'审查】综述按钮');
+};
+
 
 </script>
 

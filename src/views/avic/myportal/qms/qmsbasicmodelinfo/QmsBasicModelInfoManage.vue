@@ -15,106 +15,6 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item label="总师单位">
-              <a-input
-                v-model:value="queryForm.managerdept"
-                placeholder="请输入总师单位"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item label="总承单位">
-              <a-input
-                v-model:value="queryForm.productdept"
-                placeholder="请输入总承单位"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="军代表">
-              <a-input
-                v-model:value="queryForm.armyRepresentative"
-                placeholder="请输入军代表"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="副总师">
-              <a-input
-                v-model:value="queryForm.zlbFzs"
-                placeholder="请输入副总师"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="科研部主管ID">
-              <a-input
-                v-model:value="queryForm.kybMasterId"
-                placeholder="请输入科研部主管ID"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="科研部主管CODE">
-              <a-input
-                v-model:value="queryForm.kybMasterCode"
-                placeholder="请输入科研部主管CODE"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="科研部主管">
-              <a-input
-                v-model:value="queryForm.kybMasterName"
-                placeholder="请输入科研部主管"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="质量部主管ID">
-              <a-input
-                v-model:value="queryForm.zlbMasterId"
-                placeholder="请输入质量部主管ID"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="质量部主管CODE">
-              <a-input
-                v-model:value="queryForm.zlbMasterCode"
-                placeholder="请输入质量部主管CODE"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="质量部主管">
-              <a-input
-                v-model:value="queryForm.zlbMasterName"
-                placeholder="请输入质量部主管"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
             <a-form-item label="密级">
               <a-select
                 v-model:value="queryForm.secretLevel"
@@ -134,7 +34,7 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
+          <a-col v-bind="colLayout.cols">
             <a-form-item label="是否已删除">
               <a-input
                 v-model:value="queryForm.ynDeleted"
@@ -155,10 +55,140 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="父节点ID">
+            <a-form-item label="总师单位">
               <a-input
-                v-model:value="queryForm.parentId"
-                placeholder="请输入父节点ID"
+                v-model:value="queryForm.managerDept"
+                placeholder="请输入总师单位"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="总承单位">
+              <a-input
+                v-model:value="queryForm.productDept"
+                placeholder="请输入总承单位"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="军代表ID">
+              <a-input
+                v-model:value="queryForm.milRepId"
+                placeholder="请输入军代表ID"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="军代表CODE">
+              <a-input
+                v-model:value="queryForm.milRepCode"
+                placeholder="请输入军代表CODE"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="军代表">
+              <a-input
+                v-model:value="queryForm.milRepName"
+                placeholder="请输入军代表"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="副总师ID">
+              <a-input
+                v-model:value="queryForm.deputyChiefDesignerId"
+                placeholder="请输入副总师ID"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="副总师CODE">
+              <a-input
+                v-model:value="queryForm.deputyChiefDesignerCode"
+                placeholder="请输入副总师CODE"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="副总师">
+              <a-input
+                v-model:value="queryForm.deputyChiefDesignerName"
+                placeholder="请输入副总师"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="科研部主管ID">
+              <a-input
+                v-model:value="queryForm.rdManagerId"
+                placeholder="请输入科研部主管ID"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="科研部主管CODE">
+              <a-input
+                v-model:value="queryForm.rdManagerCode"
+                placeholder="请输入科研部主管CODE"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="科研部主管">
+              <a-input
+                v-model:value="queryForm.rdManagerName"
+                placeholder="请输入科研部主管"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="质量部主管ID">
+              <a-input
+                v-model:value="queryForm.qaManagerId"
+                placeholder="请输入质量部主管ID"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="质量部主管CODE">
+              <a-input
+                v-model:value="queryForm.qaManagerCode"
+                placeholder="请输入质量部主管CODE"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="质量部主管">
+              <a-input
+                v-model:value="queryForm.qaManagerName"
+                placeholder="请输入质量部主管"
                 :allow-clear="true"
                 @pressEnter="handleQuery"
               />
@@ -209,7 +239,7 @@
         @change="handleTableChange"
         @refresh="getList"
       >
-        <template #toolBarRight>
+        <template #toolBarLeft>
           <a-space>
             <a-button
               v-hasPermi="['qmsBasicModelInfo:add']"
@@ -223,24 +253,12 @@
               添加
             </a-button>
             <a-button
-              v-hasPermi="['qmsBasicModelInfo:edit']"
-              title="编辑"
-              type="primary"
-              ghost
-              @click="handleEdit"
-            >
-              <template #icon>
-                <edit-outlined />
-              </template>
-              编辑
-            </a-button>
-            <a-button
               v-hasPermi="['qmsBasicModelInfo:del']"
               title="删除"
               danger
               :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
               :loading="delLoading"
-              @click="handleDelete(selectedRows, selectedRowKeys)"
+              @click="handleDelete(selectedRowKeys, '')"
             >
               <template #icon>
                 <delete-outlined />
@@ -254,7 +272,7 @@
               ghost
               @click="handleImport">
               <template #icon>
-                <import-outlined />
+                 <import-outlined />
               </template>
               导入
             </a-button>
@@ -271,51 +289,72 @@
             </a-button>
           </a-space>
         </template>
-        <!--<template #toolBarRight>-->
-        <!--  <a-space>-->
-        <!--    <AvicBpmFilter-->
-        <!--      :allFileAuth="['qmsBasicModelInfo:all']"-->
-        <!--      :myFileAuth="['qmsBasicModelInfo:my']"-->
-        <!--      :defaultBpmType = 'queryForm.bpmType'-->
-        <!--      :defaultBpmState = 'queryForm.bpmState'-->
-        <!--      @change="changeBpmFilter"-->
-        <!--    />-->
-        <!--    <a-input-search-->
-        <!--      class="opt-btn-commonsearch"-->
-        <!--      style="width: 200px"-->
-        <!--      placeholder="请输入型号或总师单位"-->
-        <!--      :allow-clear="true"-->
-        <!--      @search="handleKeyWordQuery"-->
-        <!--    />-->
-        <!--  </a-space>-->
-        <!--</template>-->
+        <template #toolBarRight>
+          <a-input-search
+            class="opt-btn-commonsearch"
+            style="width: 200px"
+            placeholder="请输入型号"
+            :allow-clear="true"
+            @search="handleKeyWordQuery"
+          />
+        </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex === 'id'">
             {{ index + 1 + queryParam.pageParameter.rows * (queryParam.pageParameter.page - 1) }}
           </template>
           <template v-else-if="column.dataIndex === 'model'">
-            <a @click="handleFlowDetail(record)">
+            <a @click="handleDetail(record)">
               {{ record.model }}
             </a>
+          </template>
+          <template v-else-if="column.dataIndex === 'action'">
+            <a-button
+              type="link"
+              class="inner-btn"
+              @click.stop="handleEdit(record.id)">
+              编辑
+            </a-button>
+            <a-button
+              v-hasPermi="['qmsBasicModelInfo:del']"
+              type="link"
+              class="inner-btn"
+              @click.stop="handleDelete([record.id], 'row')">
+              删除
+            </a-button>
           </template>
         </template>
       </AvicTable>
     </div>
     <!-- 添加页面弹窗 -->
-    <QmsBasicModelInfoAdd
+    <qms-basic-model-info-add
       v-if="showAddModal"
       ref="addModal"
-      :bpmOperatorRefresh="getList"
       @reloadData="getList"
       @close="showAddModal = false"
     />
     <!-- 编辑页面弹窗 -->
-    <QmsBasicModelInfoEdit
+    <qms-basic-model-info-edit
       v-if="showEditModal"
       ref="editModal"
       :form-id="formId"
       @reloadData="getList"
       @close="showEditModal = false"
+    />
+    <!-- 详情页面弹窗 -->
+    <qms-basic-model-info-detail
+      v-if="showDetailModal"
+      ref="detailModal"
+      :form-id="formId"
+      @close="showDetailModal = false"
+    />
+    <AvicExcelImport
+      v-if="showImportModal"
+      :formData="excelParams"
+      title="单表模板导入"
+      importUrl="/myportal/qms/qmsbasicmodelinfos/importData/v1"
+      downloadTemplateUrl="/myportal/qms/qmsbasicmodelinfos/downloadTemplate/v1"
+      @reloadData="getList"
+      @close="showImportModal = false"
     />
   </div>
 </template>
@@ -324,7 +363,7 @@ import type { QmsBasicModelInfoDto } from '@/api/avic/myportal/qms/QmsBasicModel
 import { listQmsBasicModelInfoByPage, delQmsBasicModelInfo, exportExcel } from '@/api/avic/myportal/qms/QmsBasicModelInfoApi'; // 引入模块API
 import QmsBasicModelInfoAdd from './QmsBasicModelInfoAdd.vue'; // 引入添加页面组件
 import QmsBasicModelInfoEdit from './QmsBasicModelInfoEdit.vue'; // 引入编辑页面组件
-import flowUtils from '@/views/avic/bpm/bpmutils/FlowUtils.js';
+import QmsBasicModelInfoDetail from './QmsBasicModelInfoDetail.vue'; // 引入详情页面组件
 const { proxy } = getCurrentInstance();
 const layout = {
   labelCol: { flex: '0 0 120px' },
@@ -336,66 +375,13 @@ const columns = [
     title: '序号',
     dataIndex: 'id',
     ellipsis: true,
-    width: 50,
+    width: 60,
     align: 'center',
+    fixed: 'left'
   },
   {
     title: '型号',
     dataIndex: 'model',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '总师单位',
-    dataIndex: 'managerdept',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '总承单位',
-    dataIndex: 'productdept',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '军代表',
-    dataIndex: 'armyRepresentative',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '副总师',
-    dataIndex: 'zlbFzs',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '科研部主管',
-    dataIndex: 'kybMasterName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '质量部主管',
-    dataIndex: 'zlbMasterName',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
@@ -406,16 +392,171 @@ const columns = [
     title: '密级',
     dataIndex: 'secretLevelName',
     ellipsis: true,
-    width: 100,
+    minWidth: 120,
     resizable: true,
     align: 'center'
   },
+  {
+    title: '是否已删除',
+    dataIndex: 'ynDeleted',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '备注',
+    dataIndex: 'remark',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '排序',
+    dataIndex: 'orderBy',
+    ellipsis: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'right'
+  },
+  {
+    title: '总师单位',
+    dataIndex: 'managerDept',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '总承单位',
+    dataIndex: 'productDept',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '军代表ID',
+    dataIndex: 'milRepId',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '军代表CODE',
+    dataIndex: 'milRepCode',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '军代表',
+    dataIndex: 'milRepName',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '副总师ID',
+    dataIndex: 'deputyChiefDesignerId',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '副总师CODE',
+    dataIndex: 'deputyChiefDesignerCode',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '副总师',
+    dataIndex: 'deputyChiefDesignerName',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '科研部主管ID',
+    dataIndex: 'rdManagerId',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '科研部主管CODE',
+    dataIndex: 'rdManagerCode',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '科研部主管',
+    dataIndex: 'rdManagerName',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '质量部主管ID',
+    dataIndex: 'qaManagerId',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '质量部主管CODE',
+    dataIndex: 'qaManagerCode',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '质量部主管',
+    dataIndex: 'qaManagerName',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    ellipsis: true,
+    width: 120,
+    fixed: 'right'
+  }
 ];
-const queryForm = ref<QmsBasicModelInfoDto>({
-  bpmState: 'all',
-  bpmType: 'my'
-});
-// 高级查询对象
+const queryForm = ref<QmsBasicModelInfoDto>({});
 const queryParam = reactive({
   // 请求表格数据参数
   pageParameter: {
@@ -423,7 +564,7 @@ const queryParam = reactive({
     rows: 20 // 每页条数
   },
   searchParams: {
-    ...queryForm.value
+    ...queryForm
   },
   keyWord: ref(''), // 快速查询数据
   sidx: null, // 排序字段
@@ -431,13 +572,15 @@ const queryParam = reactive({
 });
 const showAddModal = ref(false); // 是否展示添加弹窗
 const showEditModal = ref(false); // 是否展示编辑弹窗
+const showDetailModal = ref(false); // 是否展示详情弹窗
+const showImportModal = ref(false); // 是否展示导入弹窗
+const excelParams = ref({ tableName: 'qmsBasicModelInfo' }); // 导入Excel数据过滤参数
 const advanced = ref(false); // 高级搜索 展开/关闭
 const list = ref([]); // 表格数据集合
 const formId = ref(''); // 当前行数据id
 const selectedRowKeys = ref([]); // 选中数据主键集合
-const selectedRows = ref([]); // 选中行集合
-const loading = ref(false); // 表格loading状态
-const delLoading = ref(false); // 删除按钮loading状态
+const loading = ref(false);
+const delLoading = ref(false);
 const totalPage = ref(0);
 const secretLevelList = ref([]); // 密级通用代码
 
@@ -448,10 +591,9 @@ onMounted(() => {
   getUserFileSecretList();
 });
 
-/** 查询数据 */
-function getList() {
+/** 查询数据  */
+function getList () {
   selectedRowKeys.value = []; // 清空选中
-  selectedRows.value = [];
   loading.value = true;
   listQmsBasicModelInfoByPage(queryParam)
     .then(response => {
@@ -466,81 +608,78 @@ function getList() {
     });
 }
 /** 获取当前用户对应的文档密级 */
-function getUserFileSecretList() {
+function getUserFileSecretList () {
   proxy.$getUserFileSecretLevelList(result => {
     secretLevelList.value = result;
   });
 }
-/** 根据流程状态及发起人查询数据 */
-function changeBpmFilter({ bpmType, bpmState }) {
-  queryForm.value.bpmType = bpmType;
-  queryForm.value.bpmState = bpmState;
-  queryParam.searchParams = queryForm.value;
-  getList();
-}
 /** 高级查询 查询按钮操作 */
-function handleQuery() {
+function handleQuery () {
   queryParam.searchParams = queryForm.value;
   queryParam.keyWord = '';
   queryParam.pageParameter.page = 1;
   getList();
 }
 /** 高级查询 重置按钮操作 */
-function resetQuery() {
-  queryForm.value = {
-    bpmType: queryForm.value.bpmType,
-    bpmState: queryForm.value.bpmState
-  };
+function resetQuery () {
+  queryForm.value = {};
   handleQuery();
 }
 /** 高级查询 展开/收起 */
-function toggleAdvanced() {
+function toggleAdvanced () {
   advanced.value = !advanced.value;
 }
 /** 快速查询逻辑 */
-function handleKeyWordQuery(value) {
+function handleKeyWordQuery (value) {
   const keyWord = {
-    model: value,
-    managerdept: value
+    model: value
   };
   queryParam.keyWord = JSON.stringify(keyWord);
   queryParam.pageParameter.page = 1;
   getList();
 }
 /** 添加 */
-function handleAdd() {
+function handleAdd () {
   showAddModal.value = true;
 }
 /** 编辑 */
-function handleEdit() {
-  if (selectedRows.value.length !== 1) {
-    proxy.$message.warning('请选择一条要编辑的数据！');
-    return;
-  }
-  formId.value = selectedRows.value[0].id;
+function handleEdit (id) {
+  formId.value = id;
   showEditModal.value = true;
 }
-/** 打开流程详情页面 */
-function handleFlowDetail(record) {
-  if (record.id) {
-    flowUtils.detailByOptions({
-      formId: record.id,
-      bpmOperatorRefresh: getList
-    });
-  }
+/** 详细 */
+function handleDetail (record) {
+  formId.value = record.id;
+  showDetailModal.value = true;
+}
+/** 导入 */
+function handleImport () {
+  showImportModal.value = true;
+}
+/** 导出 */
+function handleExport () {
+  proxy.$confirm({
+    title: '确认导出数据吗?',
+    okText: '确定',
+    cancelText: '取消',
+    onOk: () => {
+      loading.value = true;
+      queryParam.searchParams = queryForm.value;
+      exportExcel(queryParam).then(() => {
+        loading.value = false;
+        proxy.$message.info('导出成功！');
+      });
+    }
+  });
 }
 /** 删除 */
-function handleDelete(rows, ids) {
+function handleDelete (ids, type) {
   if (ids.length == 0) {
     proxy.$message.warning('请选择要删除的数据！');
     return;
   }
-  if (rows.filter(row => row.bpmState !== 'start')?.length > 0) {
-    proxy.$message.warning('只有拟稿中的数据才可以删除！');
-    return;
-  }
   proxy.$confirm({
-    title: '确认要删除选择的数据吗?',
+    title: `确认要删除${type == 'row' ? '当前行的' : '选择的'}数据吗?`,
     okText: '确定',
     cancelText: '取消',
     onOk: () => {
@@ -559,29 +698,12 @@ function handleDelete(rows, ids) {
     }
   });
 }
-/** 导出 */
-function handleExport() {
-  proxy.$confirm({
-    title: '确认导出数据吗?',
-    okText: '确定',
-    cancelText: '取消',
-    onOk: () => {
-      loading.value = true;
-      queryParam.searchParams = queryForm.value;
-      exportExcel(queryParam).then(() => {
-        loading.value = false;
-        proxy.$message.info('导出成功！');
-      });
-    }
-  });
-}
 /** 勾选复选框时触发 */
-function onSelectChange(rowKeys, rows) {
+function onSelectChange (rowKeys) {
   selectedRowKeys.value = rowKeys;
-  selectedRows.value = rows;
 }
 /** 表格排序 */
-function handleTableChange(pagination, filters, sorter) {
+function handleTableChange (pagination, filters, sorter) {
   queryParam.pageParameter.page = pagination.current;
   queryParam.pageParameter.rows = pagination.pageSize;
   if (proxy.$objIsNotBlank(sorter.field)) {
@@ -590,4 +712,6 @@ function handleTableChange(pagination, filters, sorter) {
   }
   getList();
 }
+
 </script>
+

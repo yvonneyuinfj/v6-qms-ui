@@ -162,10 +162,10 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
       form.value.auditeeDeptId = planObj?.auditeeDeptId; // 受审核部门
       form.value.auditeeDeptCode = planObj?.auditeeDeptCode;
       form.value.auditeeDeptName = planObj?.auditeeDeptName;
-      form.value.auditeeUserId = planObj?.auditeeUserId; // 受审核方人员
+      form.value.auditeeUserId = planObj?.auditeeUserId; // 陪同人员
       form.value.auditeeUserCode = planObj?.auditeeUserCode;
       form.value.auditeeUserName = planObj?.auditeeUserName;
-      form.value.auditorId = planObj?.auditorId; // 审核员
+      form.value.auditorId = planObj?.auditorId; // 审核人员
       form.value.auditorCode = planObj?.auditorCode;
       form.value.auditorName = planObj?.auditorName;
       form.value.auditTime = planObj?.auditTime; // 审核时间
@@ -350,6 +350,26 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
     }
   }
 
+  /**
+   * 选择审核计划
+   * @param e
+   * @param record
+   */
+  const handlePlanSelect = (e, record) => {
+    record.auditeeDeptId = e[0].auditeeDeptId;
+    record.auditeeDeptCode = e[0].auditeeDeptCode;
+    record.auditeeDeptName = e[0].auditeeDeptName;
+    record.auditorId = e[0].auditorId;
+    record.auditorCode = e[0].auditorCode;
+    record.auditorName = e[0].auditorName;
+    record.auditTime = e[0].auditTime;
+    record.auditTime = e[0].auditTime;
+    record.forYear = e[0].forYear;
+    record.secretLevel = e[0].secretLevel;
+    record.auditClause = e[0].auditClause;
+    record.attribute01 = `${record.forYear}年${record.auditeeDeptName}的审核实施计划`;
+  };
+
   return {
     form,
     formRef,
@@ -370,7 +390,8 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
     fieldRequired,
     beforeClickBpmButtons,
     afterClickBpmButtons,
-    qmsAuditCheckDetailEdit
+    qmsAuditCheckDetailEdit,
+    handlePlanSelect
   };
 }
 

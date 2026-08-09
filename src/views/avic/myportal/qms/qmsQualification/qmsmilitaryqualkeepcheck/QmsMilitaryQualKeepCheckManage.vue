@@ -15,116 +15,42 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item label="开始时间(起)">
-              <a-date-picker
-                v-model:value="queryForm.startTimeBegin"
+            <a-form-item label="自查周期">
+              <a-range-picker
+                v-model:value="dateRange"
                 format="YYYY-MM-DD"
                 value-format="YYYY-MM-DD"
-                placeholder="请选择开始时间(起)"
-                :disabled-date="startValue => proxy.$disabledStartDate(startValue, queryForm.startTimeEnd)"
+                @change="handleDateRangeChange"
               />
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item label="开始时间(止)">
-              <a-date-picker
-                v-model:value="queryForm.startTimeEnd"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                placeholder="请选择开始时间(止)"
-                :disabled-date="endValue => proxy.$disabledEndDate(endValue, queryForm.startTimeBegin)"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item label="结束时间(起)">
-              <a-date-picker
-                v-model:value="queryForm.endTimeBegin"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                placeholder="请选择结束时间(起)"
-                :disabled-date="startValue => proxy.$disabledStartDate(startValue, queryForm.endTimeEnd)"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item label="结束时间(止)">
-              <a-date-picker
-                v-model:value="queryForm.endTimeEnd"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                placeholder="请选择结束时间(止)"
-                :disabled-date="endValue => proxy.$disabledEndDate(endValue, queryForm.endTimeBegin)"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="责任部门ID">
-              <a-input
+            <a-form-item name="responsibleDeptId" label="责任部门">
+              <AvicCommonSelect
                 v-model:value="queryForm.responsibleDeptId"
-                placeholder="请输入责任部门ID"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
+                type="deptSelect"
+                placeholder="请选择责任部门"
+                :defaultShowValue="queryForm.responsibleDeptName"
+                @callback="
+                      result => {
+                        queryForm.responsibleDeptName = result.names;
+                      }
+                    "
               />
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="责任部门CODE">
-              <a-input
-                v-model:value="queryForm.responsibleDeptCode"
-                placeholder="请输入责任部门CODE"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="责任部门">
-              <a-input
-                v-model:value="queryForm.responsibleDeptName"
-                placeholder="请输入责任部门"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="责任人ID">
-              <a-input
-                v-model:value="queryForm.responsibleStaffId"
-                placeholder="请输入责任人ID"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="责任人CODE">
-              <a-input
-                v-model:value="queryForm.responsibleStaffCode"
-                placeholder="请输入责任人CODE"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="责任人">
-              <a-input
-                v-model:value="queryForm.responsibleStaffName"
-                placeholder="请输入责任人"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="自查内容编码">
-              <a-input
-                v-model:value="queryForm.itemCode"
-                placeholder="请输入自查内容编码"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
+            <a-form-item name="responsibleUserId" label="责任人">
+              <AvicCommonSelect
+                v-model:value="queryForm.responsibleUserId"
+                type="userSelect"
+                placeholder="请选择责任人"
+                :defaultShowValue="queryForm.responsibleUserName"
+                @callback="
+                      result => {
+                        queryForm.responsibleUserName = result.names;
+                      }
+                    "
               />
             </a-form-item>
           </a-col>
@@ -133,86 +59,6 @@
               <a-input
                 v-model:value="queryForm.checkContent"
                 placeholder="请输入自查内容"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="自查结论;正常/异常">
-              <a-input
-                v-model:value="queryForm.checkConclusion"
-                placeholder="请输入自查结论;正常/异常"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="事项说明;结论为“异常”时必填">
-              <a-input
-                v-model:value="queryForm.matterDesc"
-                placeholder="请输入事项说明;结论为“异常”时必填"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="自查周期CODE">
-              <a-input
-                v-model:value="queryForm.periodCode"
-                placeholder="请输入自查周期CODE"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="显示序号">
-              <a-input
-                v-model:value="queryForm.itemNo"
-                placeholder="请输入显示序号"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="密级">
-              <a-select
-                v-model:value="queryForm.secretLevel"
-                :get-popup-container="triggerNode => triggerNode.parentNode"
-                option-filter-prop="children"
-                :show-search="true"
-                :allow-clear="true"
-                placeholder="请选择密级"
-              >
-                <a-select-option
-                  v-for="item in secretLevelList"
-                  :key="item.sysLookupTlId"
-                  :value="item.lookupCode"
-                >
-                  {{ item.lookupName }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="是否已删除">
-              <a-input
-                v-model:value="queryForm.ynDeleted"
-                placeholder="请输入是否已删除"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="备注">
-              <a-input
-                v-model:value="queryForm.remark"
-                placeholder="请输入备注"
                 :allow-clear="true"
                 @pressEnter="handleQuery"
               />
@@ -265,6 +111,11 @@
       >
         <template #toolBarLeft>
           <a-space>
+            <div class="aecc-leftbar-title">资格保持自查表</div>
+          </a-space>
+        </template>
+        <template #toolBarRight>
+          <a-space>
             <a-button
               v-hasPermi="['qmsMilitaryQualKeepCheck:add']"
               title="添加"
@@ -308,28 +159,25 @@
               ghost
               @click="handleExport">
               <template #icon>
-                 <export-outlined />
+                <export-outlined />
               </template>
-              导出
+              生成自查表
             </a-button>
-          </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-space>
-            <AvicBpmFilter
-              :allFileAuth="['qmsMilitaryQualKeepCheck:all']"
-              :myFileAuth="['qmsMilitaryQualKeepCheck:my']"
-              :defaultBpmType = 'queryForm.bpmType'
-              :defaultBpmState = 'queryForm.bpmState'
-              @change="changeBpmFilter"
-            />
-            <a-input-search
-              class="opt-btn-commonsearch"
-              style="width: 200px"
-              placeholder="请输入所属年份或责任部门ID"
-              :allow-clear="true"
-              @search="handleKeyWordQuery"
-            />
+            <!--<AvicBpmFilter-->
+            <!--  :allFileAuth="['qmsMilitaryQualKeepCheck:all']"-->
+            <!--  :myFileAuth="['qmsMilitaryQualKeepCheck:my']"-->
+            <!--  :defaultBpmType = 'queryForm.bpmType'-->
+            <!--  :defaultBpmState = 'queryForm.bpmState'-->
+            <!--  @change="changeBpmFilter"-->
+            <!--/>-->
+            <!--<a-input-search-->
+            <!--  class="opt-btn-commonsearch"-->
+            <!--  style="width: 200px"-->
+            <!--  placeholder="请输入所属年份或责任部门ID"-->
+            <!--  :allow-clear="true"-->
+            <!--  @search="handleKeyWordQuery"-->
+            <!--/>-->
+
           </a-space>
         </template>
         <template #bodyCell="{ column, text, record, index }">
@@ -379,7 +227,7 @@ const columns = [
     title: '序号',
     dataIndex: 'id',
     ellipsis: true,
-    width: 60,
+    width: 50,
     align: 'center',
     fixed: 'left'
   },
@@ -388,15 +236,15 @@ const columns = [
     dataIndex: 'forYear',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '开始时间',
     dataIndex: 'startTime',
     ellipsis: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
     align: 'center'
   },
@@ -404,72 +252,9 @@ const columns = [
     title: '结束时间',
     dataIndex: 'endTime',
     ellipsis: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
     align: 'center'
-  },
-  {
-    title: '责任部门ID',
-    dataIndex: 'responsibleDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任部门CODE',
-    dataIndex: 'responsibleDeptCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任部门',
-    dataIndex: 'responsibleDeptName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人ID',
-    dataIndex: 'responsibleStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人CODE',
-    dataIndex: 'responsibleStaffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人',
-    dataIndex: 'responsibleStaffName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '自查内容编码',
-    dataIndex: 'itemCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
   },
   {
     title: '自查内容',
@@ -478,100 +263,67 @@ const columns = [
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
-    title: '自查结论;正常/异常',
-    dataIndex: 'checkConclusion',
+    title: '责任单位',
+    dataIndex: 'responsibleDeptName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '事项说明;结论为“异常”时必填',
-    dataIndex: 'matterDesc',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '自查周期CODE',
-    dataIndex: 'periodCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '显示序号',
-    dataIndex: 'itemNo',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
+    width: 150,
     resizable: true,
     align: 'center'
   },
   {
-    title: '是否已删除',
-    dataIndex: 'ynDeleted',
+    title: '责任人',
+    dataIndex: 'responsibleStaffName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
+
   {
-    title: '备注',
-    dataIndex: 'remark',
+    title: '自查结论',
+    dataIndex: 'checkConclusion',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 120,
+    resizable: true,
+    align: 'center'
+  },
+  {
+    title: '事项说明',
+    dataIndex: 'matterDesc',
+    ellipsis: true,
+    sorter: true,
+    width: 180,
     resizable: true,
     align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
-  },
-  {
-    title: '流程状态',
-    dataIndex: 'businessstate_',
-    ellipsis: true,
-    width: 120,
-    align: 'center',
-    fixed: 'right'
-  },
-  {
-    title: '流程当前步骤',
-    dataIndex: 'activityalias_',
-    width: 120,
-    fixed: 'right'
-  },
-  {
-    title: '当前处理人',
-    dataIndex: 'assigneenames_',
-    ellipsis: true,
-    width: 130,
-    align: 'left',
-    fixed: 'right'
   }
+  // {
+  //   title: '流程状态',
+  //   dataIndex: 'businessstate_',
+  //   ellipsis: true,
+  //   width: 120,
+  //   align: 'center',
+  //   fixed: 'right'
+  // },
+  // {
+  //   title: '流程当前步骤',
+  //   dataIndex: 'activityalias_',
+  //   width: 120,
+  //   fixed: 'right'
+  // },
+  // {
+  //   title: '当前处理人',
+  //   dataIndex: 'assigneenames_',
+  //   ellipsis: true,
+  //   width: 130,
+  //   align: 'left',
+  //   fixed: 'right'
+  // }
 ];
 const queryForm = ref<QmsMilitaryQualKeepCheckDto>({
   bpmState: 'all',
@@ -723,19 +475,20 @@ function handleDelete(rows, ids) {
 }
 /** 导出 */
 function handleExport() {
-  proxy.$confirm({
-    title: '确认导出数据吗?',
-    okText: '确定',
-    cancelText: '取消',
-    onOk: () => {
-      loading.value = true;
-      queryParam.searchParams = queryForm.value;
-      exportExcel(queryParam).then(() => {
-        loading.value = false;
-        proxy.$message.info('导出成功！');
-      });
-    }
-  });
+  proxy.$message.success('点击了生成自查表按钮');
+  // proxy.$confirm({
+  //   title: '确认导出数据吗?',
+  //   okText: '确定',
+  //   cancelText: '取消',
+  //   onOk: () => {
+  //     loading.value = true;
+  //     queryParam.searchParams = queryForm.value;
+  //     exportExcel(queryParam).then(() => {
+  //       loading.value = false;
+  //       proxy.$message.info('导出成功！');
+  //     });
+  //   }
+  // });
 }
 /** 勾选复选框时触发 */
 function onSelectChange(rowKeys, rows) {
@@ -752,4 +505,9 @@ function handleTableChange(pagination, filters, sorter) {
   }
   getList();
 }
+
+const dateRange = ref([]);
+const handleDateRangeChange = dateRange => {
+  console.log('?? ~ handleDateRangeChange ~ dateRange:', dateRange);
+};
 </script>

@@ -87,7 +87,7 @@ const columns = [
     align: 'center'
   },
   {
-    title: '审核员',
+    title: '审核人员',
     dataIndex: 'auditorName',
     ellipsis: true,
     sorter: true,

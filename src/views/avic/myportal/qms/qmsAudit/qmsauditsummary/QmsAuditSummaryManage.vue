@@ -237,7 +237,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '受审部门',
+    title: '受审核部门',
     dataIndex: 'auditeeDeptName',
     ellipsis: true,
     sorter: true,

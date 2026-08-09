@@ -13,9 +13,9 @@
         :model="form"
         :rules="rules"
         v-bind="layout"
-        class="form-excel-style"
+        layout="horizontal"
       >
-        <a-row>
+        <a-row :gutter="16">
           <a-col v-bind="colLayout.cols">
             <a-form-item name="model" label="型号">
               <a-input
@@ -23,96 +23,6 @@
                 :maxLength="200"
                 :auto-focus="true"
                 placeholder="请输入型号"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="managerdept" label="总师单位">
-              <a-input
-                v-model:value="form.managerdept"
-                :maxLength="200"
-                placeholder="请输入总师单位"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="productdept" label="总承单位">
-              <a-input
-                v-model:value="form.productdept"
-                :maxLength="200"
-                placeholder="请输入总承单位"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="armyRepresentative" label="军代表">
-              <a-input
-                v-model:value="form.armyRepresentative"
-                :maxLength="200"
-                placeholder="请输入军代表"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="zlbFzs" label="副总师">
-              <a-input
-                v-model:value="form.zlbFzs"
-                :maxLength="1000"
-                placeholder="请输入副总师"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="kybMasterId" label="科研部主管ID">
-              <a-input
-                v-model:value="form.kybMasterId"
-                :maxLength="2000"
-                placeholder="请输入科研部主管ID"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="kybMasterCode" label="科研部主管CODE">
-              <a-input
-                v-model:value="form.kybMasterCode"
-                :maxLength="1000"
-                placeholder="请输入科研部主管CODE"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="kybMasterName" label="科研部主管">
-              <a-input
-                v-model:value="form.kybMasterName"
-                :maxLength="2000"
-                placeholder="请输入科研部主管"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="zlbMasterId" label="质量部主管ID">
-              <a-input
-                v-model:value="form.zlbMasterId"
-                :maxLength="500"
-                placeholder="请输入质量部主管ID"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="zlbMasterCode" label="质量部主管CODE">
-              <a-input
-                v-model:value="form.zlbMasterCode"
-                :maxLength="200"
-                placeholder="请输入质量部主管CODE"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="zlbMasterName" label="质量部主管">
-              <a-input
-                v-model:value="form.zlbMasterName"
-                :maxLength="500"
-                placeholder="请输入质量部主管"
               />
             </a-form-item>
           </a-col>
@@ -167,23 +77,128 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item name="parentId" label="父节点ID">
+            <a-form-item name="managerDept" label="总师单位">
               <a-input
-                v-model:value="form.parentId"
-                :maxLength="64"
-                placeholder="请输入父节点ID"
+                v-model:value="form.managerDept"
+                :maxLength="200"
+                placeholder="请输入总师单位"
               />
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item name="treeSort" label="本级排序" has-feedback>
-              <a-input-number
-                v-model:value="form.treeSort"
-                :min="0"
-                :max="999999999999"
-                :precision="0"
-                :step="1"
-                placeholder="请输入本级排序"
+            <a-form-item name="productDept" label="总承单位">
+              <a-input
+                v-model:value="form.productDept"
+                :maxLength="200"
+                placeholder="请输入总承单位"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="milRepId" label="军代表ID">
+              <a-input
+                v-model:value="form.milRepId"
+                :maxLength="2000"
+                placeholder="请输入军代表ID"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="milRepCode" label="军代表CODE">
+              <a-input
+                v-model:value="form.milRepCode"
+                :maxLength="500"
+                placeholder="请输入军代表CODE"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="milRepName" label="军代表">
+              <a-input
+                v-model:value="form.milRepName"
+                :maxLength="1000"
+                placeholder="请输入军代表"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="deputyChiefDesignerId" label="副总师ID">
+              <a-input
+                v-model:value="form.deputyChiefDesignerId"
+                :maxLength="2000"
+                placeholder="请输入副总师ID"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="deputyChiefDesignerCode" label="副总师CODE">
+              <a-input
+                v-model:value="form.deputyChiefDesignerCode"
+                :maxLength="500"
+                placeholder="请输入副总师CODE"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="deputyChiefDesignerName" label="副总师">
+              <a-input
+                v-model:value="form.deputyChiefDesignerName"
+                :maxLength="1000"
+                placeholder="请输入副总师"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="rdManagerId" label="科研部主管ID">
+              <a-input
+                v-model:value="form.rdManagerId"
+                :maxLength="2000"
+                placeholder="请输入科研部主管ID"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="rdManagerCode" label="科研部主管CODE">
+              <a-input
+                v-model:value="form.rdManagerCode"
+                :maxLength="500"
+                placeholder="请输入科研部主管CODE"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="rdManagerName" label="科研部主管">
+              <a-input
+                v-model:value="form.rdManagerName"
+                :maxLength="1000"
+                placeholder="请输入科研部主管"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="qaManagerId" label="质量部主管ID">
+              <a-input
+                v-model:value="form.qaManagerId"
+                :maxLength="2000"
+                placeholder="请输入质量部主管ID"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="qaManagerCode" label="质量部主管CODE">
+              <a-input
+                v-model:value="form.qaManagerCode"
+                :maxLength="500"
+                placeholder="请输入质量部主管CODE"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="qaManagerName" label="质量部主管">
+              <a-input
+                v-model:value="form.qaManagerName"
+                :maxLength="1000"
+                placeholder="请输入质量部主管"
               />
             </a-form-item>
           </a-col>
@@ -191,7 +206,7 @@
       </a-form>
     </a-spin>
     <template #footer>
-      <a-button title="保存并启动流程" type="primary" :loading="loading" @click="saveAndStartProcess">保存并启动流程</a-button>
+      <a-button title="保存" type="primary" :loading="loading" @click="saveForm">保存</a-button>
       <a-button title="返回" type="primary" ghost @click="closeModal">返回</a-button>
     </template>
   </AvicModal>
@@ -202,17 +217,6 @@ const props = defineProps({
   formId: {
     type: String,
     default: ''
-  },
-  bpmInstanceObject: {
-    type: Object
-  },
-  params: {
-    type: Object,
-    required: false,
-    default: null
-  },
-  bpmOperatorRefresh: {
-    type: Function
   }
 });
 const emit = defineEmits(emits);
@@ -224,10 +228,11 @@ const {
   colLayout,
   loading,
   secretLevelList,
-  saveAndStartProcess,
+  saveForm,
   closeModal
 } = useQmsBasicModelInfoForm({
   props: props,
   emit: emit
 });
 </script>
+

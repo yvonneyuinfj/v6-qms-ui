@@ -322,6 +322,26 @@ export function useQmsAuditNoticeForm({ props: props, emit: emit }) {
       authJson.value = getFieldAuth(props.bpmInstanceObject);
     }
   }
+
+  /**
+   * 选择审核计划
+   * @param e
+   * @param record
+   */
+  const handlePlanSelect = (e, record) => {
+    record.auditeeDeptId = e[0].auditeeDeptId;
+    record.auditeeDeptCode = e[0].auditeeDeptCode;
+    record.auditeeDeptName = e[0].auditeeDeptName;
+    record.auditorId = e[0].auditorId;
+    record.auditorCode = e[0].auditorCode;
+    record.auditorName = e[0].auditorName;
+    record.auditTime = e[0].auditTime;
+    record.auditTime = e[0].auditTime;
+    record.forYear = e[0].forYear;
+    record.secretLevel = e[0].secretLevel;
+    record.auditClause = e[0].auditClause;
+    record.noticeName = `${record.forYear}年${record.auditeeDeptName}的审核实施计划`;
+  };
   return {
     form,
     formRef,
@@ -340,6 +360,7 @@ export function useQmsAuditNoticeForm({ props: props, emit: emit }) {
     fieldDisabled,
     fieldRequired,
     beforeClickBpmButtons,
-    afterClickBpmButtons
+    afterClickBpmButtons,
+    handlePlanSelect
   };
 }

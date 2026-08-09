@@ -81,7 +81,7 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item name="auditorId" label="审核员">
+            <a-form-item name="auditorId" label="审核人员">
               <AvicCommonSelect
               v-model:value="form.auditorId"
               type="userSelect"

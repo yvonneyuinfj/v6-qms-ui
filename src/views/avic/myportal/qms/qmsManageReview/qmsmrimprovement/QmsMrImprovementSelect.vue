@@ -785,15 +785,7 @@ const columns = [
     resizable: true,
     align: 'center'
   },
-  {
-    title: '是否已删除',
-    dataIndex: 'ynDeleted',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
+
   {
     title: '备注',
     dataIndex: 'remark',

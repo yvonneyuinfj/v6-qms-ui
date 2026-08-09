@@ -19,7 +19,7 @@ export interface QmsAuditCheckDetailDto extends BaseBeanModel {
   auditorId?: string;
   /** 审核员CODE */
   auditorCode?: string;
-  /** 审核员 */
+  /** 审核人员 */
   auditorName?: string;
   /** 检查内容 */
   checkContent?: string;

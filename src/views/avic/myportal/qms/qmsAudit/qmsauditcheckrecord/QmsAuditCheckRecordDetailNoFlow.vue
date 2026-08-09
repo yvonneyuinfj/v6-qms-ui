@@ -18,7 +18,7 @@ QmsAuditCheckRecordEdit.vue<template>
       >
         <a-row :gutter="0">
           <a-col v-bind="colLayout.cols">
-            <a-form-item name="auditeeDeptName" label="受审部门">
+            <a-form-item name="auditeeDeptName" label="受审核部门">
               <a-input
                 v-model:value="form.auditeeDeptName"
                 disabled
@@ -38,7 +38,7 @@ QmsAuditCheckRecordEdit.vue<template>
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item name="auditorName" label="审核员">
+            <a-form-item name="auditorName" label="审核人员">
               <a-input
                 v-model:value="form.auditorName"
                 disabled

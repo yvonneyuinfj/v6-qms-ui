@@ -34,7 +34,7 @@ export interface QmsAuditNoticeDto extends BaseBeanModel {
   auditeeDeptId?: string;
   /** 受审部门CODE */
   auditeeDeptCode?: string;
-  /** 受审部门 */
+  /** 受审核部门 */
   auditeeDeptName?: string;
   /** 单位负责人ID */
   auditeeLeaderId?: string;
@@ -46,7 +46,7 @@ export interface QmsAuditNoticeDto extends BaseBeanModel {
   auditorId?: string;
   /** 审核员CODE;主审填写 */
   auditorCode?: string;
-  /** 审核员;主审填写 */
+  /** 审核人员;主审填写 */
   auditorName?: string;
   /** 主审ID */
   chiefAuditorId?: string;

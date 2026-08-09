@@ -16,7 +16,7 @@ export interface QmsAuditCheckRecordDto extends BaseBeanModel {
   auditeeDeptId?: string;
   /** 受审部门CODE;通知单带入 */
   auditeeDeptCode?: string;
-  /** 受审部门;通知单带入 */
+  /** 受审核部门;通知单带入 */
   auditeeDeptName?: string;
   /** 审核时间;通知单带入 */
   auditTime?: any;
@@ -26,7 +26,7 @@ export interface QmsAuditCheckRecordDto extends BaseBeanModel {
   auditorId?: string;
   /** 审核员CODE */
   auditorCode?: string;
-  /** 审核员 */
+  /** 审核人员 */
   auditorName?: string;
   /** 主审ID */
   chiefAuditorId?: string;

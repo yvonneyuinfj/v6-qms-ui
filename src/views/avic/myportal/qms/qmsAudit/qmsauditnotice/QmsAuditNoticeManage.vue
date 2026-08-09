@@ -203,34 +203,16 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '审核计划ID',
-    dataIndex: 'planId',
+    title: '受审核部门',
+    dataIndex: 'auditeeDeptName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
-    title: '通知单编号;系统生成',
-    dataIndex: 'noticeCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '通知单名称',
-    dataIndex: 'noticeName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核目的;主审填写',
+    title: '审核目的',
     dataIndex: 'auditPurpose',
     ellipsis: true,
     sorter: true,
@@ -239,7 +221,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '审核依据的标准和文件;主审填写',
+    title: '审核依据的标准和文件',
     dataIndex: 'auditBasis',
     ellipsis: true,
     sorter: true,
@@ -248,34 +230,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '审核条款',
-    dataIndex: 'auditClause',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '型号/项目',
-    dataIndex: 'modelProject',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核范围',
-    dataIndex: 'auditScope',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核覆盖产品;主审填写',
+    title: '审核覆盖产品',
     dataIndex: 'coveredProduct',
     ellipsis: true,
     sorter: true,
@@ -284,277 +239,36 @@ const columns = [
     align: 'left'
   },
   {
-    title: '审核日期;主审填写',
+    title: '审核日期',
     dataIndex: 'auditTime',
     ellipsis: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
     align: 'center'
   },
   {
-    title: '审核持续天数',
+    title: '持续天数',
     dataIndex: 'durationDays',
     ellipsis: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
     align: 'right'
   },
   {
-    title: '受审部门ID',
-    dataIndex: 'auditeeDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '受审部门CODE',
-    dataIndex: 'auditeeDeptCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '受审部门',
-    dataIndex: 'auditeeDeptName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '单位负责人ID',
-    dataIndex: 'auditeeLeaderId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '单位负责人CODE',
-    dataIndex: 'auditeeLeaderCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '单位负责人',
-    dataIndex: 'auditeeLeaderName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核员ID;主审填写',
-    dataIndex: 'auditorId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核员CODE;主审填写',
-    dataIndex: 'auditorCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核员;主审填写',
+    title: '审核人员',
     dataIndex: 'auditorName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
     align: 'left'
   },
   {
-    title: '主审ID',
-    dataIndex: 'chiefAuditorId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '主审CODE',
-    dataIndex: 'chiefAuditorCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '主审',
-    dataIndex: 'chiefAuditorName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核评价主管ID',
-    dataIndex: 'evaluationSupervisorId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核评价主管CODE',
-    dataIndex: 'evaluationSupervisorCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核评价主管NAME',
-    dataIndex: 'evaluationSupervisorName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核组长ID',
-    dataIndex: 'auditLeaderId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核组长CODE',
-    dataIndex: 'auditLeaderCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '审核组长',
-    dataIndex: 'auditLeaderName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '受审方人员ID',
-    dataIndex: 'auditeeUserId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '受审方人员CODE',
-    dataIndex: 'auditeeUserCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '受审方人员',
+    title: '陪同人员',
     dataIndex: 'auditeeUserName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '业务状态',
-    dataIndex: 'status',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程实例ID',
-    dataIndex: 'processInstanceId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程状态',
-    dataIndex: 'processStatus',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '是否已删除',
-    dataIndex: 'ynDeleted',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
-  },
-  {
-    title: '父节点ID',
-    dataIndex: 'parentId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
+    width: 200,
     resizable: true,
     align: 'left'
   },
@@ -566,20 +280,20 @@ const columns = [
     align: 'center',
     fixed: 'right'
   },
-  {
-    title: '流程当前步骤',
-    dataIndex: 'activityalias_',
-    width: 120,
-    fixed: 'right'
-  },
-  {
-    title: '当前处理人',
-    dataIndex: 'assigneenames_',
-    ellipsis: true,
-    width: 130,
-    align: 'left',
-    fixed: 'right'
-  }
+  // {
+  //   title: '流程当前步骤',
+  //   dataIndex: 'activityalias_',
+  //   width: 120,
+  //   fixed: 'right'
+  // },
+  // {
+  //   title: '当前处理人',
+  //   dataIndex: 'assigneenames_',
+  //   ellipsis: true,
+  //   width: 130,
+  //   align: 'left',
+  //   fixed: 'right'
+  // }
 ];
 const queryForm = ref<QmsAuditNoticeDto>({
   bpmState: 'all',

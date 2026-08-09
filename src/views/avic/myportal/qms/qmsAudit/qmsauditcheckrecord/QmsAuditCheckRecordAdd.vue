@@ -3,12 +3,12 @@
     :visible="true"
     title="添加"
     width="95%"
-    height="85%"
+    height="90%"
     :centered="true"
     @cancel="closeModal"
   >
     <a-spin :spinning="loading">
-      <a-form ref="formRef" :model="form" :rules="rules" v-bind="layout" class="form-excel-style">
+      <a-form ref="formRef" :model="form" :rules="rules" v-bind="layout" class="form-excel-style" :colon="false">
         <a-row :gutter="0">
           <!--<a-col v-bind="colLayout.cols">-->
           <!--  <a-form-item name="planId" label="审核计划ID;关联年度计划">-->
@@ -20,71 +20,87 @@
           <!--    />-->
           <!--  </a-form-item>-->
           <!--</a-col>-->
-
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="auditeeDeptName" label="受审部门">
-              <a-input
-                v-model:value="form.auditeeDeptName"
-                disabled
-              />
-            </a-form-item>
-          </a-col>
-
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="auditTime" label="审核时间">
-              <a-date-picker
-                v-model:value="form.auditTime"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                placeholder="请选择审核时间"
-                disabled
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="auditorName" label="审核员">
-              <a-input
-                v-model:value="form.auditorName"
-                disabled
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="auditeeUserName" label="陪同人员">
-              <a-input
-                v-model:value="form.auditeeUserName"
-                disabled
-              />
-            </a-form-item>
-          </a-col>
           <a-col v-bind="colLayout.cols2">
-            <a-form-item name="auditClause" label="标准条款">
-              <a-input
-                v-model:value="form.auditClause"
-                disabled
+            <a-form-item name="planId" label="审核计划">
+              <AvicModalSelect
+                v-model:value="form.planId"
+                title="请选择实施计划"
+                placeholder="请选择实施计划"
+                valueField="id"
+                showField="auditeeDeptName"
+                :selectComponent="QmsAuditPlanSelect"
+                @selectConfirm="handlePlanSelect($event,form)"
+                :defaultShowValue="form.noticeName"
               />
             </a-form-item>
           </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="secretLevel" label="密级" has-feedback>
-              <a-select
-                v-model:value="form.secretLevel"
-                :get-popup-container="triggerNode => triggerNode.parentNode"
-                option-filter-prop="children"
-                :show-search="true"
-                :allow-clear="true"
-                placeholder="请选择密级"
-              >
-                <a-select-option
-                  v-for="item in secretLevelList"
-                  :key="item.sysLookupTlId"
-                  :value="item.lookupCode"
+          <template v-if="form.noticeName">
+            <a-col v-bind="colLayout.cols">
+              <a-form-item name="auditeeDeptName" label="受审核部门">
+                <a-input
+                  v-model:value="form.auditeeDeptName"
+                  disabled
+                />
+              </a-form-item>
+            </a-col>
+
+            <a-col v-bind="colLayout.cols">
+              <a-form-item name="auditTime" label="审核时间">
+                <a-date-picker
+                  v-model:value="form.auditTime"
+                  format="YYYY-MM-DD"
+                  value-format="YYYY-MM-DD"
+                  placeholder="请选择审核时间"
+                  disabled
+                />
+              </a-form-item>
+            </a-col>
+            <a-col v-bind="colLayout.cols">
+              <a-form-item name="auditorName" label="审核人员">
+                <a-input
+                  v-model:value="form.auditorName"
+                  disabled
+                />
+              </a-form-item>
+            </a-col>
+            <a-col v-bind="colLayout.cols">
+              <a-form-item name="auditeeUserName" label="陪同人员">
+                <a-input
+                  v-model:value="form.auditeeUserName"
+                  disabled
+                />
+              </a-form-item>
+            </a-col>
+            <a-col v-bind="colLayout.cols2">
+              <a-form-item name="auditClause" label="标准条款">
+                <a-input
+                  v-model:value="form.auditClause"
+                  disabled
+                />
+              </a-form-item>
+            </a-col>
+            <a-col v-bind="colLayout.cols">
+              <a-form-item name="secretLevel" label="密级" has-feedback>
+                <a-select
+                  v-model:value="form.secretLevel"
+                  :get-popup-container="triggerNode => triggerNode.parentNode"
+                  option-filter-prop="children"
+                  :show-search="true"
+                  :allow-clear="true"
+                  placeholder="请选择密级"
+                  disabled
                 >
-                  {{ item.lookupName }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
+                  <a-select-option
+                    v-for="item in secretLevelList"
+                    :key="item.sysLookupTlId"
+                    :value="item.lookupCode"
+                  >
+                    {{ item.lookupName }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </template>
           <a-col v-bind="colLayout.cols2">
             <a-form-item
               label="附件"
@@ -106,7 +122,7 @@
           </a-col>
         </a-row>
       </a-form>
-      <QmsAuditCheckDetailEdit ref="qmsAuditCheckDetailEdit" />
+      <QmsAuditCheckDetailEdit ref="qmsAuditCheckDetailEdit"/>
     </a-spin>
     <template #footer>
       <a-button title="保存" type="primary" :loading="loading" @click="saveForm">保存</a-button>
@@ -116,7 +132,9 @@
 </template>
 <script lang="ts" setup>
 import { useQmsAuditCheckRecordForm, emits } from './ts/QmsAuditCheckRecordForm'; // 引入表单ts
-import QmsAuditCheckDetailEdit from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckdetail/QmsAuditCheckDetailRowEdit.vue'; // 引入子表组件
+import QmsAuditCheckDetailEdit
+  from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckdetail/QmsAuditCheckDetailRowEdit.vue'; // 引入子表组件
+import QmsAuditPlanSelect from '../qmsauditplan/QmsAuditPlanSelect.vue';
 
 const props = defineProps({
   formId: {
@@ -136,7 +154,7 @@ const props = defineProps({
   bpmOperatorRefresh: {
     type: Function
   },
-  planObj:{
+  planObj: {
     type: Object
   }
 });
@@ -154,7 +172,8 @@ const {
   closeModal,
   saveAndStartProcess,
   qmsAuditCheckDetailEdit,
-  saveForm
+  saveForm,
+  handlePlanSelect
 } = useQmsAuditCheckRecordForm({
   props: props,
   emit: emit

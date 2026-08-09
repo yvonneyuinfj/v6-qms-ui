@@ -30,6 +30,9 @@
         @refresh="getList"
       >
         <template #toolBarLeft>
+          <div class="aecc-leftbar-title">问题台账</div>
+        </template>
+        <template #toolBarRight>
           <a-space>
             <a-button
               v-hasPermi="['qmsCheckProblem:add']"
@@ -62,7 +65,7 @@
               ghost
               @click="handleImport">
               <template #icon>
-                 <import-outlined />
+                <import-outlined />
               </template>
               导入
             </a-button>
@@ -73,20 +76,18 @@
               ghost
               @click="handleExport">
               <template #icon>
-                 <export-outlined />
+                <export-outlined />
               </template>
               导出
             </a-button>
           </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-input-search
-            class="opt-btn-commonsearch"
-            style="width: 200px"
-            placeholder="请输入问题编号或所属年份"
-            :allow-clear="true"
-            @search="handleKeyWordQuery"
-          />
+          <!--<a-input-search-->
+          <!--  class="opt-btn-commonsearch"-->
+          <!--  style="width: 200px"-->
+          <!--  placeholder="请输入问题编号或所属年份"-->
+          <!--  :allow-clear="true"-->
+          <!--  @search="handleKeyWordQuery"-->
+          <!--/>-->
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex  === 'id'">
@@ -162,24 +163,6 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '问题编号',
-    dataIndex: 'problemCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '所属年份',
-    dataIndex: 'forYear',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '问题描述',
     dataIndex: 'problemDesc',
     ellipsis: true,
@@ -190,249 +173,47 @@ const columns = [
   },
   {
     title: '问题分类',
-    dataIndex: 'problemCategory',
+    dataIndex: 'problemCategoryName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
-  {
-    title: '整改单位ID',
-    dataIndex: 'rectificationDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '整改单位CODE',
-    dataIndex: 'rectificationDeptCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '整改单位',
-    dataIndex: 'rectificationDeptName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人ID',
-    dataIndex: 'responsibleUserIds',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人CODE',
-    dataIndex: 'responsibleUserCodes',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
+  // {
+  //   title: '整改单位',
+  //   dataIndex: 'rectificationDeptName',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   width: 120,
+  //   resizable: true,
+  //   align: 'center'
+  // },
   {
     title: '责任人姓名',
     dataIndex: 'responsibleUserNames',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '整改期限',
     dataIndex: 'rectificationDeadline',
     ellipsis: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
     align: 'center'
   },
   {
-    title: '问题状态',
+    title: '整改完成情况',
     dataIndex: 'status',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
     resizable: true,
     align: 'left'
-  },
-  {
-    title: '流程实例ID',
-    dataIndex: 'processInstanceId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程状态',
-    dataIndex: 'processStatus',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '整改完成时间',
-    dataIndex: 'completeTime',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '整改提交时间',
-    dataIndex: 'submitTime',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '来源类型;字典：INTERNAL_AUDIT;QUALITY_SUPERVISION;QUALITY_INSPECTION;QUALIFICATION_REVIEW;OTHER_CHECK',
-    dataIndex: 'sourceType',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '来源业务编号;检查编号、监督编号等',
-    dataIndex: 'sourceCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '来源业务名称;检查名称、审核名称等',
-    dataIndex: 'sourceName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '问题等级',
-    dataIndex: 'problemLevel',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '依据条款',
-    dataIndex: 'baisisClause',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '发现时间',
-    dataIndex: 'foundTime',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '涉及型号',
-    dataIndex: 'model',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '发现人ID',
-    dataIndex: 'discovererStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '发现人CODE',
-    dataIndex: 'discovererStaffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '发现人',
-    dataIndex: 'discovererStaffName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '是否需要整改',
-    dataIndex: 'ynRectification',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '是否已删除',
-    dataIndex: 'ynDeleted',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
   },
   {
     title: '操作',

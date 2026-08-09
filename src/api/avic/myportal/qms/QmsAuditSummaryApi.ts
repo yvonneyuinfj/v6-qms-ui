@@ -18,7 +18,7 @@ export interface QmsAuditSummaryDto extends BaseBeanModel {
   auditeeDeptId?: string;
   /** 受审部门CODE;通知单带入 */
   auditeeDeptCode?: string;
-  /** 受审部门;通知单带入 */
+  /** 受审核部门;通知单带入 */
   auditeeDeptName?: string;
   /** 内审计划执行情况 */
   executionDesc?: string;

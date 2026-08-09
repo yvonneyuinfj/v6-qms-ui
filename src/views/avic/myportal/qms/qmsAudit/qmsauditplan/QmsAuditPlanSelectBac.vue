@@ -85,7 +85,7 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="受审部门">
+            <a-form-item label="受审核部门">
               <a-input
                 v-model:value="queryForm.auditeeDeptName"
                 placeholder="请输入受审部门"
@@ -155,7 +155,7 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="审核员">
+            <a-form-item label="审核人员">
               <a-input
                 v-model:value="queryForm.auditorName"
                 placeholder="请输入审核员"
@@ -404,7 +404,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '受审部门',
+    title: '受审核部门',
     dataIndex: 'auditeeDeptName',
     ellipsis: true,
     sorter: true,
@@ -467,7 +467,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '审核员',
+    title: '审核人员',
     dataIndex: 'auditorName',
     ellipsis: true,
     sorter: true,
@@ -501,15 +501,7 @@ const columns = [
     resizable: true,
     align: 'center'
   },
-  {
-    title: '是否已删除',
-    dataIndex: 'ynDeleted',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
+
   {
     title: '备注',
     dataIndex: 'remark',

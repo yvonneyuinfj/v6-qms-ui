@@ -2,10 +2,10 @@
   <div class="content-wrapper">
     <div class="top-search-box">
       <!-- 高级查询 -->
-      <a-form v-bind="layout" ref="formRef" :model="queryForm">
+      <a-form v-bind="layout" ref="formRef" :model="queryForm" :colon="false">
         <a-row :gutter="16">
           <a-col v-bind="colLayout.cols">
-            <a-form-item label="年度">
+            <a-form-item label="所属年份">
               <a-input
                 v-model:value="queryForm.forYear"
                 placeholder="请输入年度"
@@ -15,17 +15,7 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item label="编号">
-              <a-input
-                v-model:value="queryForm.improvementCode"
-                placeholder="请输入编号"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item label="材料名称">
+            <a-form-item label="改进项名称">
               <a-input
                 v-model:value="queryForm.improvementName"
                 placeholder="请输入材料名称"
@@ -35,10 +25,10 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="改进要求要求">
+            <a-form-item label="改进项要求">
               <a-input
                 v-model:value="queryForm.improvementContent"
-                placeholder="请输入改进要求要求"
+                placeholder="请输入改进要求"
                 :allow-clear="true"
                 @pressEnter="handleQuery"
               />
@@ -568,7 +558,7 @@ import QmsMrImprovementEdit from './QmsMrImprovementEdit.vue'; // 引入编辑�
 import QmsMrImprovementDetail from './QmsMrImprovementDetail.vue'; // 引入详情页面组件
 const { proxy } = getCurrentInstance();
 const layout = {
-  labelCol: { flex: '0 0 120px' },
+  labelCol: { flex: '0 0 100px' },
   wrapperCol: { flex: '1 1 0' }
 };
 const colLayout = proxy.$colLayout4; // 页面表单响应式布局对象
@@ -582,347 +572,81 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '年度',
-    dataIndex: 'forYear',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '编号',
-    dataIndex: 'improvementCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '材料名称',
+    title: '改进项名称',
     dataIndex: 'improvementName',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
-    title: '改进要求要求',
-    dataIndex: 'improvementContent',
+    title: '类别',
+    dataIndex: 'improvementTypeName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 80,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
-    title: '改进项类型;课题、建议',
-    dataIndex: 'improvementType',
+    title: '类型',
+    dataIndex: 'categoryName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 150,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '改进类别;战略级转型和变革、战术级改进和优化',
-    dataIndex: 'category',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '提出人ID',
-    dataIndex: 'proposerId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '提出人CODE',
-    dataIndex: 'proposerCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '提出人',
     dataIndex: 'proposerName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '主管所领导ID',
-    dataIndex: 'responsibleSleaderId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '主管所领导CODE',
-    dataIndex: 'responsibleSleaderCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '主管所领导',
     dataIndex: 'responsibleSleaderName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '主责部门ID',
-    dataIndex: 'responsibleDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '主责部门CODE',
-    dataIndex: 'responsibleDeptCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '主责部门',
     dataIndex: 'responsibleDeptName',
     ellipsis: true,
     sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任领导ID',
-    dataIndex: 'responsibleDeptLeaderId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任领导CODE',
-    dataIndex: 'responsibleDeptLeaderCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任领导',
-    dataIndex: 'responsibleDeptLeaderName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人ID',
-    dataIndex: 'responsibleUserId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人CODE',
-    dataIndex: 'responsibleUserCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人',
-    dataIndex: 'responsibleUserName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '参与部门ID',
-    dataIndex: 'participatingDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '参与部门CODE',
-    dataIndex: 'participatingDeptCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '参与部门',
-    dataIndex: 'participatingDeptName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '产生原因分析;或与目标差距分析',
-    dataIndex: 'causeAnalysis',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '开始时间',
-    dataIndex: 'startTime',
-    ellipsis: true,
-    minWidth: 120,
+    width: 150,
     resizable: true,
     align: 'center'
   },
   {
-    title: '截止时间',
+    title: '节点',
     dataIndex: 'deadline',
     ellipsis: true,
-    minWidth: 120,
+    width: 120,
     resizable: true,
     align: 'center'
-  },
-  {
-    title: '预期改进效果',
-    dataIndex: 'expectedResult',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '公共行动项ID',
-    dataIndex: 'actionId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '总体进度',
-    dataIndex: 'progress',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
-  },
-  {
-    title: '风险状态',
-    dataIndex: 'riskStatus',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '业务状态',
-    dataIndex: 'status',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '交付物',
-    dataIndex: 'expectedDeliverable',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
   },
   {
     title: '密级',
     dataIndex: 'secretLevelName',
     ellipsis: true,
-    minWidth: 120,
+    width: 100,
     resizable: true,
     align: 'center'
-  },
-  {
-    title: '是否已删除',
-    dataIndex: 'ynDeleted',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
-  },
-  {
-    title: '父节点ID',
-    dataIndex: 'parentId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
   },
   {
     title: '操作',
     dataIndex: 'action',
     ellipsis: true,
     width: 120,
+    align: 'center',
     fixed: 'right'
   }
 ];

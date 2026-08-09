@@ -57,7 +57,7 @@
           </a-form-item>
         </a-col>
         <a-col v-bind="colLayout.cols" v-if="fieldVisible('auditeeDeptName')">
-          <a-form-item name="auditeeDeptName" label="受审部门;通知单带入" :rules="fieldRequired('auditeeDeptName')" has-feedback>
+          <a-form-item name="auditeeDeptName" label="受审核部门;通知单带入" :rules="fieldRequired('auditeeDeptName')" has-feedback>
             <a-input
               v-model:value="form.auditeeDeptName"
               :disabled="fieldDisabled('auditeeDeptName')"

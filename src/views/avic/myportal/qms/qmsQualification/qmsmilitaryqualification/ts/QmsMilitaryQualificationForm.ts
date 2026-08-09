@@ -14,7 +14,7 @@ export function useQmsMilitaryQualificationForm({
     ]
   };
   const layout = {
-    labelCol: { flex: '0 0 140px' },
+    labelCol: { flex: '0 0 100px' },
     wrapperCol: { flex: '1 1 0' }
   };
   const colLayout = proxy.$colLayout2; // 调用布局公共方法

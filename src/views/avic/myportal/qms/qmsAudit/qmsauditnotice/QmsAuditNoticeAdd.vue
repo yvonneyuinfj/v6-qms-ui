@@ -14,6 +14,7 @@
         :rules="rules"
         v-bind="layout"
         class="form-excel-style"
+        :colon="false"
       >
         <a-row>
           <!--<a-col v-bind="colLayout.cols">-->
@@ -25,9 +26,22 @@
           <!--    />-->
           <!--  </a-form-item>-->
           <!--</a-col>-->
-
+          <a-col v-bind="colLayout.cols2">
+            <a-form-item name="noticeName" label="审核计划">
+              <AvicModalSelect
+                v-model:value="form.planId"
+                title="请选择实施计划"
+                placeholder="请选择实施计划"
+                valueField="id"
+                showField="auditeeDeptName"
+                :selectComponent="QmsAuditPlanSelect"
+                @selectConfirm="handlePlanSelect($event,form)"
+                :defaultShowValue="form.noticeName"
+              />
+            </a-form-item>
+          </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item name="auditeeDeptName" label="受审核单位">
+            <a-form-item name="auditeeDeptName" label="受审核部门">
               <a-input
                 v-model:value="form.auditeeDeptName"
                 disabled
@@ -116,19 +130,19 @@
           </a-col>
 
           <a-col v-bind="colLayout.cols2">
-            <a-form-item name="auditeeUserId" label="受审核方人员">
-                <AvicCommonSelect
-                  v-model:value="form.auditeeUserId"
-                  type="userSelect"
-                  placeholder="请选择受审核方人员"
-                  :default-show-value="form.auditeeUserName"
-                  @callback="res => (form.auditeeUserName = res.names)"
-                  :userSelectTabs="['dept']"
-                  :moreUserInfo="['no']"
-                />
+            <a-form-item name="auditeeUserId" label="陪同人员">
+              <AvicCommonSelect
+                v-model:value="form.auditeeUserId"
+                type="userSelect"
+                placeholder="请选择受审核方人员"
+                :default-show-value="form.auditeeUserName"
+                @callback="res => (form.auditeeUserName = res.names)"
+                :userSelectTabs="['dept']"
+                :moreUserInfo="['no']"
+              />
             </a-form-item>
           </a-col>
-          <a-col v-bind="colLayout.cols">
+          <a-col v-bind="colLayout.cols" v-if="form.secretLevel">
             <a-form-item name="secretLevel" label="密级" has-feedback>
               <a-select
                 v-model:value="form.secretLevel"
@@ -137,6 +151,7 @@
                 :show-search="true"
                 :allow-clear="true"
                 placeholder="请选择密级"
+                disabled
               >
                 <a-select-option
                   v-for="item in secretLevelList"
@@ -172,12 +187,15 @@
     </a-spin>
     <template #footer>
       <a-button title="保存并启动流程" type="primary" :loading="loading" @click="saveAndStartProcess">保存并启动流程</a-button>
+      <a-button title="保存" type="primary" :loading="loading" @click="saveForm">保存</a-button>
       <a-button title="返回" type="primary" ghost @click="closeModal">返回</a-button>
     </template>
   </AvicModal>
 </template>
 <script lang="ts" setup>
 import { useQmsAuditNoticeForm, emits } from './ts/QmsAuditNoticeForm'; // 引入表单ts
+import QmsAuditPlanSelect from '../qmsauditplan/QmsAuditPlanSelect.vue';
+
 const props = defineProps({
   formId: {
     type: String,
@@ -194,7 +212,7 @@ const props = defineProps({
   bpmOperatorRefresh: {
     type: Function
   },
-  planObj:{
+  planObj: {
     type: Object
   }
 });
@@ -210,7 +228,9 @@ const {
   uploadFile,
   afterUploadEvent,
   saveAndStartProcess,
-  closeModal
+  closeModal,
+  saveForm,
+  handlePlanSelect
 } = useQmsAuditNoticeForm({
   props: props,
   emit: emit

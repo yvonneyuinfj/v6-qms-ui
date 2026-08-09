@@ -134,15 +134,13 @@
                   </template>
                   导出
                 </a-button>
-              </a-space>
-              <a-space>
-                <AvicBpmFilter
-                  :allFileAuth="['qmsAuditCheckRecord:all']"
-                  :myFileAuth="['qmsAuditCheckRecord:my']"
-                  :defaultBpmType = 'queryForm.bpmType'
-                  :defaultBpmState = 'queryForm.bpmState'
-                  @change="changeBpmFilter"
-                />
+                <!--<AvicBpmFilter-->
+                <!--  :allFileAuth="['qmsAuditCheckRecord:all']"-->
+                <!--  :myFileAuth="['qmsAuditCheckRecord:my']"-->
+                <!--  :defaultBpmType = 'queryForm.bpmType'-->
+                <!--  :defaultBpmState = 'queryForm.bpmState'-->
+                <!--  @change="changeBpmFilter"-->
+                <!--/>-->
                 <!--<a-input-search-->
                 <!--  class="opt-btn-commonsearch"-->
                 <!--  style="width: 200px"-->
@@ -243,7 +241,7 @@ const columns = [
     align: 'center'
   },
   {
-    title: '审核员',
+    title: '审核人员',
     dataIndex: 'auditorName',
     ellipsis: true,
     sorter: true,

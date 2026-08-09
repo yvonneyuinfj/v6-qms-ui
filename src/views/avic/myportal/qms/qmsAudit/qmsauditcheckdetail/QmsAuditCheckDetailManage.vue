@@ -99,7 +99,7 @@ const columns = [
     title: '序号',
     dataIndex: 'sequenceCode',
     key: 'sequenceCode',
-    width: 60,
+    width: 50,
     resizable: true,
     align: 'center'
   },
@@ -108,7 +108,7 @@ const columns = [
     dataIndex: 'clauseNo',
     key: 'clauseNo',
     ellipsis: true,
-    width: 100,
+    width: 80,
     resizable: true,
     align: 'center'
   },
@@ -126,7 +126,7 @@ const columns = [
     dataIndex: 'checkModel',
     key: 'checkModel',
     ellipsis: true,
-    width: 120,
+    width: 200,
     resizable: true,
     align: 'center'
   },
@@ -141,10 +141,10 @@ const columns = [
   },
   {
     title: '符合情况',
-    dataIndex: 'conformityResult',
-    key: 'conformityResult',
+    dataIndex: 'conformityResultName',
+    key: 'conformityResultName',
     ellipsis: true,
-    width: 120,
+    width: 150,
     resizable: true,
     align: 'center'
   },
@@ -153,7 +153,7 @@ const columns = [
     dataIndex: 'adviceContent',
     key: 'adviceContent',
     ellipsis: true,
-    width: 120,
+    width: 150,
     resizable: true,
     align: 'center'
   },
