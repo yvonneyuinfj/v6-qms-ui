@@ -145,6 +145,14 @@ export interface QmsQualityObjectiveDto extends BaseBeanModel {
   treeLeaf?: string;
   /** 交付物 */
   expectedDeliverable?: string;
+  /** 目标来源 */
+  objectiveSource?: string;
+  /** 责任人 */
+  responsibleStaffId?: string;
+  /** 责任人CODE */
+  responsibleStaffCode?: string;
+  /** 责任人姓名 */
+  responsibleStaffName?: string;
 }
 
 /** 获取分页数据 */

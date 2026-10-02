@@ -3,7 +3,6 @@
     :visible="true"
     title="编辑"
     width="80%"
-    height="80%"
     :centered="true"
     @cancel="closeModal"
   >
@@ -48,7 +47,7 @@
                 :default-show-value="form.chiefAuditorName"
                 @callback="res => (form.chiefAuditorName = res.names)"
                 :userSelectTabs="['dept']"
-                :moreUserInfo="['no']"
+
               />
             </a-form-item>
           </a-col>
@@ -114,7 +113,7 @@
                 :default-show-value="form.auditorName"
                 @callback="res => (form.auditorName = res.names)"
                 :userSelectTabs="['dept']"
-                :moreUserInfo="['no']"
+
                 select-model="multi"
               />
             </a-form-item>
@@ -129,7 +128,7 @@
                 :default-show-value="form.auditeeUserName"
                 @callback="res => (form.auditeeUserName = res.names)"
                 :userSelectTabs="['dept']"
-                :moreUserInfo="['no']"
+
               />
             </a-form-item>
           </a-col>
@@ -177,6 +176,15 @@
       </a-form>
     </a-spin>
     <template #footer>
+      <a-button
+        title="保存并启动流程"
+        type="primary"
+        :loading="loading"
+        @click="saveAndStartProcess"
+        v-if="!form.dbid_"
+      >
+        保存并启动流程
+      </a-button>
       <a-button title="保存" type="primary" :loading="loading" @click="saveForm">保存</a-button>
       <a-button title="返回" type="primary" ghost @click="closeModal">返回</a-button>
     </template>
@@ -215,7 +223,8 @@ const {
   afterUploadEvent,
   saveForm,
   closeModal,
-  handlePlanSelect
+  handlePlanSelect,
+  saveAndStartProcess
 } = useQmsAuditNoticeForm({
   props: props,
   emit: emit

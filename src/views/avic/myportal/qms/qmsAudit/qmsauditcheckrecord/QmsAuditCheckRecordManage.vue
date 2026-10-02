@@ -1,6 +1,6 @@
 <template>
   <AvicSplit horizontal>
-    <AvicPane size="70">
+    <AvicPane size="60">
       <div class="content-wrapper">
         <div class="top-search-box">
           <!-- 高级查询 -->
@@ -42,18 +42,18 @@
                 <div class="table-page-search-submitButtons">
                   <a-space>
                     <a-button type="primary" @click="handleQuery">
-                      <search-outlined />
+                      <search-outlined/>
                       查询
                     </a-button>
                     <a-button type="primary" @click="resetQuery" ghost>
-                      <redo-outlined />
+                      <redo-outlined/>
                       重置
                     </a-button>
-                    <a-button type="link" @click="toggleAdvanced" style="margin: 0">
-                      {{ advanced ? '收起' : '展开' }}
-                      <up-outlined v-if="advanced" />
-                      <down-outlined v-else />
-                    </a-button>
+                    <!--<a-button type="link" @click="toggleAdvanced" style="margin: 0">-->
+                    <!--  {{ advanced ? '收起' : '展开' }}-->
+                    <!--  <up-outlined v-if="advanced"/>-->
+                    <!--  <down-outlined v-else/>-->
+                    <!--</a-button>-->
                   </a-space>
                 </div>
               </a-col>
@@ -87,17 +87,17 @@
             </template>
             <template #toolBarRight>
               <a-space>
-                <a-button
-                  v-hasPermi="['qmsAuditCheckRecord:add']"
-                  title="添加"
-                  type="primary"
-                  @click="handleAdd"
-                >
-                  <template #icon>
-                    <plus-outlined />
-                  </template>
-                  添加
-                </a-button>
+                <!--<a-button-->
+                <!--  v-hasPermi="['qmsAuditCheckRecord:add']"-->
+                <!--  title="添加"-->
+                <!--  type="primary"-->
+                <!--  @click="handleAdd"-->
+                <!--&gt;-->
+                <!--  <template #icon>-->
+                <!--    <plus-outlined/>-->
+                <!--  </template>-->
+                <!--  添加-->
+                <!--</a-button>-->
                 <a-button
                   v-hasPermi="['qmsAuditCheckRecord:edit']"
                   title="编辑"
@@ -106,7 +106,7 @@
                   @click="handleEdit"
                 >
                   <template #icon>
-                    <edit-outlined />
+                    <edit-outlined/>
                   </template>
                   编辑
                 </a-button>
@@ -119,21 +119,21 @@
                   @click="handleDelete(selectedRows, selectedRowKeys)"
                 >
                   <template #icon>
-                    <delete-outlined />
+                    <delete-outlined/>
                   </template>
                   删除
                 </a-button>
-                <a-button
-                  v-hasPermi="['qmsAuditCheckRecord:export']"
-                  title="导出"
-                  type="primary"
-                  ghost
-                  @click="handleExport">
-                  <template #icon>
-                    <export-outlined />
-                  </template>
-                  导出
-                </a-button>
+                <!--<a-button-->
+                <!--  v-hasPermi="['qmsAuditCheckRecord:export']"-->
+                <!--  title="导出"-->
+                <!--  type="primary"-->
+                <!--  ghost-->
+                <!--  @click="handleExport">-->
+                <!--  <template #icon>-->
+                <!--    <export-outlined/>-->
+                <!--  </template>-->
+                <!--  导出-->
+                <!--</a-button>-->
                 <!--<AvicBpmFilter-->
                 <!--  :allFileAuth="['qmsAuditCheckRecord:all']"-->
                 <!--  :myFileAuth="['qmsAuditCheckRecord:my']"-->
@@ -156,9 +156,9 @@
                   index + 1 + queryParam.pageParameter.rows * (queryParam.pageParameter.page - 1)
                 }}
               </template>
-              <template v-else-if="column.dataIndex === 'planId'">
+              <template v-else-if="column.dataIndex === 'auditeeDeptName'">
                 <a @click="handleFlowDetail(record)">
-                  {{ record.planId }}
+                  {{ record.auditeeDeptName }}
                 </a>
               </template>
             </template>
@@ -182,7 +182,7 @@
         @close="showEditModal = false"
       />
       <!-- 详情页面弹窗 -->
-      <QmsAuditCheckRecordDetail
+      <QmsAuditCheckRecordDetailNoFlow
         v-if="showDetailModal"
         ref="detailModal"
         :form-id="formId"
@@ -201,12 +201,18 @@
 </template>
 <script lang="ts" setup>
 import type { QmsAuditCheckRecordDto } from '@/api/avic/myportal/qms/QmsAuditCheckRecordApi'; // 引入模块DTO
-import { listQmsAuditCheckRecordByPage, delQmsAuditCheckRecord, exportExcel } from '@/api/avic/myportal/qms/QmsAuditCheckRecordApi'; // 引入模块API
+import {
+  delQmsAuditCheckRecord,
+  exportExcel,
+  listQmsAuditCheckRecordByPage
+} from '@/api/avic/myportal/qms/QmsAuditCheckRecordApi'; // 引入模块API
 import QmsAuditCheckRecordAdd from './QmsAuditCheckRecordAdd.vue'; // 引入添加页面组件
 import QmsAuditCheckRecordEdit from './QmsAuditCheckRecordEdit.vue'; // 引入编辑页面组件
-import QmsAuditCheckRecordDetail from './QmsAuditCheckRecordDetail.vue'; // 引入详情页面组件
 import QmsAuditCheckDetailManage from '../qmsauditcheckdetail/QmsAuditCheckDetailManage.vue'; // 引入子表页面组件
 import flowUtils from '@/views/avic/bpm/bpmutils/FlowUtils.js';
+import QmsAuditCheckRecordDetailNoFlow
+  from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckrecord/QmsAuditCheckRecordDetailNoFlow.vue';
+import { useUserStore } from '@/store/user';
 
 const { proxy } = getCurrentInstance();
 const layout = {
@@ -219,7 +225,7 @@ const columns = [
     title: '序号',
     dataIndex: 'id',
     ellipsis: true,
-    width: 50,
+    width: 60,
     align: 'center',
     fixed: 'left'
   },
@@ -228,7 +234,7 @@ const columns = [
     dataIndex: 'auditeeDeptName',
     ellipsis: true,
     sorter: true,
-    width: 120,
+    minWidth: 120,
     resizable: true,
     align: 'center'
   },
@@ -236,7 +242,7 @@ const columns = [
     title: '审核时间',
     dataIndex: 'auditTime',
     ellipsis: true,
-    width: 120,
+    minWidth: 120,
     resizable: true,
     align: 'center'
   },
@@ -245,7 +251,7 @@ const columns = [
     dataIndex: 'auditorName',
     ellipsis: true,
     sorter: true,
-    width: 120,
+    minWidth: 120,
     resizable: true,
     align: 'center'
   },
@@ -255,7 +261,7 @@ const columns = [
     ellipsis: true,
     minWidth: 120,
     resizable: true,
-    align: 'right'
+    align: 'center'
   },
   {
     title: '不符合项明细数量',
@@ -263,7 +269,7 @@ const columns = [
     ellipsis: true,
     minWidth: 120,
     resizable: true,
-    align: 'right'
+    align: 'center'
   },
   {
     title: '有建议明细数量',
@@ -271,7 +277,7 @@ const columns = [
     ellipsis: true,
     minWidth: 120,
     resizable: true,
-    align: 'right'
+    align: 'center'
   },
   // {
   //   title: '业务状态',
@@ -282,32 +288,34 @@ const columns = [
   //   resizable: true,
   //   align: 'left'
   // },
-  // {
-  //   title: '流程状态',
-  //   dataIndex: 'businessstate_',
-  //   ellipsis: true,
-  //   width: 120,
-  //   align: 'center',
-  //   fixed: 'right'
-  // },
-  // {
-  //   title: '流程当前步骤',
-  //   dataIndex: 'activityalias_',
-  //   width: 120,
-  //   fixed: 'right'
-  // },
-  // {
-  //   title: '当前处理人',
-  //   dataIndex: 'assigneenames_',
-  //   ellipsis: true,
-  //   width: 130,
-  //   align: 'left',
-  //   fixed: 'right'
-  // }
+  {
+    title: '流程状态',
+    dataIndex: 'businessstate_',
+    ellipsis: true,
+    width: 120,
+    align: 'center',
+    fixed: 'right'
+  },
+  {
+    title: '流程当前步骤',
+    dataIndex: 'activityalias_',
+    ellipsis: true,
+    width: 120,
+    align: 'center',
+    fixed: 'right'
+  },
+  {
+    title: '当前处理人',
+    dataIndex: 'assigneenames_',
+    ellipsis: true,
+    width: 120,
+    align: 'center',
+    fixed: 'right'
+  }
 ];
 const queryForm = ref<QmsAuditCheckRecordDto>({
   bpmState: 'all',
-  bpmType: 'my'
+  bpmType: 'all'
 }); // 高级查询对象
 const queryParam = reactive({
   // 请求表格数据参数
@@ -343,7 +351,34 @@ onMounted(() => {
   getList();
   // 获取当前用户对应的文档密级
   getUserFileSecretList();
+  getRole();
+  getYearList();
 });
+
+// 获取角色
+const userStore = useUserStore();
+const userInfo = userStore.userInfo;
+const isManager = ref(true);
+
+function getRole() {
+  if (userStore.roleMap.get('qms_audit_manager') || window.$config.hacker.indexOf(userInfo.loginName) >= 0) {
+    isManager.value = true;
+  } else {
+    isManager.value = false;
+  }
+}
+
+// 获取年份
+const yearList = ref([]);
+const getYearList = () => {
+  const currentYear = proxy.$dayjs().year();
+  yearList.value = [
+    (currentYear - 1).toString(),
+    currentYear.toString(),
+    (currentYear + 1).toString()
+  ];
+  return yearList;
+};
 
 /** 查询数据  */
 function getList() {
@@ -370,12 +405,14 @@ function getList() {
       loading.value = false;
     });
 }
+
 /** 获取当前用户对应的文档密级 */
-function getUserFileSecretList () {
+function getUserFileSecretList() {
   proxy.$getUserFileSecretLevelList(result => {
     secretLevelList.value = result;
   });
 }
+
 /** 根据流程状态及发起人查询数据 */
 function changeBpmFilter({ bpmType, bpmState }) {
   queryForm.value.bpmType = bpmType;
@@ -383,6 +420,7 @@ function changeBpmFilter({ bpmType, bpmState }) {
   queryParam.searchParams = queryForm.value;
   getList();
 }
+
 /** 高级查询 查询按钮操作 */
 function handleQuery() {
   queryParam.searchParams = queryForm.value;
@@ -390,6 +428,7 @@ function handleQuery() {
   queryParam.pageParameter.page = 1;
   getList();
 }
+
 /** 高级查询 重置按钮操作 */
 function resetQuery() {
   queryForm.value = {
@@ -398,10 +437,12 @@ function resetQuery() {
   };
   handleQuery();
 }
+
 /** 高级查询 展开/收起 */
 function toggleAdvanced() {
   advanced.value = !advanced.value;
 }
+
 /** 快速查询逻辑 */
 function handleKeyWordQuery(value) {
   const keyWord = {
@@ -412,10 +453,12 @@ function handleKeyWordQuery(value) {
   queryParam.pageParameter.page = 1;
   getList();
 }
+
 /** 添加 */
 function handleAdd() {
   showAddModal.value = true;
 }
+
 /** 编辑 */
 function handleEdit() {
   if (selectedRows.value.length !== 1) {
@@ -425,17 +468,31 @@ function handleEdit() {
   formId.value = selectedRows.value[0].id;
   showEditModal.value = true;
 }
+
+
 /** 打开流程详情页面 */
 function handleFlowDetail(record) {
   if (record.id) {
-    flowUtils.detailByOptions({
-      formId: record.id,
-      bpmOperatorRefresh: getList
-    });
+    if (!record.dbid_) {
+      formId.value = record.id;
+      if (isManager.value || userInfo.id === record.createdBy) {
+        showEditModal.value = true;
+      } else {
+        showDetailModal.value = true;
+      }
+
+    } else {
+      flowUtils.detailByOptions({
+        formId: record.id,
+        bpmOperatorRefresh: getList
+      });
+    }
+
   }
 }
+
 /** 导出 */
-function handleExport () {
+function handleExport() {
   proxy.$confirm({
     title: '确认导出数据吗?',
     okText: '确定',
@@ -450,17 +507,18 @@ function handleExport () {
     }
   });
 }
+
 /** 删除 */
 function handleDelete(rows, ids) {
   if (ids.length == 0) {
-    proxy. $message.warning('请选择要删除的数据！');
+    proxy.$message.warning('请选择要删除的数据！');
     return;
   }
-  if (rows.filter(row => row.bpmState !== 'start')?.length > 0) {
-    proxy. $message.warning('只有拟稿中的数据才可以删除！');
+  if (rows.filter(row => (row.bpmState && row.bpmState !== 'start'))?.length > 0) {
+    proxy.$message.warning('只有拟稿中的数据才可以删除！');
     return;
   }
-  proxy. $confirm({
+  proxy.$confirm({
     title: '确定删除已选数据及关联的子表数据吗？',
     okText: '确定',
     cancelText: '取消',
@@ -483,11 +541,13 @@ function handleDelete(rows, ids) {
     }
   });
 }
+
 /** 勾选复选框时触发 */
 function onSelectChange(rowKeys, rows) {
   selectedRowKeys.value = rowKeys;
   selectedRows.value = rows;
 }
+
 /** 表格排序 */
 function handleTableChange(pagination, filters, sorter) {
   queryParam.pageParameter.page = pagination.current;

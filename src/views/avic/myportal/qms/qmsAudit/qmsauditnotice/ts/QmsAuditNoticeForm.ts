@@ -23,7 +23,7 @@ export function useQmsAuditNoticeForm({ props: props, emit: emit }) {
   const rules: Record<string, Rule[]> = {
     secretLevel: [
       { required: true, message: '密级不能为空', trigger: 'change' }
-    ],
+    ]
   };
   const layout = {
     labelCol: { flex: '0 0 140px' },
@@ -145,18 +145,26 @@ export function useQmsAuditNoticeForm({ props: props, emit: emit }) {
    * 初始化表单数据
    */
   const initFormData = ()=>{
+    console.log(props);
     if(props.planObj){
       const planObj = props.planObj;
       form.value.planId = planObj.id;
-      form.value.auditeeDeptId = planObj.auditeeDeptId;
+      form.value.auditeeDeptId = planObj.auditeeDeptId; // 受审核部门
       form.value.auditeeDeptCode = planObj.auditeeDeptCode;
       form.value.auditeeDeptName = planObj.auditeeDeptName;
-      form.value.auditorId = planObj.auditorId;
+      form.value.auditorId = planObj.auditorId; // 审核人员
       form.value.auditorCode = planObj.auditorCode;
       form.value.auditorName = planObj.auditorName;
-      form.value.auditTime = planObj.auditTime;
-      form.value.auditClause = planObj.auditClause;
-      form.value.secretLevel = planObj.secretLevel;
+      form.value.auditTime = planObj.auditTime; // 审核时间
+      form.value.auditClause = planObj.auditClause; // 条款
+      form.value.secretLevel = planObj.secretLevel; // 密级
+      form.value.chiefAuditorId = planObj.auditorId?.split(/[;；,，]/)[0]; // 主审
+      form.value.chiefAuditorCode = planObj.auditorCode?.split(/[;；,，]/)[0];
+      form.value.chiefAuditorName= planObj.auditorName?.split(/[;；,，]/)[0];
+      form.value.modelProject = planObj.modelProject;
+      if(!form.value.noticeName){
+        `${planObj.forYear}年${planObj.auditeeDeptName}的审核实施计划`;
+      }
     }
     if(!form.value.treeSort){
       form.value.treeSort = 0;
@@ -262,7 +270,7 @@ export function useQmsAuditNoticeForm({ props: props, emit: emit }) {
     }
   }
   /** 附件上传完之后的回调函数 */
-  function afterUploadEvent(successFile, errorFile) {
+  function afterUploadEvent(_, errorFile) {
     if (errorFile.length > 0) {
       // 有附件保存失败的处理
       errorCallback();

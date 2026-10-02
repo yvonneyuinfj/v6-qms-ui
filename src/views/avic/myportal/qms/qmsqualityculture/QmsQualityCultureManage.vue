@@ -18,19 +18,34 @@
               </a-col>
               <a-col v-bind="colLayout.cols">
                 <a-form-item label="所属年份">
-                  <a-input
+                  <!--<a-input-->
+                  <!--  v-model:value="queryForm.forYear"-->
+                  <!--  placeholder="请输入所属年份"-->
+                  <!--  :allow-clear="true"-->
+                  <!--  @pressEnter="handleQuery"-->
+                  <!--/>-->
+                  <a-select
                     v-model:value="queryForm.forYear"
+                    :get-popup-container="triggerNode => triggerNode.parentNode"
+                    option-filter-prop="children"
                     placeholder="请输入所属年份"
-                    :allow-clear="true"
-                    @pressEnter="handleQuery"
-                  />
+                    @select="handleQuery"
+                  >
+                    <a-select-option
+                      v-for="item in yearList"
+                      :key="item"
+                      :value="item"
+                    >
+                      {{ item }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col v-bind="colLayout.cols">
-                <a-form-item label="活动类型;QUALITY_WEEK质量周、QUALITY_MONTH质量月">
+                <a-form-item label="活动类型">
                   <a-input
                     v-model:value="queryForm.activityType"
-                    placeholder="请输入活动类型;QUALITY_WEEK质量周、QUALITY_MONTH质量月"
+                    placeholder="请输入活动类型"
                     :allow-clear="true"
                     @pressEnter="handleQuery"
                   />
@@ -241,63 +256,64 @@
             @refresh="getList"
           >
             <template #toolBarLeft>
-          <a-space>
-            <a-button
-              v-hasPermi="['qmsQualityCulture:add']"
-              title="添加"
-              type="primary"
-              @click="handleAdd"
-            >
-              <template #icon>
-                <plus-outlined />
-              </template>
-              添加
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityCulture:del']"
-              title="删除"
-              danger
-              :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
-              :loading="delLoading"
-              @click="handleDelete(selectedRowKeys, '')"
-            >
-              <template #icon>
-                <delete-outlined />
-              </template>
-              删除
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityCulture:import']"
-              title="导入"
-              type="primary"
-              ghost
-              @click="handleImport">
-              <template #icon>
-                 <import-outlined />
-              </template>
-              导入
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityCulture:export']"
-              title="导出"
-              type="primary"
-              ghost
-              @click="handleExport">
-              <template #icon>
-                 <export-outlined />
-              </template>
-              导出
-            </a-button>
-          </a-space>
+              <div class="aecc-leftbar-title">质量文化</div>
             </template>
             <template #toolBarRight>
-              <a-input-search
-                class="opt-btn-commonsearch"
-                style="width: 200px"
-                placeholder="请输入文化编号或所属年份"
-                :allow-clear="true"
-                @search="handleKeyWordQuery"
-              />
+              <!--<a-input-search-->
+              <!--  class="opt-btn-commonsearch"-->
+              <!--  style="width: 200px"-->
+              <!--  placeholder="请输入文化编号或所属年份"-->
+              <!--  :allow-clear="true"-->
+              <!--  @search="handleKeyWordQuery"-->
+              <!--/>-->
+              <a-space>
+                <a-button
+                  v-hasPermi="['qmsQualityCulture:add']"
+                  title="添加"
+                  type="primary"
+                  @click="handleAdd"
+                >
+                  <template #icon>
+                    <plus-outlined />
+                  </template>
+                  添加
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityCulture:del']"
+                  title="删除"
+                  danger
+                  :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
+                  :loading="delLoading"
+                  @click="handleDelete(selectedRowKeys, '')"
+                >
+                  <template #icon>
+                    <delete-outlined />
+                  </template>
+                  删除
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityCulture:import']"
+                  title="导入"
+                  type="primary"
+                  ghost
+                  @click="handleImport">
+                  <template #icon>
+                    <import-outlined />
+                  </template>
+                  导入
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityCulture:export']"
+                  title="导出"
+                  type="primary"
+                  ghost
+                  @click="handleExport">
+                  <template #icon>
+                    <export-outlined />
+                  </template>
+                  导出
+                </a-button>
+              </a-space>
             </template>
             <template #bodyCell="{ column, text, record, index }">
               <template v-if="column.dataIndex  === 'id'">
@@ -409,7 +425,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '活动类型;QUALITY_WEEK质量周、QUALITY_MONTH质量月',
+    title: '活动类型',
     dataIndex: 'activityType',
     ellipsis: true,
     sorter: true,
@@ -459,15 +475,6 @@ const columns = [
     align: 'center'
   },
   {
-    title: '状态',
-    dataIndex: 'status',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '活动来源',
     dataIndex: 'activitySource',
     ellipsis: true,
@@ -475,32 +482,6 @@ const columns = [
     minWidth: 120,
     resizable: true,
     align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
   },
   {
     title: '操作',
@@ -549,6 +530,7 @@ onMounted(() => {
   getList();
   // 获取当前用户对应的文档密级
   getUserFileSecretList();
+  getYearList();
 });
 
 /** 查询数据  */
@@ -685,5 +667,15 @@ function handleTableChange (pagination, filters, sorter) {
   getList();
 }
 
+const yearList = ref([]);
+const getYearList = () => {
+  const currentYear = proxy.$dayjs().year();
+  yearList.value = [
+    (currentYear - 1).toString(),
+    currentYear.toString(),
+    (currentYear + 1).toString()
+  ];
+  return yearList;
+};
 </script>
 

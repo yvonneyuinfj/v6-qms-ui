@@ -123,17 +123,6 @@
               添加
             </a-button>
             <a-button
-              v-hasPermi="['qmsAuditPlan:edit']"
-              title="编辑"
-              type="primary"
-              @click="handleEdit"
-            >
-              <template #icon>
-                <avic-icon svg='avic-edit-line'/>
-              </template>
-              编辑
-            </a-button>
-            <a-button
               v-hasPermi="['qmsAuditPlan:del']"
               title="删除"
               danger
@@ -146,17 +135,18 @@
               </template>
               删除
             </a-button>
-            <a-button
-              v-hasPermi="['qmsAuditPlan:import']"
-              title="导入"
-              type="primary"
-              ghost
-              @click="handleImport">
-              <template #icon>
-                <import-outlined/>
-              </template>
-              批量导入
-            </a-button>
+            <!--<a-button-->
+            <!--  v-hasPermi="['qmsAuditPlan:import']"-->
+            <!--  title="导入"-->
+            <!--  type="primary"-->
+            <!--  ghost-->
+            <!--  @click="handleImport">-->
+            <!--  <template #icon>-->
+            <!--    <import-outlined/>-->
+            <!--  </template>-->
+            <!--  批量导入-->
+            <!--</a-button>-->
+
             <!--<a-button-->
             <!--  v-hasPermi="['qmsAuditPlan:export']"-->
             <!--  title="导出"-->
@@ -174,9 +164,9 @@
           <template v-if="column.dataIndex === 'id'">
             {{ index + 1 + queryParam.pageParameter.rows * (queryParam.pageParameter.page - 1) }}
           </template>
-          <template v-else-if="column.dataIndex === 'planCode'">
+          <template v-else-if="column.dataIndex === 'auditeeDeptName'">
             <a @click="handleDetail(record)">
-              {{ record.planCode }}
+              {{ record.auditeeDeptName }}
             </a>
           </template>
           <template v-else-if="column.dataIndex === 'action'">
@@ -191,28 +181,28 @@
               v-hasPermi="['qmsAuditPlan:edit']"
               type="link"
               class="inner-btn"
-              @click.stop="handleNotice(record)">
+              @click.stop="handleNotice(record?.id)">
               通知单
             </a-button>
             <a-button
               v-hasPermi="['qmsAuditPlan:edit']"
               type="link"
               class="inner-btn"
-              @click.stop="handleCheck(record)">
-              检查单
+              @click.stop="handleCheck(record?.id)">
+              检查记录
             </a-button>
+            <!--<a-button-->
+            <!--  v-hasPermi="['qmsAuditPlan:edit']"-->
+            <!--  type="link"-->
+            <!--  class="inner-btn"-->
+            <!--  @click.stop="handleRectify(record)">-->
+            <!--  不符合项-->
+            <!--</a-button>-->
             <a-button
               v-hasPermi="['qmsAuditPlan:edit']"
               type="link"
               class="inner-btn"
-              @click.stop="handleRectify(record)">
-              整改项
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsAuditPlan:edit']"
-              type="link"
-              class="inner-btn"
-              @click.stop="handleSummary(record)">
+              @click.stop="handleSummary(record?.id)">
               综述
             </a-button>
           </template>
@@ -251,45 +241,84 @@
       @reloadData="getList"
       @close="showImportModal = false"
     />
-    <!-- 通知添加页面弹窗 -->
-    <qms-audit-notice-add
-      v-if="showNoticeAddModal"
-      ref="noticeAddModal"
-      @close="showNoticeAddModal = false"
+    <!-- 通知编辑页面弹窗 -->
+    <qms-audit-notice-edit
+      v-if="showNoticeEditModal"
+      ref="noticeEditModal"
+      @close="showNoticeEditModal = false"
       :planObj="planObj"
+      :form-id="noticeFormId"
+      :fromPlanPage="fromPlanPage"
     />
-    <qms-audit-notice-detail
+    <!--通知详情页面弹窗-->
+    <qms-audit-notice-detail-no-flow
       v-if="showNoticeDetailModal"
       ref="noticeDetailModal"
       @close="showNoticeDetailModal = false"
       :form-id="noticeFormId"
     />
     <!-- 检查记录添加页面弹窗 -->
-    <qms-audit-check-record-add
-      v-if="showCheckRecordAddModal"
-      ref="checkRecordAddModal"
-      @close="showCheckRecordAddModal = false"
+    <qms-audit-check-record-edit
+      v-if="showCheckRecordEditModal"
+      ref="checkRecordEditModal"
+      @close="showCheckRecordEditModal = false"
+      :form-id="checkRecordFormId"
       :planObj="planObj"
+      :fromPlanPage="fromPlanPage"
     />
-    <qms-audit-check-record-detail
+    <!--检查记录详情页面弹窗-->
+    <qms-audit-check-record-detail-no-flow
       v-if="showCheckRecordDetailModal"
       ref="checkRecordDetailModal"
       :form-id="checkRecordFormId"
       @close="showCheckRecordDetailModal = false"
     />
-
+    <!--&lt;!&ndash;不合格项添加&ndash;&gt;-->
+    <!--<qms-audit-nc-edit-->
+    <!--  v-if="showNcEditModal"-->
+    <!--  @close="showNcEditModal=false"-->
+    <!--/>-->
+    <!--&lt;!&ndash;不合格详情&ndash;&gt;-->
+    <!--<qms-audit-nc-detail-->
+    <!--  v-if="showNcDetailModal"-->
+    <!--  @close="showNcDetailModal=false"-->
+    <!--  :form-id="checkRecordFormId"-->
+    <!--/>-->
+    <!--综述添加-->
+    <qms-audit-summary-edit
+      v-if="showSummaryEditModal"
+      :form-id="summaryFormId"
+      @close="showSummaryEditModal=false"
+    />
+    <qms-audit-summary-detail-no-flow
+      v-if="showSummaryDetailModal"
+      :form-id="summaryFormId"
+      @close="showSummaryDetailModal=false"
+    />
   </div>
 </template>
 <script lang="ts" setup>
 import type { QmsAuditPlanDto } from '@/api/avic/myportal/qms/QmsAuditPlanApi'; // 引入模块DTO
-import { listQmsAuditPlanByPage, delQmsAuditPlan, exportExcel } from '@/api/avic/myportal/qms/QmsAuditPlanApi'; // 引入模块API
+import { delQmsAuditPlan, exportExcel, listQmsAuditPlanByPage } from '@/api/avic/myportal/qms/QmsAuditPlanApi'; // 引入模块API
+import { getQmsAuditNoticeByPlanId } from '@/api/avic/myportal/qms/QmsAuditNoticeApi';
+import { getQmsAuditCheckRecordByPlanId } from '@/api/avic/myportal/qms/QmsAuditCheckRecordApi';
+import { getQmsAuditSummaryByPlanId } from '@/api/avic/myportal/qms/QmsAuditSummaryApi';
 import QmsAuditPlanAdd from './QmsAuditPlanAdd.vue'; // 引入添加页面组件
 import QmsAuditPlanEdit from './QmsAuditPlanEdit.vue'; // 引入编辑页面组件
 import QmsAuditPlanDetail from './QmsAuditPlanDetail.vue';
-import QmsAuditNoticeAdd from '@/views/avic/myportal/qms/qmsAudit/qmsauditnotice/QmsAuditNoticeAdd.vue';
-import QmsAuditCheckRecordAdd from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckrecord/QmsAuditCheckRecordAdd.vue';
-import QmsAuditCheckRecordDetail from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckrecord/QmsAuditCheckRecordDetailNoFlow.vue';
-import QmsAuditNoticeDetail from '@/views/avic/myportal/qms/qmsAudit/qmsauditnotice/QmsAuditNoticeDetail.vue'; // 引入详情页面组件
+import QmsAuditCheckRecordDetailNoFlow
+  from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckrecord/QmsAuditCheckRecordDetailNoFlow.vue'; // 引入详情页面组件
+import QmsAuditNoticeDetailNoFlow
+  from '@/views/avic/myportal/qms/qmsAudit/qmsauditnotice/QmsAuditNoticeDetailNoFlow.vue';
+import flowUtils from '@/views/avic/bpm/bpmutils/FlowUtils';
+import QmsAuditCheckRecordEdit
+  from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckrecord/QmsAuditCheckRecordEdit.vue';
+import QmsAuditNoticeEdit from '@/views/avic/myportal/qms/qmsAudit/qmsauditnotice/QmsAuditNoticeEdit.vue';
+import { useUserStore } from '@/store/user';
+import QmsAuditSummaryEdit from '@/views/avic/myportal/qms/qmsAudit/qmsauditsummary/QmsAuditSummaryEdit.vue';
+import QmsAuditSummaryDetailNoFlow
+  from '@/views/avic/myportal/qms/qmsAudit/qmsauditsummary/QmsAuditSummaryDetailNoFlow.vue';
+
 const { proxy } = getCurrentInstance();
 const layout = {
   labelCol: { flex: '0 0 120px' },
@@ -352,7 +381,7 @@ const columns = [
     title: '操作',
     dataIndex: 'action',
     ellipsis: true,
-    width: 300,
+    width: 250,
     align: 'center',
     fixed: 'right'
   }
@@ -390,8 +419,22 @@ onMounted(() => {
   // 获取当前用户对应的文档密级
   getUserFileSecretList();
   getYearList();
+  getRole();
   queryForm.value.forYear = proxy.$dayjs().year();
 });
+
+// 获取角色
+const userStore = useUserStore();
+const userInfo = userStore.userInfo;
+const isManager = ref(true);
+
+function getRole() {
+  if (userStore.roleMap.get('qms_audit_manager') || window.$config.hacker.indexOf(userInfo.loginName) >= 0) {
+    isManager.value = true;
+  } else {
+    isManager.value = false;
+  }
+}
 
 /** 查询数据  */
 function getList() {
@@ -522,50 +565,99 @@ function handleDelete(ids, type) {
 }
 
 const planObj = ref(null);
-
+const fromPlanPage = ref(false);
 /**
  * 通知单
  */
-const showNoticeAddModal = ref(false);
 const showNoticeDetailModal = ref(false);
+const showNoticeEditModal = ref(false);
 const noticeFormId = ref('');
-const handleNotice = (row) => {
-  planObj.value = row;
-  if (row.ynNotice) {
-    noticeFormId.value = row.auditNoticeId;
-    showNoticeDetailModal.value = true;
-  } else {
-    showNoticeAddModal.value = true;
-  }
+const handleNotice = (id) => {
+  if (!id) return;
+  const planId = id;
+  getQmsAuditNoticeByPlanId(planId).then(res => {
+    if (res.success) {
+      const record = res.data;
+      if (!record.dbid_) {
+        noticeFormId.value = record.id;
+        if (isManager.value) {
+          showNoticeEditModal.value = true;
+        } else {
+          showNoticeDetailModal.value = true;
+        }
+      } else {
+        handleFlowDetail(res.data);
+      }
+    }
+  });
 };
 
 /**
  * 检查单
  */
-const showCheckRecordAddModal = ref(false);
+const showCheckRecordEditModal = ref(false);
 const showCheckRecordDetailModal = ref(false);
 const checkRecordFormId = ref('');
-const handleCheck = (row) => {
-  planObj.value = row;
-  if (row.ynCheckRecord) {
-    checkRecordFormId.value = row.auditCheckRecordId;
-    showCheckRecordDetailModal.value = true;
-  } else {
-    showCheckRecordAddModal.value = true;
-  }
-
-  // proxy.$confirm({
-  //   title: `确认要给【${row.auditeeDeptName}】发起审核检查单吗?`,
-  //   okText: '确定',
-  //   cancelText: '取消',
-  //   onOk: () => {
-  //     console.log(`给【${row.auditeeDeptName}】发起审核检查单`);
-  //   }
-  // });
+const handleCheck = (id) => {
+  if (!id) return;
+  const planId = id;
+  getQmsAuditCheckRecordByPlanId(planId).then(res => {
+    console.log('🚀 ~ ',res);
+    if (res.success) {
+      const record = res.data;
+      if (!record.dbid_) {
+        checkRecordFormId.value = record.id;
+        if (isManager.value) {
+          showCheckRecordEditModal.value = true;
+        } else {
+          showCheckRecordDetailModal.value = true;
+        }
+      } else {
+        handleFlowDetail(res.data);
+      }
+    }
+  });
 };
 
-/** 勾选复选框时触发 */
+/**
+ * 综述
+ */
+const showSummaryEditModal = ref(false);
+const showSummaryDetailModal = ref(false);
+const summaryFormId = ref('');
+const handleSummary = (id) => {
+  if (!id) return;
+  const planId = id;
+  getQmsAuditSummaryByPlanId(planId).then(res => {
+    console.log('🚀 ~ ', res);
+    if (res.success) {
+      const record = res.data;
+      if (!record.dbid_) {
+        summaryFormId.value = record.id;
+        if (isManager.value) {
+          showSummaryEditModal.value = true;
+        } else {
+          showSummaryDetailModal.value = true;
+        }
+      } else {
+        handleFlowDetail(res.data);
+      }
+    }
+  });
+};
 
+function handleFlowDetail(record) {
+  console.log(record);
+  if (!record) return;
+  if (record.id) {
+    flowUtils.detailByOptionsAll({
+      formId: record.id,
+      bpmOperatorRefresh: getList
+    });
+  }
+}
+
+/** 勾选复选框时触发 */
 function onSelectChange(rowKeys) {
   selectedRowKeys.value = rowKeys;
 }
@@ -590,20 +682,6 @@ const getYearList = () => {
     (currentYear + 1).toString()
   ];
   return yearList;
-};
-/**
- * 整改项
- * @param row
- */
-const handleRectify = (row) => {
-  proxy.$message.success('点击了【'+ row.forYear+'年'+ row.auditeeDeptName +'审查】的整改项按钮');
-};
-/**
- * 综述
- * @param row
- */
-const handleSummary = (row) => {
-  proxy.$message.success('点击了【'+ row.forYear+'年'+ row.auditeeDeptName +'审查】综述按钮');
 };
 
 

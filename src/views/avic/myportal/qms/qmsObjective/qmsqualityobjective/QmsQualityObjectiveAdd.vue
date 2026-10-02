@@ -105,22 +105,23 @@
               />
             </a-form-item>
           </a-col>
-          <!--建议承接部门-->
-          <a-col v-bind="colLayout.cols2">
-            <a-form-item name="suggestAcceptDeptId" label="建议承接部门">
-              <AvicCommonSelect
-                v-model:value="form.suggestAcceptDeptId"
-                type="deptSelect"
-                placeholder="请选择建议承接部门"
-                select-model="multi"
-                :defaultShowValue="form.suggestAcceptDeptIdAlias"
-                @callback="
-                      result => {
-                        form.suggestAcceptDeptName = result.names;
-                        form.suggestAcceptDeptIdAlias = result.names;
-                      }
-                    "
-              />
+          <!--指标属性-->
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="indicatorType" label="指标属性">
+              <a-select
+                v-model:value="form.indicatorType"
+                :get-popup-container="triggerNode => triggerNode.parentNode"
+                option-filter-prop="children"
+                placeholder="请选择指标属性"
+              >
+                <a-select-option
+                  v-for="item in indicatorTypeList"
+                  :key="item.sysLookupTlId"
+                  :value="item.lookupCode"
+                >
+                  {{ item.lookupName }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
           </a-col>
           <!--统计部门-->
@@ -131,7 +132,7 @@
                 type="deptSelect"
                 placeholder="请选择统计部门"
                 select-model="single"
-                :defaultShowValue="form.responsibleDeptIdAlias"
+                :defaultShowValue="form.responsibleDeptName"
                 @callback="
                       result => {
                         form.responsibleDeptName = result.names;
@@ -141,7 +142,25 @@
               />
             </a-form-item>
           </a-col>
-          <!-- 截止日期 -->
+          <!--建议承接部门-->
+          <a-col v-bind="colLayout.cols2">
+            <a-form-item name="suggestAcceptDeptId" label="建议承接部门">
+              <AvicCommonSelect
+                v-model:value="form.suggestAcceptDeptId"
+                type="deptSelect"
+                placeholder="请选择建议承接部门"
+                select-model="multi"
+                :defaultShowValue="form.suggestAcceptDeptName"
+                @callback="
+                      result => {
+                        form.suggestAcceptDeptName = result.names;
+                        form.suggestAcceptDeptIdAlias = result.names;
+                      }
+                    "
+              />
+            </a-form-item>
+          </a-col>
+          <!-- 排序 -->
           <a-col v-bind="colLayout.cols">
             <a-form-item name="treeSort" label="排序" has-feedback>
               <a-input-number
@@ -175,6 +194,7 @@
               </a-select>
             </a-form-item>
           </a-col>
+          <!--附件-->
           <a-col v-bind="colLayout.cols2">
             <a-form-item
               label="附件"
@@ -204,7 +224,7 @@
   </AvicModal>
 </template>
 <script lang="ts" setup>
-import { useQmsQualityObjectiveForm, emits } from './ts/QmsQualityObjectiveForm'; // 引入表单ts
+import { emits, useQmsQualityObjectiveForm } from './ts/QmsQualityObjectiveForm'; // 引入表单ts
 const props = defineProps({
   formId: {
     type: String,
@@ -227,6 +247,7 @@ const {
   yearList,
   dataStatCycleList,
   objectiveLevelList,
+  indicatorTypeList
 } = useQmsQualityObjectiveForm({
   props: props,
   emit: emit

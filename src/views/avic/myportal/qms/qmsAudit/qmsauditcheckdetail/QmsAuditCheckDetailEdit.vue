@@ -3,7 +3,6 @@
     :visible="true"
     title="编辑"
     width="960px"
-    height="580px"
     :centered="true"
     @cancel="closeModal"
   >
@@ -18,7 +17,7 @@
         <a-row :gutter="16">
           <a-col v-bind="colLayout.cols">
             <a-form-item name="sequenceCode" label="序号">
-              <a-input
+              <a-input-number
                 v-model:value="form.sequenceCode"
                 :maxLength="50"
                 placeholder="请输入序号"
@@ -44,7 +43,7 @@
               />
             </a-form-item>
           </a-col>
-          <a-col v-bind="colLayout.cols">
+          <a-col v-bind="colLayout.cols2">
             <a-form-item name="checkModel" label="检查型号">
               <a-select
                 ref="select"

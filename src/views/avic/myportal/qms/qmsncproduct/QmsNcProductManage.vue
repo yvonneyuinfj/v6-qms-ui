@@ -14,38 +14,34 @@
               />
             </a-form-item>
           </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="审理单密级">
-              <a-input
-                v-model:value="queryForm.reviewSecretLevel"
-                placeholder="请输入审理单密级"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="日期(起)">
-              <a-date-picker
-                v-model:value="queryForm.reportTimeBegin"
+          <a-col v-bind="colLayout.cols">
+            <a-form-item label="日期">
+              <!--<a-date-picker-->
+              <!--  v-model:value="queryForm.reportTimeBegin"-->
+              <!--  format="YYYY-MM-DD"-->
+              <!--  value-format="YYYY-MM-DD"-->
+              <!--  placeholder="请选择日期(起)"-->
+              <!--  :disabled-date="startValue => proxy.$disabledStartDate(startValue, queryForm.reportTimeEnd)"-->
+              <!--/>-->
+              <a-range-picker
+                v-model:value="dateRange"
                 format="YYYY-MM-DD"
                 value-format="YYYY-MM-DD"
-                placeholder="请选择日期(起)"
-                :disabled-date="startValue => proxy.$disabledStartDate(startValue, queryForm.reportTimeEnd)"
+                @change="handleDateRangeChange"
               />
             </a-form-item>
           </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="日期(止)">
-              <a-date-picker
-                v-model:value="queryForm.reportTimeEnd"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                placeholder="请选择日期(止)"
-                :disabled-date="endValue => proxy.$disabledEndDate(endValue, queryForm.reportTimeBegin)"
-              />
-            </a-form-item>
-          </a-col>
+          <!--<a-col v-bind="colLayout.cols" v-show="advanced">-->
+          <!--  <a-form-item label="日期(止)">-->
+          <!--    <a-date-picker-->
+          <!--      v-model:value="queryForm.reportTimeEnd"-->
+          <!--      format="YYYY-MM-DD"-->
+          <!--      value-format="YYYY-MM-DD"-->
+          <!--      placeholder="请选择日期(止)"-->
+          <!--      :disabled-date="endValue => proxy.$disabledEndDate(endValue, queryForm.reportTimeBegin)"-->
+          <!--    />-->
+          <!--  </a-form-item>-->
+          <!--</a-col>-->
           <a-col v-bind="colLayout.cols" v-show="advanced">
             <a-form-item label="型号">
               <a-input
@@ -814,6 +810,16 @@
               />
             </a-form-item>
           </a-col>
+          <a-col v-bind="colLayout.cols" v-show="advanced">
+            <a-form-item label="审理单密级">
+              <a-input
+                v-model:value="queryForm.reviewSecretLevel"
+                placeholder="请输入审理单密级"
+                :allow-clear="true"
+                @pressEnter="handleQuery"
+              />
+            </a-form-item>
+          </a-col>
           <a-col
             v-bind="colLayout.cols"
             style="margin-left: auto"
@@ -860,6 +866,10 @@
         @refresh="getList"
       >
         <template #toolBarLeft>
+          <div class="aecc-leftbar-title">不合格品审理</div>
+
+        </template>
+        <template #toolBarRight>
           <a-space>
             <a-button
               v-hasPermi="['qmsNcProduct:add']"
@@ -904,29 +914,27 @@
               ghost
               @click="handleExport">
               <template #icon>
-                 <export-outlined />
+                <export-outlined />
               </template>
               导出
             </a-button>
           </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-space>
-            <AvicBpmFilter
-              :allFileAuth="['qmsNcProduct:all']"
-              :myFileAuth="['qmsNcProduct:my']"
-              :defaultBpmType = 'queryForm.bpmType'
-              :defaultBpmState = 'queryForm.bpmState'
-              @change="changeBpmFilter"
-            />
-            <a-input-search
-              class="opt-btn-commonsearch"
-              style="width: 200px"
-              placeholder="请输入审理单编号;编号方法：ZCJ26a＋年代号（四位数）＋型号＋责任单位代号（三位数）＋流水号（三位数）或审理单密级"
-              :allow-clear="true"
-              @search="handleKeyWordQuery"
-            />
-          </a-space>
+          <!--<a-space>-->
+          <!--  <AvicBpmFilter-->
+          <!--    :allFileAuth="['qmsNcProduct:all']"-->
+          <!--    :myFileAuth="['qmsNcProduct:my']"-->
+          <!--    :defaultBpmType = 'queryForm.bpmType'-->
+          <!--    :defaultBpmState = 'queryForm.bpmState'-->
+          <!--    @change="changeBpmFilter"-->
+          <!--  />-->
+          <!--  <a-input-search-->
+          <!--    class="opt-btn-commonsearch"-->
+          <!--    style="width: 200px"-->
+          <!--    placeholder="请输入审理单编号;编号方法：ZCJ26a＋年代号（四位数）＋型号＋责任单位代号（三位数）＋流水号（三位数）或审理单密级"-->
+          <!--    :allow-clear="true"-->
+          <!--    @search="handleKeyWordQuery"-->
+          <!--  />-->
+          <!--</a-space>-->
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex === 'id'">
@@ -1241,7 +1249,7 @@ function handleDelete(rows, ids) {
     proxy.$message.warning('请选择要删除的数据！');
     return;
   }
-  if (rows.filter(row => row.bpmState !== 'start')?.length > 0) {
+  if (rows.filter(row => row.bpmState && row.bpmState !== 'start')?.length > 0) {
     proxy.$message.warning('只有拟稿中的数据才可以删除！');
     return;
   }
@@ -1296,4 +1304,10 @@ function handleTableChange(pagination, filters, sorter) {
   }
   getList();
 }
+
+const dateRange = ref([]);
+const handleDateRangeChange = dateRange => {
+  queryForm.value.reportTimeBegin = dateRange[0];
+  queryForm.value.reportTimeEnd = dateRange[1];
+};
 </script>

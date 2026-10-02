@@ -55,6 +55,7 @@ export function useQmsActionPlanForm({
       secretLevelList.value = result;
     });
   }
+
   /**
    * 编辑、详情页面加载数据
    * @param {String} id 行数据的id
@@ -139,6 +140,7 @@ export function useQmsActionPlanForm({
     form.value.sourceId = selected[0].id;
     form.value.secretLevel = selected[0].secretLevel;
   };
+
   return {
     form,
     formRef,
@@ -154,4 +156,3 @@ export function useQmsActionPlanForm({
     handleSelect
   };
 }
-

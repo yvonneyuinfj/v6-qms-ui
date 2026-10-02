@@ -50,11 +50,11 @@
             <div class="table-page-search-submitButtons">
               <a-space>
                 <a-button type="primary" @click="handleQuery">
-                  <search-outlined />
+                  <search-outlined/>
                   查询
                 </a-button>
                 <a-button type="primary" @click="resetQuery" ghost>
-                  <redo-outlined />
+                  <redo-outlined/>
                   重置
                 </a-button>
                 <!--<a-button type="link" @click="toggleAdvanced" style="margin: 0">-->
@@ -95,15 +95,27 @@
           <a-space>
             <a-button
               v-hasPermi="['qmsAuditNotice:add']"
-              title="添加"
+              title="提交审批"
               type="primary"
-              @click="handleAdd"
+              :loading="submitLoading"
+              @click="handleStartFlow"
             >
               <template #icon>
-                <plus-outlined />
+                <check-circle-outlined/>
               </template>
-              添加
+              提交审批
             </a-button>
+            <!--<a-button-->
+            <!--  v-hasPermi="['qmsAuditNotice:add']"-->
+            <!--  title="添加"-->
+            <!--  type="primary"-->
+            <!--  @click="handleAdd"-->
+            <!--&gt;-->
+            <!--  <template #icon>-->
+            <!--    <plus-outlined/>-->
+            <!--  </template>-->
+            <!--  添加-->
+            <!--</a-button>-->
             <a-button
               v-hasPermi="['qmsAuditNotice:edit']"
               title="编辑"
@@ -112,7 +124,7 @@
               @click="handleEdit"
             >
               <template #icon>
-                <edit-outlined />
+                <edit-outlined/>
               </template>
               编辑
             </a-button>
@@ -125,21 +137,21 @@
               @click="handleDelete(selectedRows, selectedRowKeys)"
             >
               <template #icon>
-                <delete-outlined />
+                <delete-outlined/>
               </template>
               删除
             </a-button>
-            <a-button
-              v-hasPermi="['qmsAuditNotice:export']"
-              title="导出"
-              type="primary"
-              ghost
-              @click="handleExport">
-              <template #icon>
-                <export-outlined />
-              </template>
-              导出
-            </a-button>
+            <!--<a-button-->
+            <!--  v-hasPermi="['qmsAuditNotice:export']"-->
+            <!--  title="导出"-->
+            <!--  type="primary"-->
+            <!--  ghost-->
+            <!--  @click="handleExport">-->
+            <!--  <template #icon>-->
+            <!--    <export-outlined />-->
+            <!--  </template>-->
+            <!--  导出-->
+            <!--</a-button>-->
           </a-space>
           <!--<a-space>-->
           <!--  <AvicBpmFilter-->
@@ -155,9 +167,9 @@
           <template v-if="column.dataIndex === 'id'">
             {{ index + 1 + queryParam.pageParameter.rows * (queryParam.pageParameter.page - 1) }}
           </template>
-          <template v-else-if="column.dataIndex === 'planId'">
+          <template v-else-if="column.dataIndex === 'auditeeDeptName'">
             <a @click="handleFlowDetail(record)">
-              {{ record.planId }}
+              {{ record.auditeeDeptName }}
             </a>
           </template>
         </template>
@@ -179,14 +191,22 @@
       @reloadData="getList"
       @close="showEditModal = false"
     />
+    <qms-audit-notice-detail-no-flow
+      v-if="showDetailModal"
+      :form-id="formId"
+      @close="showDetailModal = false"
+    />
   </div>
 </template>
 <script lang="ts" setup>
 import type { QmsAuditNoticeDto } from '@/api/avic/myportal/qms/QmsAuditNoticeApi'; // 引入模块DTO
-import { listQmsAuditNoticeByPage, delQmsAuditNotice, exportExcel } from '@/api/avic/myportal/qms/QmsAuditNoticeApi'; // 引入模块API
+import { delQmsAuditNotice, exportExcel, listQmsAuditNoticeByPage, saveFormAndStartProcess } from '@/api/avic/myportal/qms/QmsAuditNoticeApi'; // 引入模块API
 import QmsAuditNoticeAdd from './QmsAuditNoticeAdd.vue'; // 引入添加页面组件
 import QmsAuditNoticeEdit from './QmsAuditNoticeEdit.vue'; // 引入编辑页面组件
-import flowUtils from '@/views/avic/bpm/bpmutils/FlowUtils.js';
+import flowUtils,{startFlowByFormCode} from '@/views/avic/bpm/bpmutils/FlowUtils.js';
+import QmsAuditNoticeDetailNoFlow
+  from '@/views/avic/myportal/qms/qmsAudit/qmsauditnotice/QmsAuditNoticeDetailNoFlow.vue';
+
 const { proxy } = getCurrentInstance();
 const layout = {
   labelCol: { flex: '0 0 120px' },
@@ -198,12 +218,12 @@ const columns = [
     title: '序号',
     dataIndex: 'id',
     ellipsis: true,
-    width: 60,
+    width: 50,
     align: 'center',
     fixed: 'left'
   },
   {
-    title: '受审核部门',
+    title: '受审核单位',
     dataIndex: 'auditeeDeptName',
     ellipsis: true,
     sorter: true,
@@ -218,7 +238,7 @@ const columns = [
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '审核依据的标准和文件',
@@ -227,7 +247,7 @@ const columns = [
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '审核覆盖产品',
@@ -236,12 +256,13 @@ const columns = [
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '审核日期',
     dataIndex: 'auditTime',
     ellipsis: true,
+    sorter: true,
     width: 120,
     resizable: true,
     align: 'center'
@@ -250,9 +271,9 @@ const columns = [
     title: '持续天数',
     dataIndex: 'durationDays',
     ellipsis: true,
-    width: 120,
+    width: 100,
     resizable: true,
-    align: 'right'
+    align: 'center'
   },
   {
     title: '审核人员',
@@ -261,16 +282,16 @@ const columns = [
     sorter: true,
     width: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '陪同人员',
     dataIndex: 'auditeeUserName',
     ellipsis: true,
     sorter: true,
-    width: 200,
+    width: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '流程状态',
@@ -280,24 +301,26 @@ const columns = [
     align: 'center',
     fixed: 'right'
   },
-  // {
-  //   title: '流程当前步骤',
-  //   dataIndex: 'activityalias_',
-  //   width: 120,
-  //   fixed: 'right'
-  // },
-  // {
-  //   title: '当前处理人',
-  //   dataIndex: 'assigneenames_',
-  //   ellipsis: true,
-  //   width: 130,
-  //   align: 'left',
-  //   fixed: 'right'
-  // }
+  {
+    title: '流程当前步骤',
+    dataIndex: 'activityalias_',
+    ellipsis: true,
+    width: 120,
+    align: 'center',
+    fixed: 'right'
+  },
+  {
+    title: '当前处理人',
+    dataIndex: 'assigneenames_',
+    ellipsis: true,
+    width: 120,
+    align: 'center',
+    fixed: 'right'
+  }
 ];
 const queryForm = ref<QmsAuditNoticeDto>({
   bpmState: 'all',
-  bpmType: 'my'
+  bpmType: 'all'
 });
 // 高级查询对象
 const queryParam = reactive({
@@ -349,12 +372,14 @@ function getList() {
       loading.value = false;
     });
 }
+
 /** 获取当前用户对应的文档密级 */
 function getUserFileSecretList() {
   proxy.$getUserFileSecretLevelList(result => {
     secretLevelList.value = result;
   });
 }
+
 /** 根据流程状态及发起人查询数据 */
 function changeBpmFilter({ bpmType, bpmState }) {
   queryForm.value.bpmType = bpmType;
@@ -362,6 +387,7 @@ function changeBpmFilter({ bpmType, bpmState }) {
   queryParam.searchParams = queryForm.value;
   getList();
 }
+
 /** 高级查询 查询按钮操作 */
 function handleQuery() {
   queryParam.searchParams = queryForm.value;
@@ -369,6 +395,7 @@ function handleQuery() {
   queryParam.pageParameter.page = 1;
   getList();
 }
+
 /** 高级查询 重置按钮操作 */
 function resetQuery() {
   queryForm.value = {
@@ -377,10 +404,12 @@ function resetQuery() {
   };
   handleQuery();
 }
+
 /** 高级查询 展开/收起 */
 function toggleAdvanced() {
   advanced.value = !advanced.value;
 }
+
 /** 快速查询逻辑 */
 function handleKeyWordQuery(value) {
   const keyWord = {
@@ -391,35 +420,107 @@ function handleKeyWordQuery(value) {
   queryParam.pageParameter.page = 1;
   getList();
 }
+
 /** 添加 */
 function handleAdd() {
   showAddModal.value = true;
 }
+
 /** 编辑 */
 function handleEdit() {
   if (selectedRows.value.length !== 1) {
     proxy.$message.warning('请选择一条要编辑的数据！');
     return;
   }
+  if (selectedRows.value.filter(row => row.bpmState && row.bpmState !== 'start')?.length > 0) {
+    proxy.$message.warning('只有拟稿中的数据才可以删除！');
+    return;
+  }
   formId.value = selectedRows.value[0].id;
   showEditModal.value = true;
 }
+
+const showDetailModal = ref(false);
+
 /** 打开流程详情页面 */
 function handleFlowDetail(record) {
+  if (!record) return;
   if (record.id) {
-    flowUtils.detailByOptions({
-      formId: record.id,
-      bpmOperatorRefresh: getList
-    });
+    if (!record.dbid_) {
+      formId.value = record.id;
+      showDetailModal.value = true;
+    } else {
+      flowUtils.detailByOptionsAll({
+        formId: record.id,
+        bpmOperatorRefresh: getList
+      });
+    }
   }
 }
+
+const formCode = 'QmsAuditNotice';
+const submitLoading = ref(false);
+
+/** 提交流程 */
+function handleStartFlow() {
+  if (selectedRows.value.length !== 1) {
+    proxy.$message.warning('请选择一条要提交流程的数据！');
+    return;
+  }
+  // 流程已存在，打开表单
+  if (selectedRows.value[0].businessstate_ != '') {
+    handleFlowDetail(selectedRows.value[0]);
+    return;
+  }
+  proxy.$confirm({
+    title: '确定提交流程吗？',
+    okText: '确定',
+    cancelText: '取消',
+    onOk: () => {
+      submitLoading.value = true;
+      startFlowByFormCode({
+        formCode: formCode,
+        formData: selectedRows.value[0],
+        callback: bpmDefinedInfo => {
+          // 处理数据
+          const postData = proxy.$lodash.cloneDeep(selectedRows.value[0]);
+          const params = {
+            processDefId: bpmDefinedInfo.dbid || bpmDefinedInfo.value.defineId,
+            formCode: formCode,
+            postData
+          };
+          saveFormAndStartProcess(params)
+            .then(res => {
+              if (res.success) {
+                // handleFlowDetail(postData);
+                flowUtils.detailByOptions({
+                  formId: postData.id,
+                  bpmOperatorRefresh: getList
+                });
+                proxy.$message.info('提交流程成功！');
+                handleQuery();
+              } else {
+                proxy.$message.info('提交流程失败！');
+              }
+            })
+            .catch(error => {
+              proxy.$message.warning(error.message);
+              proxy.$message.info('提交流程失败！');
+            })
+            .finally(() => (submitLoading.value = false));
+        }
+      });
+    }
+  });
+}
+
 /** 删除 */
 function handleDelete(rows, ids) {
   if (ids.length == 0) {
     proxy.$message.warning('请选择要删除的数据！');
     return;
   }
-  if (rows.filter(row => row.bpmState !== 'start')?.length > 0) {
+  if (rows.filter(row => row.bpmState && row.bpmState !== 'start')?.length > 0) {
     proxy.$message.warning('只有拟稿中的数据才可以删除！');
     return;
   }
@@ -443,6 +544,7 @@ function handleDelete(rows, ids) {
     }
   });
 }
+
 /** 导出 */
 function handleExport() {
   proxy.$confirm({
@@ -459,11 +561,13 @@ function handleExport() {
     }
   });
 }
+
 /** 勾选复选框时触发 */
 function onSelectChange(rowKeys, rows) {
   selectedRowKeys.value = rowKeys;
   selectedRows.value = rows;
 }
+
 /** 表格排序 */
 function handleTableChange(pagination, filters, sorter) {
   queryParam.pageParameter.page = pagination.current;

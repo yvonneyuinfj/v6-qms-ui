@@ -132,6 +132,10 @@ export function getQmsAuditNotice (id: string): Promise<ResponseBaseData<QmsAudi
   return request.get(basePath + '/get/' + id + '/v1');
 }
 
+export function getQmsAuditNoticeByPlanId (planId: string): Promise<ResponseBaseData<QmsAuditNoticeDto>> {
+  return request.get(basePath + '/getByPlanId/' + planId + '/v1');
+}
+
 /** 保存表单数据 */
 export function saveQmsAuditNotice (form: QmsAuditNoticeDto): Promise<ResponseBaseData<any>> {
   return request.post(basePath + '/save/v1', form);

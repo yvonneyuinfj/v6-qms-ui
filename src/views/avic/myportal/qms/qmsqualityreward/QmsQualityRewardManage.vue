@@ -36,11 +36,11 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col v-bind="colLayout.cols" v-show="advanced">
-                <a-form-item label="奖励类型;部门、个人，可多选">
+              <a-col v-bind="colLayout.cols">
+                <a-form-item label="奖励类型">
                   <a-input
                     v-model:value="queryForm.awardType"
-                    placeholder="请输入奖励类型;部门、个人，可多选"
+                    placeholder="请输入奖励类型"
                     :allow-clear="true"
                     @pressEnter="handleQuery"
                   />
@@ -365,73 +365,74 @@
             @refresh="getList"
           >
             <template #toolBarLeft>
-          <a-space>
-            <a-button
-              v-hasPermi="['qmsQualityReward:add']"
-              title="添加"
-              type="primary"
-              @click="handleAdd"
-            >
-              <template #icon>
-                <plus-outlined />
-              </template>
-              添加
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityReward:edit']"
-              title="编辑"
-              type="primary"
-              ghost
-              @click="handleEdit"
-            >
-              <template #icon>
-                <edit-outlined />
-              </template>
-              编辑
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityReward:del']"
-              title="删除"
-              danger
-              :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
-              :loading="delLoading"
-              @click="handleDelete(selectedRows, selectedRowKeys)"
-            >
-              <template #icon>
-                <delete-outlined />
-              </template>
-              删除
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityReward:export']"
-              title="导出"
-              type="primary"
-              ghost
-              @click="handleExport">
-              <template #icon>
-                 <export-outlined />
-              </template>
-              导出
-            </a-button>
-          </a-space>
+              <div class="aecc-leftbar-title">质量奖励</div>
             </template>
             <template #toolBarRight>
               <a-space>
-                <AvicBpmFilter
-                  :allFileAuth="['qmsQualityReward:all']"
-                  :myFileAuth="['qmsQualityReward:my']"
-                  :defaultBpmType = 'queryForm.bpmType'
-                  :defaultBpmState = 'queryForm.bpmState'
-                  @change="changeBpmFilter"
-                />
-                <a-input-search
-                  class="opt-btn-commonsearch"
-                  style="width: 200px"
-                  placeholder="请输入项目名称或涉及型号"
-                  :allow-clear="true"
-                  @search="handleKeyWordQuery"
-                />
+                <a-button
+                  v-hasPermi="['qmsQualityReward:add']"
+                  title="添加"
+                  type="primary"
+                  @click="handleAdd"
+                >
+                  <template #icon>
+                    <plus-outlined />
+                  </template>
+                  添加
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityReward:edit']"
+                  title="编辑"
+                  type="primary"
+                  ghost
+                  @click="handleEdit"
+                >
+                  <template #icon>
+                    <edit-outlined />
+                  </template>
+                  编辑
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityReward:del']"
+                  title="删除"
+                  danger
+                  :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
+                  :loading="delLoading"
+                  @click="handleDelete(selectedRows, selectedRowKeys)"
+                >
+                  <template #icon>
+                    <delete-outlined />
+                  </template>
+                  删除
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityReward:export']"
+                  title="导出"
+                  type="primary"
+                  ghost
+                  @click="handleExport">
+                  <template #icon>
+                    <export-outlined />
+                  </template>
+                  导出
+                </a-button>
               </a-space>
+              <!--<a-space>-->
+              <!--  <AvicBpmFilter-->
+              <!--    :allFileAuth="['qmsQualityReward:all']"-->
+              <!--    :myFileAuth="['qmsQualityReward:my']"-->
+              <!--    :defaultBpmType = 'queryForm.bpmType'-->
+              <!--    :defaultBpmState = 'queryForm.bpmState'-->
+              <!--    @change="changeBpmFilter"-->
+              <!--  />-->
+              <!--  <a-input-search-->
+              <!--    class="opt-btn-commonsearch"-->
+              <!--    style="width: 200px"-->
+              <!--    placeholder="请输入项目名称或涉及型号"-->
+              <!--    :allow-clear="true"-->
+              <!--    @search="handleKeyWordQuery"-->
+              <!--  />-->
+              <!--</a-space>-->
             </template>
             <template #bodyCell="{ column, text, record, index }">
               <template v-if="column.dataIndex === 'id'">
@@ -507,140 +508,6 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '项目名称',
-    dataIndex: 'awardProjectName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '涉及型号',
-    dataIndex: 'model',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '参与人员数量',
-    dataIndex: 'participantCount',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
-  },
-  {
-    title: '经济效益预估',
-    dataIndex: 'economicBenefitEstimate',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '奖励类型;部门、个人，可多选',
-    dataIndex: 'awardType',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申报/推荐事由;说明事迹具体情况和每个奖励人员的作用和贡献.（限定不超过500字）事迹应包括时间、型号和产品名称、地点、人员和所在单位、事迹内容、取得的效果（如避免较大经济损失、指标改善明显，通过发现问题形成改进完善了体系标准得以推广应用等）。',
-    dataIndex: 'applyReason',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '引用条款',
-    dataIndex: 'mainClauseName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '一级条款CODE',
-    dataIndex: 'clauseLevel1Code',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '二级条款CODE',
-    dataIndex: 'clauseLevel2Code',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '活动前效果',
-    dataIndex: 'beforeEffectDesc',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '活动后效果',
-    dataIndex: 'afterEffectDesc',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '质量事迹简介;不超过400字',
-    dataIndex: 'qualityDeedDesc',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '运用的先进质量工具或方法',
-    dataIndex: 'advancedToolMethod',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '优化的流程体系文件名称',
-    dataIndex: 'optimizedSystemFileName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '优化的流程体系文件编号',
-    dataIndex: 'optimizedSystemFileNameNo',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '奖励编号',
     dataIndex: 'rewardCode',
     ellipsis: true,
@@ -659,8 +526,8 @@ const columns = [
     align: 'left'
   },
   {
-    title: '申报人ID',
-    dataIndex: 'applyStaffId',
+    title: '项目名称',
+    dataIndex: 'awardProjectName',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
@@ -668,35 +535,79 @@ const columns = [
     align: 'left'
   },
   {
-    title: '申报人CODE',
-    dataIndex: 'applyStaffCode',
+    title: '涉及型号',
+    dataIndex: 'model',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
     resizable: true,
     align: 'left'
   },
+  {
+    title: '奖励类型',
+    dataIndex: 'awardType',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'left'
+  },
+  {
+    title: '参与人员数量',
+    dataIndex: 'participantCount',
+    ellipsis: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'right'
+  },
+  // {
+  //   title: '经济效益预估',
+  //   dataIndex: 'economicBenefitEstimate',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '申报/推荐事由',
+  //   dataIndex: 'applyReason',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '引用条款',
+  //   dataIndex: 'mainClauseName',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '一级条款CODE',
+  //   dataIndex: 'clauseLevel1Code',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '二级条款CODE',
+  //   dataIndex: 'clauseLevel2Code',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
   {
     title: '申报人',
     dataIndex: 'applyStaffName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申报单位ID',
-    dataIndex: 'applyDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申报单位CODE',
-    dataIndex: 'applyDeptCode',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
@@ -719,59 +630,6 @@ const columns = [
     minWidth: 120,
     resizable: true,
     align: 'center'
-  },
-  {
-    title: '质量信息上报确认;Y\N\NA',
-    dataIndex: 'qualityInfoReportResult',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '按期归零或关闭确认;Y\N\NA',
-    dataIndex: 'zeroCloseResult',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '体系符合性确认;Y\N\NA',
-    dataIndex: 'qmsComplianceResult',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
   },
   {
     title: '流程状态',
@@ -947,7 +805,7 @@ function handleDelete(rows, ids) {
     proxy. $message.warning('请选择要删除的数据！');
     return;
   }
-  if (rows.filter(row => row.bpmState !== 'start')?.length > 0) {
+  if (rows.filter(row => row.bpmState && row.bpmState !== 'start')?.length > 0) {
     proxy. $message.warning('只有拟稿中的数据才可以删除！');
     return;
   }

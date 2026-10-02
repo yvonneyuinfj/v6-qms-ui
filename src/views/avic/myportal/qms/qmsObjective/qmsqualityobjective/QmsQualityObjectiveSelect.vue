@@ -204,7 +204,7 @@ const list = ref([]); // 表格数据集合
 const selectedRowKeys = ref([]); // 选中数据主键集合
 const selectedRows = ref([]); // 选中行集合
 const loading = ref(false);
-const  totalPage = ref(0);
+const totalPage = ref(0);
 const secretLevelList = ref([]); // 密级通用代码
 
 onMounted(() => {
@@ -213,11 +213,14 @@ onMounted(() => {
   // 获取当前用户对应的文档密级
   getUserFileSecretList();
 });
+
 /** 查询数据  */
 function getList() {
   selectedRowKeys.value = []; // 清空选中
   selectedRows.value = []; // 清空选中
   loading.value = true;
+  queryForm.value.objectiveLevel = 'INST';
+  queryParam.searchParams = queryForm.value;
   listQmsQualityObjectiveByPage(queryParam)
     .then(response => {
       list.value = response.data.result;
@@ -230,12 +233,14 @@ function getList() {
       loading.value = false;
     });
 }
+
 /** 获取当前用户对应的文档密级 */
 function getUserFileSecretList() {
   proxy.$getUserFileSecretLevelList(result => {
     secretLevelList.value = result;
   });
 }
+
 /** 高级查询 查询按钮操作 */
 function handleQuery() {
   queryParam.searchParams = queryForm.value;
@@ -243,15 +248,18 @@ function handleQuery() {
   queryParam.pageParameter.page = 1;
   getList();
 }
+
 /** 高级查询 重置按钮操作 */
 function resetQuery() {
   queryForm.value = {};
   handleQuery();
 }
+
 /** 高级查询 展开/收起 */
 function toggleAdvanced() {
   advanced.value = !advanced.value;
 }
+
 /** 快速查询逻辑 */
 function handleKeyWordQuery(value) {
   const keyWord = {
@@ -270,6 +278,7 @@ function onSelectChange(rowKeys, rows) {
   // 传出选中项
   $emit('select', selectedRows.value);
 }
+
 /** 表格排序 */
 function handleTableChange(pagination, _filters, sorter) {
   queryParam.pageParameter.page = pagination.current;
@@ -280,8 +289,9 @@ function handleTableChange(pagination, _filters, sorter) {
   }
   getList();
 }
+
 /** 行双击事件 */
-function customRow (record) {
+function customRow(record) {
   return {
     on: {
       dblclick: (event, record, index) => {

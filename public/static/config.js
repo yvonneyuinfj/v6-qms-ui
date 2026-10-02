@@ -20,5 +20,6 @@ window.$config = {
   ssoConfig: {
     /** 单点登录方式，未开启单点和多种单点方式配置空，其余按照具体单点方式配置 */
     ssoFlag: ''
-  }
+  },
+  hacker:['u4891']
 };

@@ -11,6 +11,11 @@ export function getProcessDetailParameter(data) {
   return request.post(bpmUtils.baseurl + '/business/getProcessDetailParameter/v1', data);
 }
 
+/** 获取流程详情页面相关数据*/
+export function getProcessDetailParameterAll(data) {
+  return request.post(bpmUtils.baseurl + '/business/getProcessDetailParameterAll/v1', data);
+}
+
 /** 完成待阅任务 */
 export function finishreader(data) {
   return request.post(bpmUtils.baseurl + '/business/finishreader/v1', data);

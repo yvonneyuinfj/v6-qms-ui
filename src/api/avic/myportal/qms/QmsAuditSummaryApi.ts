@@ -106,6 +106,10 @@ export function getQmsAuditSummary (id: string): Promise<ResponseBaseData<QmsAud
   return request.get(basePath + '/get/' + id + '/v1');
 }
 
+export function getQmsAuditSummaryByPlanId (planId: string): Promise<ResponseBaseData<QmsAuditSummaryDto>> {
+  return request.get(basePath + '/getByPlanId/' + planId + '/v1');
+}
+
 /** 保存表单数据 */
 export function saveQmsAuditSummary (form: QmsAuditSummaryDto): Promise<ResponseBaseData<any>> {
   return request.post(basePath + '/save/v1', form);

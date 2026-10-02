@@ -25,27 +25,33 @@
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item label="培训日期(起)">
-              <a-date-picker
-                v-model:value="queryForm.trainingDateBegin"
+            <a-form-item label="培训日期">
+              <!--<a-date-picker-->
+              <!--  v-model:value="queryForm.trainingDateBegin"-->
+              <!--  format="YYYY-MM-DD"-->
+              <!--  value-format="YYYY-MM-DD"-->
+              <!--  placeholder="请选择培训日期(起)"-->
+              <!--  :disabled-date="startValue => proxy.$disabledStartDate(startValue, queryForm.trainingDateEnd)"-->
+              <!--/>-->
+              <a-range-picker
+                v-model:value="dateRange"
                 format="YYYY-MM-DD"
                 value-format="YYYY-MM-DD"
-                placeholder="请选择培训日期(起)"
-                :disabled-date="startValue => proxy.$disabledStartDate(startValue, queryForm.trainingDateEnd)"
+                @change="handleDateRangeChange"
               />
             </a-form-item>
           </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item label="培训日期(止)">
-              <a-date-picker
-                v-model:value="queryForm.trainingDateEnd"
-                format="YYYY-MM-DD"
-                value-format="YYYY-MM-DD"
-                placeholder="请选择培训日期(止)"
-                :disabled-date="endValue => proxy.$disabledEndDate(endValue, queryForm.trainingDateBegin)"
-              />
-            </a-form-item>
-          </a-col>
+          <!--<a-col v-bind="colLayout.cols">-->
+          <!--  <a-form-item label="培训日期(止)">-->
+          <!--    <a-date-picker-->
+          <!--      v-model:value="queryForm.trainingDateEnd"-->
+          <!--      format="YYYY-MM-DD"-->
+          <!--      value-format="YYYY-MM-DD"-->
+          <!--      placeholder="请选择培训日期(止)"-->
+          <!--      :disabled-date="endValue => proxy.$disabledEndDate(endValue, queryForm.trainingDateBegin)"-->
+          <!--    />-->
+          <!--  </a-form-item>-->
+          <!--</a-col>-->
           <a-col v-bind="colLayout.cols" v-show="advanced">
             <a-form-item label="培训地点类型">
               <a-input
@@ -182,6 +188,9 @@
         @refresh="getList"
       >
         <template #toolBarLeft>
+          <div class="aecc-leftbar-title">质量培训</div>
+        </template>
+        <template #toolBarRight>
           <a-space>
             <a-button
               v-hasPermi="['qmsTrainingRecord:add']"
@@ -226,29 +235,27 @@
               ghost
               @click="handleExport">
               <template #icon>
-                 <export-outlined />
+                <export-outlined />
               </template>
               导出
             </a-button>
           </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-space>
-            <AvicBpmFilter
-              :allFileAuth="['qmsTrainingRecord:all']"
-              :myFileAuth="['qmsTrainingRecord:my']"
-              :defaultBpmType = 'queryForm.bpmType'
-              :defaultBpmState = 'queryForm.bpmState'
-              @change="changeBpmFilter"
-            />
-            <a-input-search
-              class="opt-btn-commonsearch"
-              style="width: 200px"
-              placeholder="请输入培训编号或培训题目"
-              :allow-clear="true"
-              @search="handleKeyWordQuery"
-            />
-          </a-space>
+          <!--<a-space>-->
+          <!--  <AvicBpmFilter-->
+          <!--    :allFileAuth="['qmsTrainingRecord:all']"-->
+          <!--    :myFileAuth="['qmsTrainingRecord:my']"-->
+          <!--    :defaultBpmType = 'queryForm.bpmType'-->
+          <!--    :defaultBpmState = 'queryForm.bpmState'-->
+          <!--    @change="changeBpmFilter"-->
+          <!--  />-->
+          <!--  <a-input-search-->
+          <!--    class="opt-btn-commonsearch"-->
+          <!--    style="width: 200px"-->
+          <!--    placeholder="请输入培训编号或培训题目"-->
+          <!--    :allow-clear="true"-->
+          <!--    @search="handleKeyWordQuery"-->
+          <!--  />-->
+          <!--</a-space>-->
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex === 'id'">
@@ -345,24 +352,24 @@ const columns = [
     resizable: true,
     align: 'left'
   },
-  {
-    title: '培训教师ID',
-    dataIndex: 'trainingId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '培训教师职工号',
-    dataIndex: 'trainingTeacherCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
+  // {
+  //   title: '培训教师ID',
+  //   dataIndex: 'trainingId',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '培训教师职工号',
+  //   dataIndex: 'trainingTeacherCode',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
   {
     title: '培训教师',
     dataIndex: 'trainingTeacher',
@@ -372,32 +379,32 @@ const columns = [
     resizable: true,
     align: 'left'
   },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
-  },
+  // {
+  //   title: '密级',
+  //   dataIndex: 'secretLevelName',
+  //   ellipsis: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'center'
+  // },
+  //
+  // {
+  //   title: '备注',
+  //   dataIndex: 'remark',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '排序',
+  //   dataIndex: 'orderBy',
+  //   ellipsis: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'right'
+  // },
   {
     title: '流程状态',
     dataIndex: 'businessstate_',
@@ -410,6 +417,7 @@ const columns = [
     title: '流程当前步骤',
     dataIndex: 'activityalias_',
     width: 120,
+    align: 'center',
     fixed: 'right'
   },
   {
@@ -417,7 +425,7 @@ const columns = [
     dataIndex: 'assigneenames_',
     ellipsis: true,
     width: 130,
-    align: 'left',
+    align: 'center',
     fixed: 'right'
   }
 ];
@@ -545,7 +553,7 @@ function handleDelete(rows, ids) {
     proxy.$message.warning('请选择要删除的数据！');
     return;
   }
-  if (rows.filter(row => row.bpmState !== 'start')?.length > 0) {
+  if (rows.filter(row => row.bpmState && row.bpmState !== 'start')?.length > 0) {
     proxy.$message.warning('只有拟稿中的数据才可以删除！');
     return;
   }
@@ -600,4 +608,11 @@ function handleTableChange(pagination, filters, sorter) {
   }
   getList();
 }
+
+const dateRange = ref([]);
+
+const handleDateRangeChange = dateRange => {
+  queryForm.value.trainingDateBegin = dateRange[0];
+  queryForm.value.trainingDateEnd = dateRange[1];
+};
 </script>

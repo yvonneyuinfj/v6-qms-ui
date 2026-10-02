@@ -110,6 +110,7 @@ export interface QmsAuditCheckRecordDto extends BaseBeanModel {
   bpmType?: string;
   /** 子表集合 */
   qmsAuditCheckDetailList?: [];
+  auditClause?: string;
 }
 
 /** 获取分页数据 */
@@ -120,6 +121,10 @@ export function listQmsAuditCheckRecordByPage(param: QueryParamModel): Promise<R
 /** 根据id加载数据 */
 export function getQmsAuditCheckRecord (id: string): Promise<ResponseBaseData<QmsAuditCheckRecordDto>> {
   return request.get(basePath + '/get/' + id + '/v1');
+}
+
+export function getQmsAuditCheckRecordByPlanId (planId: string): Promise<ResponseBaseData<QmsAuditCheckRecordDto>> {
+  return request.get(basePath + '/getByPlanId/' + planId + '/v1');
 }
 
 /** 保存表单数据 */

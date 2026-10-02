@@ -1,9 +1,8 @@
 <template>
   <AvicModal
     :visible="true"
-    title="编辑"
-    width="80%"
-    height="80%"
+    title="通知单详情"
+    width="70%"
     :centered="true"
     @cancel="closeModal"
   >
@@ -17,14 +16,6 @@
         :colon="false"
        >
         <a-row>
-          <a-col v-bind="colLayout.cols2">
-            <a-form-item name="noticeName" label="审核计划">
-              <a-input
-                v-model:value="form.noticeName"
-                disabled
-              />
-            </a-form-item>
-          </a-col>
           <a-col v-bind="colLayout.cols">
             <a-form-item name="auditeeDeptName" label="受审核部门">
               <a-input
@@ -42,7 +33,7 @@
                 :default-show-value="form.chiefAuditorName"
                 @callback="res => (form.chiefAuditorName = res.names)"
                 :userSelectTabs="['dept']"
-                :moreUserInfo="['no']"
+
                 disabled
               />
             </a-form-item>
@@ -114,7 +105,7 @@
                 :default-show-value="form.auditorName"
                 @callback="res => (form.auditorName = res.names)"
                 :userSelectTabs="['dept']"
-                :moreUserInfo="['no']"
+
                 select-model="multi"
                 disabled
               />
@@ -130,7 +121,6 @@
                 :default-show-value="form.auditeeUserName"
                 @callback="res => (form.auditeeUserName = res.names)"
                 :userSelectTabs="['dept']"
-                :moreUserInfo="['no']"
                 disabled
               />
             </a-form-item>
@@ -176,7 +166,6 @@
       </a-form>
     </a-spin>
     <template #footer>
-      <a-button title="保存" type="primary" :loading="loading" @click="saveForm">保存</a-button>
       <a-button title="返回" type="primary" ghost @click="closeModal">返回</a-button>
     </template>
   </AvicModal>

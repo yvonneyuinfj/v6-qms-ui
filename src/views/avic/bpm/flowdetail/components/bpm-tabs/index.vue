@@ -162,14 +162,21 @@ export default {
     },
     'bpmInstanceObject.bpmTabs.showTabs': {
       handler(tabs) {
-        // if (tabs) {
-        //   // 流程意见默认不显示
-        //   tabs.forEach(item => {
-        //     if (item.code === 'bpm_idea_tab') {
-        //       item.display = '0';
-        //     }
-        //   });
-        // }
+        if (tabs) {
+          /**
+           * 流程意见默认不显示
+           * 文字跟踪默认显示
+           * 20250210 于小耘
+           */
+          tabs.forEach(item => {
+            // console.log('🚀 ~ handler ~ item:', item);
+            if (item.code === 'bpm_idea_tab') {
+              item.display = '0';
+            } else if (item.code === 'bpm_track_tab') {
+              item.display = '1';
+            }
+          });
+        }
         this.data = tabs;
       }
     }

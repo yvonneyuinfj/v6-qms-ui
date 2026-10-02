@@ -7,10 +7,10 @@
           <a-form v-bind="layout" ref="formRef" :model="queryForm">
             <a-row :gutter="16">
               <a-col v-bind="colLayout.cols">
-                <a-form-item label="活动编号;自动生成，QC/BZ/GG年份号-3位流水号">
+                <a-form-item label="活动编号">
                   <a-input
                     v-model:value="queryForm.activityCode"
-                    placeholder="请输入活动编号;自动生成，QC/BZ/GG年份号-3位流水号"
+                    placeholder="请输入活动编号"
                     :allow-clear="true"
                     @pressEnter="handleQuery"
                   />
@@ -18,22 +18,40 @@
               </a-col>
               <a-col v-bind="colLayout.cols">
                 <a-form-item label="所属年份">
-                  <a-input
+                  <a-select
                     v-model:value="queryForm.forYear"
+                    :get-popup-container="triggerNode => triggerNode.parentNode"
+                    option-filter-prop="children"
                     placeholder="请输入所属年份"
-                    :allow-clear="true"
-                    @pressEnter="handleQuery"
-                  />
+                    @select="handleQuery"
+                  >
+                    <a-select-option
+                      v-for="item in yearList"
+                      :key="item"
+                      :value="item"
+                    >
+                      {{ item }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col v-bind="colLayout.cols">
-                <a-form-item label="活动类型;数据字典：QC小组、质量信得过班组、质量攻关项目">
-                  <a-input
-                    v-model:value="queryForm.activityType"
-                    placeholder="请输入活动类型;数据字典：QC小组、质量信得过班组、质量攻关项目"
-                    :allow-clear="true"
-                    @pressEnter="handleQuery"
-                  />
+                <a-form-item label="活动类型">
+                  <a-select
+                    v-model:value="queryForm.forYear"
+                    :get-popup-container="triggerNode => triggerNode.parentNode"
+                    option-filter-prop="children"
+                    placeholder="请选择活动类型"
+                    @select="handleQuery"
+                  >
+                    <a-select-option
+                      v-for="item in yearList"
+                      :key="item"
+                      :value="item"
+                    >
+                      {{ item }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col v-bind="colLayout.cols" v-show="advanced">
@@ -477,63 +495,64 @@
             @refresh="getList"
           >
             <template #toolBarLeft>
-          <a-space>
-            <a-button
-              v-hasPermi="['qmsQualityActivity:add']"
-              title="添加"
-              type="primary"
-              @click="handleAdd"
-            >
-              <template #icon>
-                <plus-outlined />
-              </template>
-              添加
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityActivity:del']"
-              title="删除"
-              danger
-              :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
-              :loading="delLoading"
-              @click="handleDelete(selectedRowKeys, '')"
-            >
-              <template #icon>
-                <delete-outlined />
-              </template>
-              删除
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityActivity:import']"
-              title="导入"
-              type="primary"
-              ghost
-              @click="handleImport">
-              <template #icon>
-                 <import-outlined />
-              </template>
-              导入
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityActivity:export']"
-              title="导出"
-              type="primary"
-              ghost
-              @click="handleExport">
-              <template #icon>
-                 <export-outlined />
-              </template>
-              导出
-            </a-button>
-          </a-space>
+              <div class="aecc-leftbar-title">质量活动【QC小组、质量信得过班组、质量攻关项目】</div>
             </template>
             <template #toolBarRight>
-              <a-input-search
-                class="opt-btn-commonsearch"
-                style="width: 200px"
-                placeholder="请输入活动编号;自动生成，QC/BZ/GG年份号-3位流水号或所属年份"
-                :allow-clear="true"
-                @search="handleKeyWordQuery"
-              />
+              <a-space>
+                <a-button
+                  v-hasPermi="['qmsQualityActivity:add']"
+                  title="添加"
+                  type="primary"
+                  @click="handleAdd"
+                >
+                  <template #icon>
+                    <plus-outlined />
+                  </template>
+                  添加
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityActivity:del']"
+                  title="删除"
+                  danger
+                  :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
+                  :loading="delLoading"
+                  @click="handleDelete(selectedRowKeys, '')"
+                >
+                  <template #icon>
+                    <delete-outlined />
+                  </template>
+                  删除
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityActivity:import']"
+                  title="导入"
+                  type="primary"
+                  ghost
+                  @click="handleImport">
+                  <template #icon>
+                    <import-outlined />
+                  </template>
+                  导入
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityActivity:export']"
+                  title="导出"
+                  type="primary"
+                  ghost
+                  @click="handleExport">
+                  <template #icon>
+                    <export-outlined />
+                  </template>
+                  导出
+                </a-button>
+              </a-space>
+              <!--<a-input-search-->
+              <!--  class="opt-btn-commonsearch"-->
+              <!--  style="width: 200px"-->
+              <!--  placeholder="请输入活动编号;自动生成，QC/BZ/GG年份号-3位流水号或所属年份"-->
+              <!--  :allow-clear="true"-->
+              <!--  @search="handleKeyWordQuery"-->
+              <!--/>-->
             </template>
             <template #bodyCell="{ column, text, record, index }">
               <template v-if="column.dataIndex  === 'id'">
@@ -627,7 +646,7 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '活动编号;自动生成，QC/BZ/GG年份号-3位流水号',
+    title: '活动编号',
     dataIndex: 'activityCode',
     ellipsis: true,
     sorter: true,
@@ -645,7 +664,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '活动类型;数据字典：QC小组、质量信得过班组、质量攻关项目',
+    title: '活动类型',
     dataIndex: 'activityType',
     ellipsis: true,
     sorter: true,
@@ -656,24 +675,6 @@ const columns = [
   {
     title: '课题/班组/项目名称',
     dataIndex: 'activityName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '成员ID',
-    dataIndex: 'membebrId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '成员CODE',
-    dataIndex: 'memberCode',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
@@ -698,16 +699,7 @@ const columns = [
     align: 'right'
   },
   {
-    title: '小组名称;QC小组使用',
-    dataIndex: 'groupName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '活动结束时间;月度进展生成截止依据',
+    title: '活动结束时间',
     dataIndex: 'deadline',
     ellipsis: true,
     minWidth: 120,
@@ -715,44 +707,8 @@ const columns = [
     align: 'center'
   },
   {
-    title: '申请人ID',
-    dataIndex: 'applyStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申请人CODE',
-    dataIndex: 'applyStaffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申请人姓名',
+    title: '申请人',
     dataIndex: 'applyStaffName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申请部门ID',
-    dataIndex: 'applyDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申请部门CODE',
-    dataIndex: 'applyDeptCode',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
@@ -777,24 +733,6 @@ const columns = [
     align: 'center'
   },
   {
-    title: '组长/负责人ID',
-    dataIndex: 'leaderStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '组长/负责人CODE',
-    dataIndex: 'leaderStaffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '组长/负责人',
     dataIndex: 'leaderStaffName',
     ellipsis: true,
@@ -813,33 +751,6 @@ const columns = [
     align: 'left'
   },
   {
-    title: '课题类型;QC小组：问题解决型/创新型',
-    dataIndex: 'topicType',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '课题来源;QC小组：指令型课题、指导型课题、自选课题',
-    dataIndex: 'topicSource',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '选题理由;QC小组填写',
-    dataIndex: 'selectionReason',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '活动目标',
     dataIndex: 'activityGoal',
     ellipsis: true,
@@ -847,140 +758,6 @@ const columns = [
     minWidth: 120,
     resizable: true,
     align: 'left'
-  },
-  {
-    title: '攻关类别;质量信得过班组：体系运行类/体系改进类/攻坚型号类/故障攻关类/其他',
-    dataIndex: 'projectCategory',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '项目来源;质量信得过班组：自定项目/集团要求/所内要求/其他',
-    dataIndex: 'projectSource',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '班组基本情况;质量信得过班组',
-    dataIndex: 'teamBasicInfo',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '识别需求;质量信得过班组',
-    dataIndex: 'requirmentIdentification',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '明确目标;质量信得过班组',
-    dataIndex: 'objectiveDefinition',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '有效实施;质量信得过班组',
-    dataIndex: 'effectiveImplementation',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '成效检查;质量信得过班组',
-    dataIndex: 'effectCheck',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '攻关项目简介;攻关项目',
-    dataIndex: 'projectIntro',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '攻关目标;攻关项目',
-    dataIndex: 'projectGoal',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '业务状态',
-    dataIndex: 'status',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程实例ID',
-    dataIndex: 'processInstanceId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程状态',
-    dataIndex: 'processStatus',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
   },
   {
     title: '操作',

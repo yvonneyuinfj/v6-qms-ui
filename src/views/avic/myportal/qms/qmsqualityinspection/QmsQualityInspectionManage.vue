@@ -1,16 +1,16 @@
 <template>
   <AvicSplit horizontal>
-    <AvicPane size="55">
+    <AvicPane size="65">
       <div class="content-wrapper">
         <div class="top-search-box">
           <!-- 高级查询 -->
           <a-form v-bind="layout" ref="formRef" :model="queryForm">
             <a-row :gutter="16">
               <a-col v-bind="colLayout.cols">
-                <a-form-item label="检查编号;检查编号+3位数流水号">
+                <a-form-item label="检查编号">
                   <a-input
                     v-model:value="queryForm.inspectionCode"
-                    placeholder="请输入检查编号;检查编号+3位数流水号"
+                    placeholder="请输入检查编号"
                     :allow-clear="true"
                     @pressEnter="handleQuery"
                   />
@@ -18,19 +18,28 @@
               </a-col>
               <a-col v-bind="colLayout.cols">
                 <a-form-item label="所属年份">
-                  <a-input
+                  <a-select
                     v-model:value="queryForm.forYear"
-                    placeholder="请输入所属年份"
-                    :allow-clear="true"
-                    @pressEnter="handleQuery"
-                  />
+                    :get-popup-container="triggerNode => triggerNode.parentNode"
+                    option-filter-prop="children"
+                    placeholder="请选择所属年度"
+                    @select="handleQuery"
+                  >
+                    <a-select-option
+                      v-for="item in yearList"
+                      :key="item"
+                      :value="item"
+                    >
+                      {{ item }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <a-col v-bind="colLayout.cols">
-                <a-form-item label="检查名称;对XXX的专项检查">
+                <a-form-item label="检查名称">
                   <a-input
                     v-model:value="queryForm.inspectName"
-                    placeholder="请输入检查名称;对XXX的专项检查"
+                    placeholder="请输入检查名称"
                     :allow-clear="true"
                     @pressEnter="handleQuery"
                   />
@@ -47,27 +56,7 @@
                 </a-form-item>
               </a-col>
               <a-col v-bind="colLayout.cols" v-show="advanced">
-                <a-form-item label="被检查单位CODE">
-                  <a-input
-                    v-model:value="queryForm.inspectedDeptCode"
-                    placeholder="请输入被检查单位CODE"
-                    :allow-clear="true"
-                    @pressEnter="handleQuery"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col v-bind="colLayout.cols" v-show="advanced">
-                <a-form-item label="被检查单位">
-                  <a-input
-                    v-model:value="queryForm.inspectedDeptName"
-                    placeholder="请输入被检查单位"
-                    :allow-clear="true"
-                    @pressEnter="handleQuery"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col v-bind="colLayout.cols" v-show="advanced">
-                <a-form-item label="涉及型号;多选，逗号分隔">
+                <a-form-item label="涉及型号">
                   <a-input
                     v-model:value="queryForm.model"
                     placeholder="请输入涉及型号;多选，逗号分隔"
@@ -277,63 +266,64 @@
             @refresh="getList"
           >
             <template #toolBarLeft>
-          <a-space>
-            <a-button
-              v-hasPermi="['qmsQualityInspection:add']"
-              title="添加"
-              type="primary"
-              @click="handleAdd"
-            >
-              <template #icon>
-                <plus-outlined />
-              </template>
-              添加
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityInspection:del']"
-              title="删除"
-              danger
-              :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
-              :loading="delLoading"
-              @click="handleDelete(selectedRowKeys, '')"
-            >
-              <template #icon>
-                <delete-outlined />
-              </template>
-              删除
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityInspection:import']"
-              title="导入"
-              type="primary"
-              ghost
-              @click="handleImport">
-              <template #icon>
-                 <import-outlined />
-              </template>
-              导入
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityInspection:export']"
-              title="导出"
-              type="primary"
-              ghost
-              @click="handleExport">
-              <template #icon>
-                 <export-outlined />
-              </template>
-              导出
-            </a-button>
-          </a-space>
+              <div class="aecc-leftbar-title">质量检查</div>
             </template>
             <template #toolBarRight>
-              <a-input-search
-                class="opt-btn-commonsearch"
-                style="width: 200px"
-                placeholder="请输入检查编号;检查编号+3位数流水号或所属年份"
-                :allow-clear="true"
-                @search="handleKeyWordQuery"
-              />
+              <a-space>
+                <a-button
+                  v-hasPermi="['qmsQualityInspection:add']"
+                  title="添加"
+                  type="primary"
+                  @click="handleAdd"
+                >
+                  <template #icon>
+                    <plus-outlined />
+                  </template>
+                  添加
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityInspection:del']"
+                  title="删除"
+                  danger
+                  :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
+                  :loading="delLoading"
+                  @click="handleDelete(selectedRowKeys, '')"
+                >
+                  <template #icon>
+                    <delete-outlined />
+                  </template>
+                  删除
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityInspection:import']"
+                  title="导入"
+                  type="primary"
+                  ghost
+                  @click="handleImport">
+                  <template #icon>
+                    <import-outlined />
+                  </template>
+                  导入
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityInspection:export']"
+                  title="导出"
+                  type="primary"
+                  ghost
+                  @click="handleExport">
+                  <template #icon>
+                    <export-outlined />
+                  </template>
+                  导出
+                </a-button>
+              </a-space>
+              <!--<a-input-search-->
+              <!--  class="opt-btn-commonsearch"-->
+              <!--  style="width: 200px"-->
+              <!--  placeholder="请输入检查编号;检查编号+3位数流水号或所属年份"-->
+              <!--  :allow-clear="true"-->
+              <!--  @search="handleKeyWordQuery"-->
+              <!--/>-->
             </template>
             <template #bodyCell="{ column, text, record, index }">
               <template v-if="column.dataIndex  === 'id'">
@@ -427,7 +417,7 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '检查编号;检查编号+3位数流水号',
+    title: '检查编号',
     dataIndex: 'inspectionCode',
     ellipsis: true,
     sorter: true,
@@ -439,32 +429,15 @@ const columns = [
     title: '所属年份',
     dataIndex: 'forYear',
     ellipsis: true,
+    ellipsis: true,
     sorter: true,
     minWidth: 120,
     resizable: true,
     align: 'left'
   },
   {
-    title: '检查名称;对XXX的专项检查',
+    title: '检查名称',
     dataIndex: 'inspectName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '被检查单位ID;检查单位名称/代号',
-    dataIndex: 'inspectedDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '被检查单位CODE',
-    dataIndex: 'inspectedDeptCode',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
@@ -481,7 +454,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '涉及型号;多选，逗号分隔',
+    title: '涉及型号',
     dataIndex: 'model',
     ellipsis: true,
     sorter: true,
@@ -492,6 +465,7 @@ const columns = [
   {
     title: '检查时间',
     dataIndex: 'inspectionTime',
+    sorter:true,
     ellipsis: true,
     minWidth: 120,
     resizable: true,
@@ -509,44 +483,8 @@ const columns = [
     align: 'right'
   },
   {
-    title: '检查组长ID',
-    dataIndex: 'leaderStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '检查组长CODE',
-    dataIndex: 'leaderStaffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '检查组长',
     dataIndex: 'leaderStaffName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '检查组成员ID',
-    dataIndex: 'memberStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '检查组成员CODE',
-    dataIndex: 'memberStaffCode',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
@@ -565,6 +503,7 @@ const columns = [
   {
     title: '问题数',
     dataIndex: 'problemCount',
+    sorter:true,
     ellipsis: true,
     minWidth: 120,
     resizable: true,
@@ -576,6 +515,7 @@ const columns = [
   {
     title: '完成整改数',
     dataIndex: 'completeCount',
+    sorter:true,
     ellipsis: true,
     minWidth: 120,
     resizable: true,
@@ -587,45 +527,11 @@ const columns = [
   {
     title: '完成时间',
     dataIndex: 'completeTime',
+    sorter:true,
     ellipsis: true,
     minWidth: 120,
     resizable: true,
     align: 'center'
-  },
-  {
-    title: '业务状态',
-    dataIndex: 'status',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
   },
   {
     title: '操作',
@@ -674,6 +580,7 @@ onMounted(() => {
   getList();
   // 获取当前用户对应的文档密级
   getUserFileSecretList();
+  getYearList();
 });
 
 /** 查询数据  */
@@ -810,5 +717,15 @@ function handleTableChange (pagination, filters, sorter) {
   getList();
 }
 
+const yearList = ref([]);
+const getYearList = () => {
+  const currentYear = proxy.$dayjs().year();
+  yearList.value = [
+    (currentYear - 1).toString(),
+    currentYear.toString(),
+    (currentYear + 1).toString()
+  ];
+  return yearList;
+};
 </script>
 

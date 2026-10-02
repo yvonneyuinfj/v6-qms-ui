@@ -30,9 +30,11 @@
         @refresh="getList"
       >
         <template #toolBarLeft>
+          <div class="aecc-leftbar-title">活动计划</div>
+        </template>
+        <template #toolBarRight>
           <a-space>
             <a-button
-              v-hasPermi="['qmsQualityCulturePlan:add']"
               title="添加"
               type="primary"
               @click="handleAdd"
@@ -43,7 +45,6 @@
               添加
             </a-button>
             <a-button
-              v-hasPermi="['qmsQualityCulturePlan:del']"
               title="删除"
               danger
               :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
@@ -56,37 +57,33 @@
               删除
             </a-button>
             <a-button
-              v-hasPermi="['qmsQualityCulturePlan:import']"
               title="导入"
               type="primary"
               ghost
               @click="handleImport">
               <template #icon>
-                 <import-outlined />
+                <import-outlined />
               </template>
               导入
             </a-button>
             <a-button
-              v-hasPermi="['qmsQualityCulturePlan:export']"
               title="导出"
               type="primary"
               ghost
               @click="handleExport">
               <template #icon>
-                 <export-outlined />
+                <export-outlined />
               </template>
               导出
             </a-button>
           </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-input-search
-            class="opt-btn-commonsearch"
-            style="width: 200px"
-            placeholder="请输入计划编号或主要工作事项"
-            :allow-clear="true"
-            @search="handleKeyWordQuery"
-          />
+          <!--<a-input-search-->
+          <!--  class="opt-btn-commonsearch"-->
+          <!--  style="width: 200px"-->
+          <!--  placeholder="请输入计划编号或主要工作事项"-->
+          <!--  :allow-clear="true"-->
+          <!--  @search="handleKeyWordQuery"-->
+          <!--/>-->
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex  === 'id'">
@@ -189,24 +186,6 @@ const columns = [
     align: 'left'
   },
   {
-    title: '组织部门ID',
-    dataIndex: 'organizingDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '组织部门CODE',
-    dataIndex: 'organizingDeptCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '组织部门',
     dataIndex: 'organizingDeptName',
     ellipsis: true,
@@ -216,44 +195,8 @@ const columns = [
     align: 'left'
   },
   {
-    title: '组织人ID',
-    dataIndex: 'organizerStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '组织人CODE',
-    dataIndex: 'organizerStaffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '组织人',
     dataIndex: 'organizerStaffName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '实施部门ID',
-    dataIndex: 'implementDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '实施部门CODE',
-    dataIndex: 'implementDeptCode',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
@@ -292,32 +235,6 @@ const columns = [
     minWidth: 120,
     resizable: true,
     align: 'center'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
   },
   {
     title: '操作',

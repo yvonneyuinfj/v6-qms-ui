@@ -2,8 +2,7 @@
   <AvicModal
     :visible="true"
     title="添加"
-    width="960px"
-    height="520px"
+    width="65%"
     :centered="true"
     @cancel="closeModal"
   >

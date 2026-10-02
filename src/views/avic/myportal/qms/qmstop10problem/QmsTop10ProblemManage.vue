@@ -6,19 +6,28 @@
         <a-row :gutter="16">
           <a-col v-bind="colLayout.cols">
             <a-form-item label="所属年份">
-              <a-input
+              <a-select
                 v-model:value="queryForm.forYear"
-                placeholder="请输入所属年份"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
+                :get-popup-container="triggerNode => triggerNode.parentNode"
+                option-filter-prop="children"
+                placeholder="请选择所属年度"
+                @select="handleQuery"
+              >
+                <a-select-option
+                  v-for="item in yearList"
+                  :key="item"
+                  :value="item"
+                >
+                  {{ item }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
           </a-col>
           <a-col v-bind="colLayout.cols">
-            <a-form-item label="编号;2025-TOP-001">
+            <a-form-item label="问题编号">
               <a-input
                 v-model:value="queryForm.topCode"
-                placeholder="请输入编号;2025-TOP-001"
+                placeholder="请输入TOP10问题编号"
                 :allow-clear="true"
                 @pressEnter="handleQuery"
               />
@@ -406,6 +415,10 @@
         @refresh="getList"
       >
         <template #toolBarLeft>
+          <div class="aecc-leftbar-title">TOP10问题</div>
+
+        </template>
+        <template #toolBarRight>
           <a-space>
             <a-button
               v-hasPermi="['qmsTop10Problem:add']"
@@ -438,7 +451,7 @@
               ghost
               @click="handleImport">
               <template #icon>
-                 <import-outlined />
+                <import-outlined />
               </template>
               导入
             </a-button>
@@ -449,20 +462,11 @@
               ghost
               @click="handleExport">
               <template #icon>
-                 <export-outlined />
+                <export-outlined />
               </template>
               导出
             </a-button>
           </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-input-search
-            class="opt-btn-commonsearch"
-            style="width: 200px"
-            placeholder="请输入所属年份或编号;2025-TOP-001"
-            :allow-clear="true"
-            @search="handleKeyWordQuery"
-          />
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex === 'id'">
@@ -546,22 +550,22 @@ const columns = [
     fixed: 'left'
   },
   {
+    title: '编号',
+    dataIndex: 'topCode',
+    ellipsis: true,
+    sorter: true,
+    minWidth: 120,
+    resizable: true,
+    align: 'center'
+  },
+  {
     title: '所属年份',
     dataIndex: 'forYear',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '编号;2025-TOP-001',
-    dataIndex: 'topCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '问题名称',
@@ -570,25 +574,7 @@ const columns = [
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '主管副总师ID',
-    dataIndex: 'deputyChiefUserId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '主管副总师CODE',
-    dataIndex: 'deputyChiefUserCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '主管副总师',
@@ -597,25 +583,7 @@ const columns = [
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '主管部门ID',
-    dataIndex: 'responsibleDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '主管部门CODE',
-    dataIndex: 'responsibleDeptCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '主管部门',
@@ -624,25 +592,7 @@ const columns = [
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人ID',
-    dataIndex: 'responsibleStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '责任人CODE',
-    dataIndex: 'responsibleStaffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '责任人',
@@ -651,7 +601,7 @@ const columns = [
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '归零节点',
@@ -662,164 +612,164 @@ const columns = [
     align: 'center'
   },
   {
-    title: '用户;空军/海军/其他',
-    dataIndex: 'userType',
+    title: '用户',
+    dataIndex: 'userTypeName',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
-    title: '阶段;科研/批产',
-    dataIndex: 'problemStage',
+    title: '阶段',
+    dataIndex: 'problemStageName',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
-    title: '级别;集团/所级',
+    title: '级别',
     dataIndex: 'problemLevel',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '计划完成情况;以分数或进度条形式展现',
-    dataIndex: 'planCompletionRate',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '周反馈情况;分数或进度条形式展现',
-    dataIndex: 'weeklyFeedbackRate',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '销号状态;攻关中/已销号',
-    dataIndex: 'status',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '销号时间',
-    dataIndex: 'closeTime',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
     align: 'center'
   },
-  {
-    title: '质量问题编号;非必填，质量问题系统内的编号',
-    dataIndex: 'qualityProblemCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '问题描述',
-    dataIndex: 'problemDesc',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '当前工作进展',
-    dataIndex: 'currentProgress',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '周反馈开始时间',
-    dataIndex: 'weeklyFeedbackStartTime',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-  {
-    title: '质量主管ID',
-    dataIndex: 'qualitySupervisorId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '质量主管CODE',
-    dataIndex: 'qualitySupervisorCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '质量主管',
-    dataIndex: 'qualitySupervisorName',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '型号',
-    dataIndex: 'model',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
-  },
+  // {
+  //   title: '计划完成情况;以分数或进度条形式展现',
+  //   dataIndex: 'planCompletionRate',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '周反馈情况;分数或进度条形式展现',
+  //   dataIndex: 'weeklyFeedbackRate',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '销号状态;攻关中/已销号',
+  //   dataIndex: 'status',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '销号时间',
+  //   dataIndex: 'closeTime',
+  //   ellipsis: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'center'
+  // },
+  // {
+  //   title: '质量问题编号;非必填，质量问题系统内的编号',
+  //   dataIndex: 'qualityProblemCode',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '问题描述',
+  //   dataIndex: 'problemDesc',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '当前工作进展',
+  //   dataIndex: 'currentProgress',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '周反馈开始时间',
+  //   dataIndex: 'weeklyFeedbackStartTime',
+  //   ellipsis: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'center'
+  // },
+  // {
+  //   title: '质量主管ID',
+  //   dataIndex: 'qualitySupervisorId',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '质量主管CODE',
+  //   dataIndex: 'qualitySupervisorCode',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '质量主管',
+  //   dataIndex: 'qualitySupervisorName',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '型号',
+  //   dataIndex: 'model',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '密级',
+  //   dataIndex: 'secretLevelName',
+  //   ellipsis: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'center'
+  // },
+  //
+  // {
+  //   title: '备注',
+  //   dataIndex: 'remark',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '排序',
+  //   dataIndex: 'orderBy',
+  //   ellipsis: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'right'
+  // },
   {
     title: '操作',
     dataIndex: 'action',
@@ -861,6 +811,7 @@ onMounted(() => {
   getList();
   // 获取当前用户对应的文档密级
   getUserFileSecretList();
+  getYearList();
 });
 
 /** 查询数据  */
@@ -985,6 +936,17 @@ function handleTableChange (pagination, filters, sorter) {
   }
   getList();
 }
+
+const yearList = ref([]);
+const getYearList = () => {
+  const currentYear = proxy.$dayjs().year();
+  yearList.value = [
+    (currentYear - 1).toString(),
+    currentYear.toString(),
+    (currentYear + 1).toString()
+  ];
+  return yearList;
+};
 
 </script>
 

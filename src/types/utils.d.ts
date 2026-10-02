@@ -19,6 +19,7 @@ declare global {
       table?: TableSettings;
       uploader?: uploaderSettings;
       ssoConfig: SsoConfig;
+      hacker?: any;
     };
   }
 }

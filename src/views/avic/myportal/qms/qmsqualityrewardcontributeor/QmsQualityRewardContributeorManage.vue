@@ -30,6 +30,9 @@
         @refresh="getList"
       >
         <template #toolBarLeft>
+          <div class="aecc-leftbar-title">参与人员贡献</div>
+        </template>
+        <template #toolBarRight>
           <a-space>
             <a-button
               danger
@@ -44,15 +47,13 @@
               删除
             </a-button>
           </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-input-search
-            class="opt-btn-commonsearch"
-            style="width: 200px"
-            placeholder="请输入部门ID或部门CODE"
-            :allow-clear="true"
-            @search="handleKeyWordQuery"
-          />
+          <!--<a-input-search-->
+          <!--  class="opt-btn-commonsearch"-->
+          <!--  style="width: 200px"-->
+          <!--  placeholder="请输入部门ID或部门CODE"-->
+          <!--  :allow-clear="true"-->
+          <!--  @search="handleKeyWordQuery"-->
+          <!--/>-->
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex === 'id'">
@@ -93,24 +94,6 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '部门ID',
-    dataIndex: 'deptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '部门CODE',
-    dataIndex: 'deptCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '部门',
     dataIndex: 'deptName',
     ellipsis: true,
@@ -120,25 +103,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '人员ID',
-    dataIndex: 'staffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '人员CODE',
-    dataIndex: 'staffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '人员ID',
+    title: '人员',
     dataIndex: 'staffName',
     ellipsis: true,
     sorter: true,
@@ -185,32 +150,6 @@ const columns = [
     minWidth: 120,
     resizable: true,
     align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
   },
   {
     title: '操作',

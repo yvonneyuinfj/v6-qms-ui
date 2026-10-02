@@ -1,233 +1,267 @@
 <template>
-  <div class="content-wrapper">
-    <div class="top-search-box">
-      <!-- 高级查询 -->
-      <a-form v-bind="layout" ref="formRef" :model="queryForm" :colon="false">
-        <a-row :gutter="16">
-          <a-col v-bind="colLayout.cols2">
-            <a-form-item label="考核/衡量指标">
-              <a-input
-                v-model:value="queryForm.objectiveName"
-                placeholder="请输入考核/衡量指标"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item label="所属年份">
-              <a-select
-                v-model:value="queryForm.forYear"
-                :get-popup-container="triggerNode => triggerNode.parentNode"
-                option-filter-prop="children"
-                placeholder="请选择统计周期"
-              >
-                <a-select-option
-                  v-for="item in yearList"
-                  :key="item"
-                  :value="item"
-                >
-                  {{ item }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="目标层级">
-              <a-select
-                v-model:value="queryForm.objectiveLevel"
-                style="width: 100%"
-                placeholder="请选择目标层级"
-                allowClear
-              >
-                <a-select-option
-                  v-for="select in objectiveLevelList"
-                  :key="select.sysLookupTlId"
-                  :value="select.lookupCode"
-                  :title="select.lookupName"
-                >
-                  {{ select.lookupName }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col v-bind="colLayout.cols" v-show="advanced">
-            <a-form-item label="统计周期">
-              <a-select
-                v-model:value="queryForm.dataStatCycle"
-                :get-popup-container="triggerNode => triggerNode.parentNode"
-                option-filter-prop="children"
-                placeholder="请选择统计周期"
-              >
-                <a-select-option
-                  v-for="item in dataStatCycleList"
-                  :key="item.sysLookupTlId"
-                  :value="item.lookupCode"
-                >
-                  {{ item.lookupName }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
+  <AvicSplit horizontal>
+    <AvicPane size="70">
+      <div class="content-wrapper">
+        <div class="top-search-box">
+          <!-- 高级查询 -->
+          <a-form v-bind="layout" ref="formRef" :model="queryForm" :colon="false">
+            <a-row :gutter="16">
+              <a-col v-bind="colLayout.cols2">
+                <a-form-item label="考核/衡量指标">
+                  <a-input
+                    v-model:value="queryForm.objectiveName"
+                    placeholder="请输入考核/衡量指标"
+                    :allow-clear="true"
+                    @pressEnter="handleQuery"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col v-bind="colLayout.cols">
+                <a-form-item label="所属年份">
+                  <a-select
+                    v-model:value="queryForm.forYear"
+                    :get-popup-container="triggerNode => triggerNode.parentNode"
+                    option-filter-prop="children"
+                    placeholder="请选择统计周期"
+                    @select="handleQuery"
+                  >
+                    <a-select-option
+                      v-for="item in yearList"
+                      :key="item"
+                      :value="item"
+                    >
+                      {{ item }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col v-bind="colLayout.cols" v-show="advanced">
+                <a-form-item label="统计周期">
+                  <a-select
+                    v-model:value="queryForm.dataStatCycle"
+                    :get-popup-container="triggerNode => triggerNode.parentNode"
+                    option-filter-prop="children"
+                    placeholder="请选择统计周期"
+                  >
+                    <a-select-option
+                      v-for="item in dataStatCycleList"
+                      :key="item.sysLookupTlId"
+                      :value="item.lookupCode"
+                    >
+                      {{ item.lookupName }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
 
-          <a-col v-bind="colLayout.cols3" v-show="advanced">
-            <a-form-item label="指标说明">
-              <a-input
-                v-model:value="queryForm.objectiveContent"
-                placeholder="请输入指标说明"
-                :allow-clear="true"
-                @pressEnter="handleQuery"
-              />
-            </a-form-item>
-          </a-col>
+              <a-col v-bind="colLayout.cols3" v-show="advanced">
+                <a-form-item label="指标说明">
+                  <a-input
+                    v-model:value="queryForm.objectiveContent"
+                    placeholder="请输入指标说明"
+                    :allow-clear="true"
+                    @pressEnter="handleQuery"
+                  />
+                </a-form-item>
+              </a-col>
 
-          <a-col
-            v-bind="colLayout.cols"
-            style="margin-left: auto"
+              <a-col
+                v-bind="colLayout.cols"
+                style="margin-left: auto"
+              >
+                <div class="table-page-search-submitButtons">
+                  <a-space>
+                    <a-button type="primary" @click="handleQuery">
+                      <search-outlined/>
+                      查询
+                    </a-button>
+                    <a-button type="primary" @click="resetQuery" ghost>
+                      <redo-outlined/>
+                      重置
+                    </a-button>
+                    <a-button type="link" @click="toggleAdvanced" style="margin: 0">
+                      {{ advanced ? '收起' : '展开' }}
+                      <up-outlined v-if="advanced"/>
+                      <down-outlined v-else/>
+                    </a-button>
+                  </a-space>
+                </div>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- 表格组件 -->
+        <div class="table-wrapper">
+          <AvicTable
+            ref="qmsQualityObjective"
+            table-key="qmsQualityObjective"
+            :columns="columns"
+            :row-key="record => record.id"
+            :data-source="list"
+            :loading="loading"
+            :row-selection="{
+              selectedRowKeys: selectedRowKeys,
+              onChange: onSelectChange,
+              columnWidth: 40,
+              fixed: true
+            }"
+            :pageParameter="queryParam.pageParameter"
+            :total="totalPage"
+            @change="handleTableChange"
+            @refresh="getList"
           >
-            <div class="table-page-search-submitButtons">
+            <template #toolBarLeft>
+              <div class="aecc-leftbar-title">{{ queryForm.forYear }}年部门质量目标</div>
+            </template>
+            <template #toolBarRight>
               <a-space>
-                <a-button type="primary" @click="handleQuery">
-                  <search-outlined/>
-                  查询
+                <a-button
+                  type="primary"
+                  title="添加"
+                  @click="handleAdd(rootTree)"
+                >
+                  <template #icon>
+                    <plus-outlined/>
+                  </template>
+                  添加
                 </a-button>
-                <a-button type="primary" @click="resetQuery" ghost>
-                  <redo-outlined/>
-                  重置
+                <!--导入-->
+                <a-button
+                  title="导入"
+                  type="primary"
+                  ghost
+                  @click="handleImport">
+                  <template #icon>
+                    <import-outlined/>
+                  </template>
+                  批量导入
                 </a-button>
-                <a-button type="link" @click="toggleAdvanced" style="margin: 0">
-                  {{ advanced ? '收起' : '展开' }}
-                  <up-outlined v-if="advanced"/>
-                  <down-outlined v-else/>
-                </a-button>
+                <!--<a-button-->
+                <!--  v-hasPermi="['qmsQualityObjective:export']"-->
+                <!--  title="导出"-->
+                <!--  type="primary"-->
+                <!--  ghost-->
+                <!--  @click="handleExport">-->
+                <!--  <template #icon>-->
+                <!--    <export-outlined/>-->
+                <!--  </template>-->
+                <!--  导出-->
+                <!--</a-button>-->
+                <!--<AvicBpmFilter-->
+                <!--  :allFileAuth="['qmsQualityObjective:all']"-->
+                <!--  :myFileAuth="['qmsQualityObjective:my']"-->
+                <!--  :defaultBpmType='queryForm.bpmType'-->
+                <!--  :defaultBpmState='queryForm.bpmState'-->
+                <!--  @change="changeBpmFilter"-->
+                <!--/>-->
               </a-space>
-            </div>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- 表格组件 -->
-    <div class="table-wrapper">
-      <AvicTable
-        ref="qmsQualityObjective"
-        table-key="qmsQualityObjective"
-        :columns="columns"
-        :row-key="record => record.id"
-        :data-source="list"
-        :loading="loading"
-        :row-selection="{
-          selectedRowKeys: selectedRowKeys,
-          onChange: onSelectChange,
-          columnWidth: 40,
-          fixed: true
-        }"
-        :pageParameter="queryParam.pageParameter"
-        :total="totalPage"
-        @change="handleTableChange"
-        @refresh="getList"
-      >
-        <template #toolBarLeft>
-          <div class="aecc-leftbar-title">{{ queryForm.forYear }}年动力所质量目标</div>
-        </template>
-        <template #toolBarRight>
-          <a-space>
-            <a-button
-              type="primary"
-              title="添加"
-              @click="handleAdd(rootTree)"
-            >
-              <template #icon>
-                <plus-outlined/>
+              <!--  <a-input-search-->
+              <!--    class="opt-btn-commonsearch"-->
+              <!--    style="width: 200px"-->
+              <!--    v-model:value="searchKeyWord"-->
+              <!--    placeholder="请输入目标编码或考核/衡量指标"-->
+              <!--    :allow-clear="true"-->
+              <!--    @search="handleKeyWordQuery"-->
+              <!--  />-->
+            </template>
+            <template #bodyCell="{ column, text, record, index }">
+              <template v-if="column.dataIndex === 'id'">
+                {{ index + 1 + queryParam.pageParameter.rows * (queryParam.pageParameter.page - 1) }}
               </template>
-              添加
-            </a-button>
-            <!--导入-->
-            <a-button
-              title="导入"
-              type="primary"
-              ghost
-              @click="handleImport">
-              <template #icon>
-                <import-outlined/>
+              <template v-else-if="column.dataIndex === 'objectiveName'">
+                <a @click="handleDetail(record)">
+                  {{ record.objectiveName }}
+                </a>
               </template>
-              批量导入
-            </a-button>
-          </a-space>
-          <!--  <a-input-search-->
-          <!--    class="opt-btn-commonsearch"-->
-          <!--    style="width: 200px"-->
-          <!--    v-model:value="searchKeyWord"-->
-          <!--    placeholder="请输入目标编码或考核/衡量指标"-->
-          <!--    :allow-clear="true"-->
-          <!--    @search="handleKeyWordQuery"-->
-          <!--  />-->
-        </template>
-        <template #bodyCell="{ column, text, record, index }">
-          <template v-if="column.dataIndex === 'id'">
-            {{ index + 1 + queryParam.pageParameter.rows * (queryParam.pageParameter.page - 1) }}
-          </template>
-          <template v-else-if="column.dataIndex === 'objectiveCode'">
-            <a @click="handleDetail(record)">
-              {{ record.objectiveCode }}
-            </a>
-          </template>
-          <template v-else-if="column.dataIndex === 'action'">
-            <a-button
-              type="link"
-              class="inner-btn"
-              @click.stop="handleEdit(record.id)">
-              编辑
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityObjective:del']"
-              type="link"
-              class="inner-btn"
-              @click.stop="handleDelete([record.id], 'row')">
-              删除
-            </a-button>
-          </template>
-        </template>
-      </AvicTable>
-    </div>
-    <!-- 添加页面弹窗 -->
-    <qms-quality-objective-add
-      v-if="showAddModal"
-      ref="addModal"
-      @reloadData="getList"
-      @close="showAddModal = false"
-    />
-    <!-- 编辑页面弹窗 -->
-    <qms-quality-objective-edit
-      v-if="showEditModal"
-      ref="editModal"
-      :form-id="formId"
-      @reloadData="getList"
-      @close="showEditModal = false"
-    />
-    <!-- 详情页面弹窗 -->
-    <qms-quality-objective-detail
-      v-if="showDetailModal"
-      ref="detailModal"
-      :form-id="formId"
-      @close="showDetailModal = false"
-    />
-    <AvicExcelImport
-      v-if="showImportModal"
-      :formData="excelParams"
-      title="单表模板导入"
-      importUrl="/myportal/qms/qmsqualityobjectives/importData/v1"
-      downloadTemplateUrl="/myportal/qms/qmsqualityobjectives/downloadTemplate/v1"
-      @reloadData="getList"
-      @close="showImportModal = false"
-    />
-  </div>
+              <template v-else-if="column.dataIndex === 'action'">
+                <a-button
+                  type="link"
+                  class="inner-btn"
+                  @click.stop="handleEdit(record.id)">
+                  编辑
+                </a-button>
+                <!--<a-button-->
+                <!--  v-hasPermi="['qmsQualityObjective:del']"-->
+                <!--  type="link"-->
+                <!--  class="inner-btn"-->
+                <!--  @click.stop="handleDelete([record.id], 'row')">-->
+                <!--  删除-->
+                <!--</a-button>-->
+                <a-button
+                  type="link"
+                  class="inner-btn"
+                  @click.stop="handleFeedback(record)"
+                >
+                  反馈
+                </a-button>
+              </template>
+            </template>
+          </AvicTable>
+        </div>
+      </div>
+    </AvicPane>
+    <AvicPane>
+      <!--子表组件-->
+      <QmsCommonActionFeedbackManage
+        key="qmsCommonActionFeedbackManage"
+        ref="qmsCommonActionFeedbackManage"
+        :mainId="mainId"
+        :mainObj="mainObj"
+      />
+    </AvicPane>
+  </AvicSplit>
+  <!-- 添加页面弹窗 -->
+  <qms-quality-objective-add
+    v-if="showAddModal"
+    ref="addModal"
+    @reloadData="getList"
+    @close="showAddModal = false"
+  />
+  <!-- 编辑页面弹窗 -->
+  <qms-quality-objective-edit
+    v-if="showEditModal"
+    ref="editModal"
+    :form-id="formId"
+    @reloadData="getList"
+    @close="showEditModal = false"
+  />
+  <!-- 详情页面弹窗 -->
+  <qms-quality-objective-detail
+    v-if="showDetailModal"
+    ref="detailModal"
+    :form-id="formId"
+    @close="showDetailModal = false"
+  />
+  <AvicExcelImport
+    v-if="showImportModal"
+    :formData="excelParams"
+    title="单表模板导入"
+    importUrl="/myportal/qms/qmsqualityobjectives/importData/v1"
+    downloadTemplateUrl="/myportal/qms/qmsqualityobjectives/downloadTemplate/v1"
+    @reloadData="getList"
+    @close="showImportModal = false"
+  />
+  <qms-common-action-feedback-add
+    v-if="showFeedbackAddModal"
+    ref="feedbackModal"
+    :mainObj="mainObj"
+    @close="showFeedbackAddModal = false"
+  />
 </template>
 <script lang="ts" setup>
 import type { QmsQualityObjectiveDto } from '@/api/avic/myportal/qms/QmsQualityObjectiveApi'; // 引入模块DTO
-import { listQmsQualityObjectiveByPage, delQmsQualityObjective, exportExcel } from '@/api/avic/myportal/qms/QmsQualityObjectiveApi'; // 引入模块API
+import {
+  delQmsQualityObjective,
+  exportExcel,
+  listQmsQualityObjectiveByPage
+} from '@/api/avic/myportal/qms/QmsQualityObjectiveApi'; // 引入模块API
 import QmsQualityObjectiveAdd from './QmsQualityObjectiveAdd.vue'; // 引入添加页面组件
 import QmsQualityObjectiveEdit from './QmsQualityObjectiveEdit.vue'; // 引入编辑页面组件
 import QmsQualityObjectiveDetail from './QmsQualityObjectiveDetail.vue'; // 引入详情页面组件
+import QmsCommonActionFeedbackManage from '../qmsObjectivefeedback/QmsCommonActionFeedbackManage.vue';
+import QmsCommonActionFeedbackAdd from '../qmsObjectivefeedback/QmsCommonActionFeedbackAdd.vue';
+import flowUtils from '@/views/avic/bpm/bpmutils/FlowUtils.js';
+
 const { proxy } = getCurrentInstance();
 const layout = {
   labelCol: { flex: '0 0 120px' },
@@ -266,6 +300,14 @@ const columns = [
     minWidth: 120,
     resizable: true,
     align: 'left'
+  },
+  {
+    title: '指标属性',
+    dataIndex: 'indicatorTypeName',
+    ellipsis: true,
+    width: 120,
+    resizable: true,
+    align: 'center'
   },
   {
     title: '建议承接部门',
@@ -308,7 +350,8 @@ const columns = [
     fixed: 'right'
   }
 ];
-const queryForm = ref<QmsQualityObjectiveDto>({});
+const queryForm = ref<QmsQualityObjectiveDto>({
+}); // 高级查询对象
 const queryParam = reactive({
   // 请求表格数据参数
   pageParameter: {
@@ -337,8 +380,13 @@ const totalPage = ref(0);
 const secretLevelList = ref([]); // 密级通用代码
 const lookupParams = [
   { fieldName: 'objectiveLevel', lookUpType: 'QMS_OBJECTIVE_LEVEL' },
-  { fieldName: 'dataStatCycle', lookUpType: 'QMS_OBJECT_DATA_STAT_CYCLE' }
+  { fieldName: 'dataStatCycle', lookUpType: 'QMS_OBJECT_DATA_STAT_CYCLE' },
+  { fieldName: 'indicatorType', lookUpType: 'QMS_INDICATOR_TYPE' }
 ];
+const mainId = computed(() => {
+  return selectedRowKeys.value.length === 1 ? selectedRowKeys.value[0] : ''; // 主表传入子表的id
+});
+const yearList = ref([]);
 onMounted(() => {
   queryForm.value.forYear = proxy.$dayjs().year();
   // 加载表格数据
@@ -346,23 +394,42 @@ onMounted(() => {
   // 获取当前用户对应的文档密级
   getUserFileSecretList();
   getLookupList();
+  getYearList();
 });
 const objectiveLevelList = ref([]);
 const dataStatCycleList = ref([]);
+const indicatorTypeList = ref([]);
+
 /** 获取通用代码  */
 function getLookupList() {
   proxy.$getLookupByType(lookupParams, result => {
     objectiveLevelList.value = result.objectiveLevel;
     dataStatCycleList.value = result.dataStatCycle;
+    indicatorTypeList.value = result.indicatorType;
   });
 }
+
+function getYearList() {
+  yearList.value = [
+    proxy.$dayjs().year() - 1,
+    proxy.$dayjs().year(),
+    proxy.$dayjs().year() + 1
+  ];
+}
+
 /** 查询数据  */
-function getList () {
+function getList() {
   selectedRowKeys.value = []; // 清空选中
   loading.value = true;
+  queryForm.value.objectiveLevel = 'INST'; // 所级
+  queryParam.searchParams = queryForm.value;
   listQmsQualityObjectiveByPage(queryParam)
     .then(response => {
       list.value = response.data.result;
+      // 选中首行
+      if (list.value.length > 0) {
+        selectedRowKeys.value.push(list.value[0].id);
+      }
       totalPage.value = response.data.pageParameter.totalCount;
       loading.value = false;
     })
@@ -372,30 +439,35 @@ function getList () {
       loading.value = false;
     });
 }
+
 /** 获取当前用户对应的文档密级 */
-function getUserFileSecretList () {
+function getUserFileSecretList() {
   proxy.$getUserFileSecretLevelList(result => {
     secretLevelList.value = result;
   });
 }
+
 /** 高级查询 查询按钮操作 */
-function handleQuery () {
+function handleQuery() {
   queryParam.searchParams = queryForm.value;
   queryParam.keyWord = '';
   queryParam.pageParameter.page = 1;
   getList();
 }
+
 /** 高级查询 重置按钮操作 */
-function resetQuery () {
+function resetQuery() {
   queryForm.value = {};
   handleQuery();
 }
+
 /** 高级查询 展开/收起 */
-function toggleAdvanced () {
+function toggleAdvanced() {
   advanced.value = !advanced.value;
 }
+
 /** 快速查询逻辑 */
-function handleKeyWordQuery (value) {
+function handleKeyWordQuery(value) {
   const keyWord = {
     objectiveCode: value,
     objectiveName: value
@@ -404,26 +476,31 @@ function handleKeyWordQuery (value) {
   queryParam.pageParameter.page = 1;
   getList();
 }
+
 /** 添加 */
-function handleAdd () {
+function handleAdd() {
   showAddModal.value = true;
 }
+
 /** 编辑 */
-function handleEdit (id) {
+function handleEdit(id) {
   formId.value = id;
   showEditModal.value = true;
 }
+
 /** 详细 */
-function handleDetail (record) {
+function handleDetail(record) {
   formId.value = record.id;
   showDetailModal.value = true;
 }
+
 /** 导入 */
-function handleImport () {
+function handleImport() {
   showImportModal.value = true;
 }
+
 /** 导出 */
-function handleExport () {
+function handleExport() {
   proxy.$confirm({
     title: '确认导出数据吗?',
     okText: '确定',
@@ -438,8 +515,9 @@ function handleExport () {
     }
   });
 }
+
 /** 删除 */
-function handleDelete (ids, type) {
+function handleDelete(ids, type) {
   if (ids.length == 0) {
     proxy.$message.warning('请选择要删除的数据！');
     return;
@@ -464,12 +542,14 @@ function handleDelete (ids, type) {
     }
   });
 }
+
 /** 勾选复选框时触发 */
-function onSelectChange (rowKeys) {
+function onSelectChange(rowKeys) {
   selectedRowKeys.value = rowKeys;
 }
+
 /** 表格排序 */
-function handleTableChange (pagination, filters, sorter) {
+function handleTableChange(pagination, filters, sorter) {
   queryParam.pageParameter.page = pagination.current;
   queryParam.pageParameter.rows = pagination.pageSize;
   if (proxy.$objIsNotBlank(sorter.field)) {
@@ -479,5 +559,20 @@ function handleTableChange (pagination, filters, sorter) {
   getList();
 }
 
+/** 打开流程详情页面 */
+function handleFlowDetail(record) {
+  if (record.id) {
+    flowUtils.detailByOptions({
+      formId: record.id,
+      bpmOperatorRefresh: getList
+    });
+  }
+}
+const mainObj = ref<QmsQualityObjectiveDto>(null);
+const showFeedbackAddModal = ref(false);
+const handleFeedback = (row) => {
+  mainObj.value = row;
+  showFeedbackAddModal.value = true;
+};
 </script>
 

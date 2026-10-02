@@ -27,7 +27,7 @@
                 </a-form-item>
               </a-col>
               <a-col v-bind="colLayout.cols">
-                <a-form-item label="质量问题反馈单的编号">
+                <a-form-item label="反馈单编号">
                   <a-input
                     v-model:value="queryForm.problemCode"
                     placeholder="请输入质量问题反馈单的编号"
@@ -379,73 +379,74 @@
             @refresh="getList"
           >
             <template #toolBarLeft>
-          <a-space>
-            <a-button
-              v-hasPermi="['qmsQualityProblemDelay:add']"
-              title="添加"
-              type="primary"
-              @click="handleAdd"
-            >
-              <template #icon>
-                <plus-outlined />
-              </template>
-              添加
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityProblemDelay:edit']"
-              title="编辑"
-              type="primary"
-              ghost
-              @click="handleEdit"
-            >
-              <template #icon>
-                <edit-outlined />
-              </template>
-              编辑
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityProblemDelay:del']"
-              title="删除"
-              danger
-              :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
-              :loading="delLoading"
-              @click="handleDelete(selectedRows, selectedRowKeys)"
-            >
-              <template #icon>
-                <delete-outlined />
-              </template>
-              删除
-            </a-button>
-            <a-button
-              v-hasPermi="['qmsQualityProblemDelay:export']"
-              title="导出"
-              type="primary"
-              ghost
-              @click="handleExport">
-              <template #icon>
-                 <export-outlined />
-              </template>
-              导出
-            </a-button>
-          </a-space>
+              <div class="aecc-leftbar-title">质量问题延期申请</div>
             </template>
             <template #toolBarRight>
               <a-space>
-                <AvicBpmFilter
-                  :allFileAuth="['qmsQualityProblemDelay:all']"
-                  :myFileAuth="['qmsQualityProblemDelay:my']"
-                  :defaultBpmType = 'queryForm.bpmType'
-                  :defaultBpmState = 'queryForm.bpmState'
-                  @change="changeBpmFilter"
-                />
-                <a-input-search
-                  class="opt-btn-commonsearch"
-                  style="width: 200px"
-                  placeholder="请输入延期编号或质量问题ID"
-                  :allow-clear="true"
-                  @search="handleKeyWordQuery"
-                />
+                <a-button
+                  v-hasPermi="['qmsQualityProblemDelay:add']"
+                  title="添加"
+                  type="primary"
+                  @click="handleAdd"
+                >
+                  <template #icon>
+                    <plus-outlined />
+                  </template>
+                  添加
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityProblemDelay:edit']"
+                  title="编辑"
+                  type="primary"
+                  ghost
+                  @click="handleEdit"
+                >
+                  <template #icon>
+                    <edit-outlined />
+                  </template>
+                  编辑
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityProblemDelay:del']"
+                  title="删除"
+                  danger
+                  :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
+                  :loading="delLoading"
+                  @click="handleDelete(selectedRows, selectedRowKeys)"
+                >
+                  <template #icon>
+                    <delete-outlined />
+                  </template>
+                  删除
+                </a-button>
+                <a-button
+                  v-hasPermi="['qmsQualityProblemDelay:export']"
+                  title="导出"
+                  type="primary"
+                  ghost
+                  @click="handleExport">
+                  <template #icon>
+                    <export-outlined />
+                  </template>
+                  导出
+                </a-button>
               </a-space>
+              <!--<a-space>-->
+              <!--  <AvicBpmFilter-->
+              <!--    :allFileAuth="['qmsQualityProblemDelay:all']"-->
+              <!--    :myFileAuth="['qmsQualityProblemDelay:my']"-->
+              <!--    :defaultBpmType = 'queryForm.bpmType'-->
+              <!--    :defaultBpmState = 'queryForm.bpmState'-->
+              <!--    @change="changeBpmFilter"-->
+              <!--  />-->
+              <!--  <a-input-search-->
+              <!--    class="opt-btn-commonsearch"-->
+              <!--    style="width: 200px"-->
+              <!--    placeholder="请输入延期编号或质量问题ID"-->
+              <!--    :allow-clear="true"-->
+              <!--    @search="handleKeyWordQuery"-->
+              <!--  />-->
+              <!--</a-space>-->
             </template>
             <template #bodyCell="{ column, text, record, index }">
               <template v-if="column.dataIndex === 'id'">
@@ -520,15 +521,15 @@ const columns = [
     align: 'center',
     fixed: 'left'
   },
-  {
-    title: '延期编号',
-    dataIndex: 'delayCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
+  // {
+  //   title: '延期编号',
+  //   dataIndex: 'delayCode',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
   {
     title: '质量问题ID',
     dataIndex: 'problemId',
@@ -538,33 +539,33 @@ const columns = [
     resizable: true,
     align: 'left'
   },
-  {
-    title: '质量问题反馈单的编号',
-    dataIndex: 'problemCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '质量问题反馈单标题;系统自动，同步质量问题反馈单的标题',
-    dataIndex: 'problemTitle',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '质量延期申请单标题;系统自动，关于xxx的延期申请',
-    dataIndex: 'delayTitle',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
+  // {
+  //   title: '反馈单编号',
+  //   dataIndex: 'problemCode',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '反馈单标题',
+  //   dataIndex: 'problemTitle',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '延期申请单标题',
+  //   dataIndex: 'delayTitle',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
   {
     title: '延期次数',
     dataIndex: 'delayTimes',
@@ -589,51 +590,51 @@ const columns = [
     resizable: true,
     align: 'center'
   },
-  {
-    title: '延期原因;数据字典：原因复杂、新件加工周期长、严正周期长（多选）',
-    dataIndex: 'delayReason',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '问题概述;系统自动，同步质量问题反馈单的问题概述',
-    dataIndex: 'problemSummary',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '当前工作进展',
-    dataIndex: 'currentProgress',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '应急措施',
-    dataIndex: 'emergencyMeasure',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '延期原因详细说明',
-    dataIndex: 'delayReasonDetail',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
+  // {
+  //   title: '延期原因;数据字典：原因复杂、新件加工周期长、严正周期长（多选）',
+  //   dataIndex: 'delayReason',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '问题概述;系统自动，同步质量问题反馈单的问题概述',
+  //   dataIndex: 'problemSummary',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '当前工作进展',
+  //   dataIndex: 'currentProgress',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '应急措施',
+  //   dataIndex: 'emergencyMeasure',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
+  // {
+  //   title: '延期原因详细说明',
+  //   dataIndex: 'delayReasonDetail',
+  //   ellipsis: true,
+  //   sorter: true,
+  //   minWidth: 120,
+  //   resizable: true,
+  //   align: 'left'
+  // },
   {
     title: '科研平台任务编号',
     dataIndex: 'ppmPlanCode',
@@ -644,7 +645,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '型号;系统自动，同步质量问题反馈单的型号',
+    title: '型号',
     dataIndex: 'model',
     ellipsis: true,
     sorter: true,
@@ -653,49 +654,13 @@ const columns = [
     align: 'left'
   },
   {
-    title: '申请人ID',
-    dataIndex: 'applicantStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申请人CODE',
-    dataIndex: 'applicantStaffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申请人姓名',
+    title: '申请人',
     dataIndex: 'applicantStaffName',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申请部门ID',
-    dataIndex: 'applicantDeptId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '申请部门CODE',
-    dataIndex: 'applicantDeptCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '申请部门',
@@ -704,7 +669,7 @@ const columns = [
     sorter: true,
     minWidth: 120,
     resizable: true,
-    align: 'left'
+    align: 'center'
   },
   {
     title: '申请时间',
@@ -713,68 +678,6 @@ const columns = [
     minWidth: 120,
     resizable: true,
     align: 'center'
-  },
-  {
-    title: '业务状态',
-    dataIndex: 'status',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程实例ID',
-    dataIndex: 'processInstanceId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程状态',
-    dataIndex: 'processStatus',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '所属年度;方便查询',
-    dataIndex: 'forYear',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
   },
   {
     title: '流程状态',
@@ -788,6 +691,7 @@ const columns = [
     title: '流程当前步骤',
     dataIndex: 'activityalias_',
     width: 120,
+    align: 'center',
     fixed: 'right'
   },
   {
@@ -950,7 +854,7 @@ function handleDelete(rows, ids) {
     proxy. $message.warning('请选择要删除的数据！');
     return;
   }
-  if (rows.filter(row => row.bpmState !== 'start')?.length > 0) {
+  if (rows.filter(row => row.bpmState && row.bpmState !== 'start')?.length > 0) {
     proxy. $message.warning('只有拟稿中的数据才可以删除！');
     return;
   }

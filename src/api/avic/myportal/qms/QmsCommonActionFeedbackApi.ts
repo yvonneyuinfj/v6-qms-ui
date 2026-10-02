@@ -1,15 +1,12 @@
 import request from '@/utils/request';
-import type { BaseBeanModel, ResponsePageData, ResponseBaseData, QueryParamModel } from '@/api/model/baseModel';
+import type { BaseBeanModel, QueryParamModel, ResponseBaseData, ResponsePageData } from '@/api/model/baseModel';
 import type { downloadParam } from '@/utils/download-util';
 import { downloadSysFile } from '@/utils/download-util';
+
 const basePath = '/myportal/qms/qmscommonactionfeedbacks';
+
 /** 通用执行反馈表 */
 export interface QmsCommonActionFeedbackDto extends BaseBeanModel {
-  /** 实施计划ID */
-  planId?: string;
-  /** 实施计划名称 */
-  planName?: string;
-  planContent?: string;
   /** 实际完成时间 */
   actualFinishTime?: any;
   actualFinishTimeBegin?: any;
@@ -80,39 +77,59 @@ export interface QmsCommonActionFeedbackDto extends BaseBeanModel {
   treeSorts?: string;
   /** 是否叶子节点 */
   treeLeaf?: string;
-  /** 截止时间*/
-  deadline?: any;
-  sourceObj?:string;
+  /** 实施计划ID */
+  sourceId?: string;
+  /** 实施计划名称 */
+  sourceName?: string;
+  /** 来源类型 */
+  sourceType?: string;
+  /** 来源表 */
+  sourceTable?: string;
+  bpmState?: string;
+  bpmType?: string;
 }
 
 /** 获取分页数据 */
-export function listQmsCommonActionFeedbackByPage (
+export function listQmsCommonActionFeedbackByPage(
   param: QueryParamModel
 ): Promise<ResponsePageData<QmsCommonActionFeedbackDto>> {
   return request.post(basePath + '/search-by-page/v1', param);
 }
 
 /** 根据id加载数据 */
-export function getQmsCommonActionFeedback (id: string): Promise<ResponseBaseData<QmsCommonActionFeedbackDto>> {
+export function getQmsCommonActionFeedback(id: string): Promise<ResponseBaseData<QmsCommonActionFeedbackDto>> {
   return request.get(basePath + '/get/' + id + '/v1');
 }
 
 /** 保存表单数据 */
-export function saveQmsCommonActionFeedback (form: QmsCommonActionFeedbackDto): Promise<ResponseBaseData<any>> {
-  return request.post(basePath + '/save/v1', form);
+export function saveQmsCommonActionFeedback(form: QmsCommonActionFeedbackDto): Promise<ResponseBaseData<any>> {
+  return request.post(basePath + '/save/v1', [form]);
 }
 
 /** 根据id集合删除数据 */
-export function delQmsCommonActionFeedback (ids: [string]): Promise<ResponseBaseData<any>> {
+export function delQmsCommonActionFeedback(ids: [string]): Promise<ResponseBaseData<any>> {
   return request.delete(basePath + '/delete-by-ids/v1', { data: ids });
 }
 
 /** 导出Excel */
-export function exportExcel (param: any) {
+export function exportExcel(param: any) {
   const download = {
     url: basePath + '/exportData/v1',
     data: param,
     method: 'post'
   } as downloadParam;
   return downloadSysFile(download);
+}
+
+/** 保存并启动流程 */
+export function saveFormAndStartProcess({
+                                          processDefId,
+                                          formCode,
+                                          postData
+                                        }): Promise<ResponseBaseData<any>> {
+  return request.post(basePath + '/save-and-start-process/v1', {
+    processDefId,
+    formCode,
+    bean: postData
+  });
 }

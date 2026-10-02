@@ -3,7 +3,6 @@
     :visible="true"
     title="添加"
     width="80%"
-    height="80%"
     :centered="true"
     @cancel="closeModal"
   >
@@ -17,16 +16,7 @@
         :colon="false"
       >
         <a-row>
-          <!--<a-col v-bind="colLayout.cols">-->
-          <!--  <a-form-item name="noticeCode" label="通知单编号">-->
-          <!--    <a-input-->
-          <!--      v-model:value="form.noticeCode"-->
-          <!--      :maxLength="50"-->
-          <!--      placeholder="请输入通知单编号"-->
-          <!--    />-->
-          <!--  </a-form-item>-->
-          <!--</a-col>-->
-          <a-col v-bind="colLayout.cols2">
+          <a-col v-bind="colLayout.cols2" v-if="!props.fromPlanPage">
             <a-form-item name="noticeName" label="审核计划">
               <AvicModalSelect
                 v-model:value="form.planId"
@@ -36,10 +26,11 @@
                 showField="auditeeDeptName"
                 :selectComponent="QmsAuditPlanSelect"
                 @selectConfirm="handlePlanSelect($event,form)"
-                :defaultShowValue="form.noticeName"
+                :defaultShowValue="form.auditeeDeptName"
               />
             </a-form-item>
           </a-col>
+          <!--受审核部门-->
           <a-col v-bind="colLayout.cols">
             <a-form-item name="auditeeDeptName" label="受审核部门">
               <a-input
@@ -48,6 +39,7 @@
               />
             </a-form-item>
           </a-col>
+          <!--主审人员-->
           <a-col v-bind="colLayout.cols">
             <a-form-item name="chiefAuditorId" label="主审人员">
               <AvicCommonSelect
@@ -57,10 +49,31 @@
                 :default-show-value="form.chiefAuditorName"
                 @callback="res => (form.chiefAuditorName = res.names)"
                 :userSelectTabs="['dept']"
-                :moreUserInfo="['no']"
+
               />
             </a-form-item>
           </a-col>
+          <!--审核条款-->
+          <a-col v-bind="colLayout.cols2">
+            <a-form-item name="auditClause" label="审核条款">
+              <a-input
+                v-model:value="form.auditClause"
+                disabled
+              />
+            </a-form-item>
+          </a-col>
+          <!--型号项目-->
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="modelProject" label="型号/项目">
+              <a-input
+                v-model:value="form.modelProject"
+                :maxLength="512"
+                placeholder="请输入型号/项目"
+                disabled
+              />
+            </a-form-item>
+          </a-col>
+          <!--审核目的-->
           <a-col v-bind="colLayout.cols2">
             <a-form-item name="auditPurpose" label="审核目的">
               <a-textarea
@@ -123,7 +136,7 @@
                 :default-show-value="form.auditorName"
                 @callback="res => (form.auditorName = res.names)"
                 :userSelectTabs="['dept']"
-                :moreUserInfo="['no']"
+
                 select-model="multi"
               />
             </a-form-item>
@@ -138,7 +151,7 @@
                 :default-show-value="form.auditeeUserName"
                 @callback="res => (form.auditeeUserName = res.names)"
                 :userSelectTabs="['dept']"
-                :moreUserInfo="['no']"
+
               />
             </a-form-item>
           </a-col>
@@ -193,7 +206,7 @@
   </AvicModal>
 </template>
 <script lang="ts" setup>
-import { useQmsAuditNoticeForm, emits } from './ts/QmsAuditNoticeForm'; // 引入表单ts
+import { emits, useQmsAuditNoticeForm } from './ts/QmsAuditNoticeForm'; // 引入表单ts
 import QmsAuditPlanSelect from '../qmsauditplan/QmsAuditPlanSelect.vue';
 
 const props = defineProps({
@@ -214,6 +227,10 @@ const props = defineProps({
   },
   planObj: {
     type: Object
+  },
+  fromPlanPage: {
+    type: Boolean,
+    default: false
   }
 });
 const emit = defineEmits(emits);

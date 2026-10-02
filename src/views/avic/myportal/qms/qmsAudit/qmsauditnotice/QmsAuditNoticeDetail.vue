@@ -8,6 +8,7 @@
       :colon="false"
     >
       <a-row>
+        <!--受审核部门-->
         <a-col v-bind="colLayout.cols" v-if="fieldVisible('auditeeDeptName')">
           <a-form-item name="auditeeDeptName" label="受审核部门" :rules="fieldRequired('auditeeDeptName')" has-feedback>
             <a-input
@@ -16,6 +17,16 @@
             />
           </a-form-item>
         </a-col>
+        <!--主审人员-->
+        <a-col v-bind="colLayout.cols" v-if="fieldVisible('chiefAuditorName')">
+          <a-form-item name="chiefAuditorName" label="主审人员" :rules="fieldRequired('chiefAuditorName')" has-feedback>
+            <a-input
+              v-model:value="form.chiefAuditorName"
+              :disabled="fieldDisabled('chiefAuditorName')"
+            />
+          </a-form-item>
+        </a-col>
+        <!--审核条款-->
         <a-col v-bind="colLayout.cols2" v-if="fieldVisible('auditClause')">
           <a-form-item name="auditClause" label="审核条款" :rules="fieldRequired('auditClause')" has-feedback>
             <a-input
@@ -24,6 +35,7 @@
             />
           </a-form-item>
         </a-col>
+        <!--型号/项目-->
         <a-col v-bind="colLayout.cols" v-if="fieldVisible('modelProject')">
           <a-form-item name="modelProject" label="型号/项目" :rules="fieldRequired('modelProject')" has-feedback>
             <a-input
@@ -32,6 +44,7 @@
             />
           </a-form-item>
         </a-col>
+        <!--审核目的-->
         <a-col v-bind="colLayout.cols2" v-if="fieldVisible('auditPurpose')">
           <a-form-item name="auditPurpose" label="审核目的" :rules="fieldRequired('auditPurpose')" has-feedback>
             <a-textarea
@@ -40,6 +53,7 @@
             />
           </a-form-item>
         </a-col>
+        <!--依据的标准和文件-->
         <a-col v-bind="colLayout.cols2" v-if="fieldVisible('auditBasis')">
           <a-form-item name="auditBasis" label="审核依据的标准和文件" :rules="fieldRequired('auditBasis')" has-feedback>
             <a-input
@@ -48,6 +62,7 @@
             />
           </a-form-item>
         </a-col>
+        <!--审核覆盖产品-->
         <a-col v-bind="colLayout.cols2" v-if="fieldVisible('coveredProduct')">
           <a-form-item name="coveredProduct" label="审核覆盖产品" :rules="fieldRequired('coveredProduct')" has-feedback>
             <a-input
@@ -56,6 +71,7 @@
             />
           </a-form-item>
         </a-col>
+        <!--审核日期-->
         <a-col v-bind="colLayout.cols" v-if="fieldVisible('auditTime')">
           <a-form-item name="auditTime" label="审核日期" :rules="fieldRequired('auditTime')" has-feedback>
             <a-date-picker
@@ -66,6 +82,7 @@
             />
           </a-form-item>
         </a-col>
+        <!--持续审核天数-->
         <a-col v-bind="colLayout.cols" v-if="fieldVisible('durationDays')">
           <a-form-item name="durationDays" label="审核持续天数" :rules="fieldRequired('durationDays')" has-feedback>
             <a-input-number
@@ -78,8 +95,9 @@
             />
           </a-form-item>
         </a-col>
-        <a-col v-bind="colLayout.cols" v-if="fieldVisible('auditorName')">
-          <a-form-item name="auditorName" label="审核人员" :rules="fieldRequired('auditorName')" has-feedback>
+        <!--审核组成员-->
+        <a-col v-bind="colLayout.cols2" v-if="fieldVisible('auditorName')">
+          <a-form-item name="auditorName" label="审核组成员" :rules="fieldRequired('auditorName')" has-feedback>
             <AvicCommonSelect
               v-model:value="form.auditorId"
               type="userSelect"
@@ -87,22 +105,15 @@
               :default-show-value="form.auditorName"
               @callback="res => (form.auditorName = res.names)"
               :userSelectTabs="['dept']"
-              :moreUserInfo="['no']"
+
               select-model="multi"
               :disabled="fieldDisabled('auditorName')"
             />
           </a-form-item>
         </a-col>
-        <a-col v-bind="colLayout.cols" v-if="fieldVisible('chiefAuditorName')">
-          <a-form-item name="chiefAuditorName" label="主审" :rules="fieldRequired('chiefAuditorName')" has-feedback>
-            <a-input
-              v-model:value="form.chiefAuditorName"
-              :disabled="fieldDisabled('chiefAuditorName')"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col v-bind="colLayout.cols" v-if="fieldVisible('auditeeUserId')">
-          <a-form-item name="auditeeUserId" label="受审方人员" :rules="fieldRequired('auditeeUserId')" has-feedback>
+        <!--陪同人员-->
+        <a-col v-bind="colLayout.cols2" v-if="fieldVisible('auditeeUserId')">
+          <a-form-item name="auditeeUserId" label="陪同人员" :rules="fieldRequired('auditeeUserId')" has-feedback>
             <AvicCommonSelect
               v-model:value="form.auditeeUserId"
               type="userSelect"
@@ -110,14 +121,13 @@
               :default-show-value="form.auditeeUserName"
               @callback="res => (form.auditeeUserName = res.names)"
               :userSelectTabs="['dept']"
-              :moreUserInfo="['no']"
               select-model="multi"
               :disabled="fieldDisabled('auditeeUserId')"
             />
           </a-form-item>
         </a-col>
         <a-col v-bind="colLayout.cols" v-if="fieldVisible('secretLevel')">
-          <a-form-item name="secretLevel" label="密级" :rules="fieldRequired('secretLevel')" has-feedback>
+          <a-form-item name="secretLevel" label="密级">
             <a-select
               v-model:value="form.secretLevel"
               :get-popup-container="triggerNode => triggerNode.parentNode"

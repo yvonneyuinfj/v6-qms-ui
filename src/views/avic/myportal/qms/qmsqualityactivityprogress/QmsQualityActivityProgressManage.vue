@@ -30,9 +30,18 @@
         @refresh="getList"
       >
         <template #toolBarLeft>
+          <div class="aecc-leftbar-title">活动过程反馈</div>
+        </template>
+        <template #toolBarRight>
+          <!--<a-input-search-->
+          <!--  class="opt-btn-commonsearch"-->
+          <!--  style="width: 200px"-->
+          <!--  placeholder="请输入所属年份或月份"-->
+          <!--  :allow-clear="true"-->
+          <!--  @search="handleKeyWordQuery"-->
+          <!--/>-->
           <a-space>
             <a-button
-              v-hasPermi="['qmsQualityActivityProgress:add']"
               title="添加"
               type="primary"
               @click="handleAdd"
@@ -43,8 +52,6 @@
               添加
             </a-button>
             <a-button
-              v-hasPermi="['qmsQualityActivityProgress:del']"
-              title="删除"
               danger
               :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"
               :loading="delLoading"
@@ -56,37 +63,26 @@
               删除
             </a-button>
             <a-button
-              v-hasPermi="['qmsQualityActivityProgress:import']"
               title="导入"
               type="primary"
               ghost
               @click="handleImport">
               <template #icon>
-                 <import-outlined />
+                <import-outlined />
               </template>
               导入
             </a-button>
             <a-button
-              v-hasPermi="['qmsQualityActivityProgress:export']"
               title="导出"
               type="primary"
               ghost
               @click="handleExport">
               <template #icon>
-                 <export-outlined />
+                <export-outlined />
               </template>
               导出
             </a-button>
           </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-input-search
-            class="opt-btn-commonsearch"
-            style="width: 200px"
-            placeholder="请输入所属年份或月份"
-            :allow-clear="true"
-            @search="handleKeyWordQuery"
-          />
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex  === 'id'">
@@ -162,8 +158,8 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '所属年份',
-    dataIndex: 'forYear',
+    title: '进展编号',
+    dataIndex: 'progressNo',
     ellipsis: true,
     sorter: true,
     minWidth: 120,
@@ -189,24 +185,6 @@ const columns = [
     align: 'left'
   },
   {
-    title: '反馈人ID',
-    dataIndex: 'feedbackStaffId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '反馈人CODE',
-    dataIndex: 'feedbackStaffCode',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
     title: '反馈人',
     dataIndex: 'feedbackStaffName',
     ellipsis: true,
@@ -222,68 +200,6 @@ const columns = [
     minWidth: 120,
     resizable: true,
     align: 'center'
-  },
-  {
-    title: '业务状态',
-    dataIndex: 'status',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程实例ID',
-    dataIndex: 'processInstanceId',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '流程状态',
-    dataIndex: 'processStatus',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '进展编号',
-    dataIndex: 'progressNo',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
   },
   {
     title: '操作',

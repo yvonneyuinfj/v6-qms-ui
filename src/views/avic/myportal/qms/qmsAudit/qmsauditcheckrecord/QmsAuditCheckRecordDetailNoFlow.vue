@@ -3,7 +3,6 @@ QmsAuditCheckRecordEdit.vue<template>
     :visible="true"
     title="检查单"
     width="95%"
-    height="80%"
     :centered="true"
     @cancel="closeModal"
   >

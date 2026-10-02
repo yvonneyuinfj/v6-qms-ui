@@ -40,6 +40,8 @@ export function useQmsAuditCheckDetailForm({
     if (props.formId) {
       // 编辑、详情页面加载数据
       getFormData(props.formId);
+    } else {
+      initFormData();
     }
   });
   const modelList = ref([]);
@@ -48,6 +50,10 @@ export function useQmsAuditCheckDetailForm({
       console.log('modelList', res);
       modelList.value = res.data;
     });
+  };
+
+  const initFormData = () => {
+    form.value.recordId = props.mainId;
   };
 
   /** 获取当前用户对应的文档密级 */

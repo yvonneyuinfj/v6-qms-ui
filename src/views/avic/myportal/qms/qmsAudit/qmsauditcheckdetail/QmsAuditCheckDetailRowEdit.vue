@@ -21,6 +21,11 @@
       :customRow="customRow"
       @change="handleTableChange"
     >
+      <template #toolBarLeft>
+        <a-space>
+          <div class="aecc-leftbar-title">检查项</div>
+        </a-space>
+      </template>
       <template v-if="!props.readOnly" #toolBarRight>
         <a-space>
           <a-space>
@@ -88,7 +93,7 @@
             ></a-select>
           </template>
         </AvicRowEdit>
-        <AvicRowEdit v-else-if="column.dataIndex === 'conformityResult'" :record="record" :column="column.dataIndex">
+        <AvicRowEdit v-else-if="column.dataIndex === 'conformityResultName'" :record="record" :column="column.dataIndex">
           <template #edit>
             <a-select
               ref="select"
@@ -189,7 +194,7 @@ const columns = [
   },
   {
     title: '符合情况',
-    dataIndex: 'conformityResult',
+    dataIndex: 'conformityResultName',
     key: 'conformityResult',
     ellipsis: true,
     width: 150,

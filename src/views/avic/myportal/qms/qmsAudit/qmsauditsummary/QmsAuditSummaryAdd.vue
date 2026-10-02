@@ -3,7 +3,6 @@
     :visible="true"
     title="添加"
     width="80%"
-    height="640px"
     :centered="true"
     @cancel="closeModal"
   >
@@ -17,21 +16,21 @@
         :colon="false"
       >
         <a-row>
-          <a-col v-bind="colLayout.cols">
-            <a-form-item name="planId" label="审核计划">
-              <AvicModalSelect
-                v-model:value="form.planId"
-                title="请选择审核计划"
-                placeholder="请选择审核计划"
-                valueField="id"
-                showField="modelProject"
-                :selectComponent="QmsAuditPlanSelect"
-                :isMultiSelection="false"
-                :allow-clear="true"
-                @selectConfirm="handleSelect"
-              />
-            </a-form-item>
-          </a-col>
+          <!--<a-col v-bind="colLayout.cols">-->
+          <!--  <a-form-item name="planId" label="审核计划">-->
+          <!--    <AvicModalSelect-->
+          <!--      v-model:value="form.planId"-->
+          <!--      title="请选择审核计划"-->
+          <!--      placeholder="请选择审核计划"-->
+          <!--      valueField="id"-->
+          <!--      showField="modelProject"-->
+          <!--      :selectComponent="QmsAuditPlanSelect"-->
+          <!--      :isMultiSelection="false"-->
+          <!--      :allow-clear="true"-->
+          <!--      @selectConfirm="handleSelect"-->
+          <!--    />-->
+          <!--  </a-form-item>-->
+          <!--</a-col>-->
           <a-col v-bind="colLayout.cols">
             <a-form-item name="auditeeDeptId" label="受审核部门">
               <AvicCommonSelect
@@ -44,6 +43,7 @@
                         form.auditeeDeptName = result.names;
                       }
                     "
+                disabled
               />
             </a-form-item>
           </a-col>

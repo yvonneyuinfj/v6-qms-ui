@@ -1,17 +1,23 @@
 import type { QmsAuditCheckRecordDto } from '@/api/avic/myportal/qms/QmsAuditCheckRecordApi'; // 引入模块DTO
-import { getQmsAuditCheckRecord, saveQmsAuditCheckRecord, saveFormAndStartProcess } from '@/api/avic/myportal/qms/QmsAuditCheckRecordApi'; // 引入模块API
 import {
-  default as flowUtils,
-  startFlowByFormCode,
+  getQmsAuditCheckRecord,
+  saveFormAndStartProcess,
+  saveQmsAuditCheckRecord
+} from '@/api/avic/myportal/qms/QmsAuditCheckRecordApi'; // 引入模块API
+import {
   closeFlowLoading,
-  openFlowDetail,
+  default as flowUtils,
   getFieldAuth,
-  getFieldVisible,
   getFieldDisabled,
-  getFieldRequired
+  getFieldRequired,
+  getFieldVisible,
+  openFlowDetail,
+  startFlowByFormCode
 } from '@/views/avic/bpm/bpmutils/FlowUtils.js';
+import { QmsAuditCheckDetailDto } from '@/api/avic/myportal/qms/QmsAuditCheckDetailApi';
 
 export const emits = ['reloadData', 'close'];
+
 export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
   const { proxy } = getCurrentInstance();
   const form = ref<QmsAuditCheckRecordDto>({});
@@ -27,21 +33,24 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
     ]
   };
   const qmsAuditCheckDetailEdit = ref();
+  const list = ref([]);
   const layout = {
     labelCol: { flex: '140px' },
     wrapperCol: { flex: '1' }
   };
-  const colLayout = proxy. $colLayout2; // 调用布局公共方法
+  const colLayout = proxy.$colLayout2; // 调用布局公共方法
   const loading = ref(false);
   const uploadFile = ref(null); // 附件ref
   const secretLevelList = ref([]); // 密级通用代码
   const authJson = ref(null);
+  const lookupParams = [{ fieldName: 'confirmityResult', lookUpType: 'QMS_CHECK_CONFORMITY_RESULT' }];
+  const conformityResultList = ref([]);
 
   if (props.params) {
     bpmParams.value = props.params;
   } else {
     if (proxy.$route) {
-      bpmParams.value = proxy. $route.query;
+      bpmParams.value = proxy.$route.query;
     }
   }
   if (bpmParams) {
@@ -53,6 +62,8 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
   onMounted(() => {
     // 获取当前用户对应的文档密级
     getUserFileSecretList();
+    // 加载所需通用代码
+    getLookupList();
     if (props.formId || form.value.id) {
       // 编辑详情页面加载数据
       getFormData(props.formId || form.value.id);
@@ -61,12 +72,21 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
       initForm();
     }
   });
+
+  /** 获取通用代码  */
+  function getLookupList() {
+    proxy.$getLookupByType(lookupParams, result => {
+      conformityResultList.value = result.confirmityResult;
+    });
+  }
+
   /** 获取当前用户对应的文档密级 */
-  function getUserFileSecretList () {
+  function getUserFileSecretList() {
     proxy.$getUserFileSecretLevelList(result => {
       secretLevelList.value = result;
     });
   }
+
   /**
    * 编辑详情页面加载数据
    * @param {String} id 行数据的id
@@ -79,9 +99,10 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
     getQmsAuditCheckRecord(id)
       .then(async res => {
         if (res.data) {
+          console.log(res.data);
           form.value = res.data;
-        // 处理数据
-           loading.value = false;
+          // 处理数据
+          loading.value = false;
         } else {
           initForm();
           loading.value = false;
@@ -92,6 +113,7 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
         loading.value = false;
       });
   }
+
   /** 保存 */
   function saveForm(params) {
     formRef.value
@@ -119,8 +141,8 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
                   if (props.bpmInstanceObject) {
                     bpmButtonParams.value = { params, result: res.data };
                   }
-                  if (!form.value.id){
-                    form.value.id=res.data;
+                  if (!form.value.id) {
+                    form.value.id = res.data;
                   }
                   uploadFile.value.upload(form.value.id || res.data); // 附件上传
                 } else {
@@ -141,6 +163,7 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
         proxy.$scrollToFirstErrorField(formRef, error);
       });
   }
+
   /** 设置添加表单的初始值 */
   function initForm() {
     // 初始化表单数据
@@ -154,8 +177,8 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
   /**
    * 初始化表单数据
    */
-  const initFormData = ()=>{
-    if(props.planObj){
+  const initFormData = () => {
+    if (props.planObj) {
       console.log('props.planObj', props.planObj);
       const planObj = props.planObj;
       form.value.planId = planObj?.id;
@@ -171,15 +194,34 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
       form.value.auditTime = planObj?.auditTime; // 审核时间
       form.value.auditClause = planObj?.auditClause; // 条款
       form.value.secretLevel = planObj.secretLevel; // 密级
+      //  TODO: 根据审核信息自动生成检查项
+      generateCheckDetailList(form.value.auditClause);
     }
-    // 自动生成记录编号
+    // TODO 自动生成检查记录编号
     // if(!form.value.recordCode){
     //   form.value.recordCode = ''
     // }
-    if(!form.value.treeSort){
+    if (!form.value.treeSort) {
       form.value.treeSort = 0;
     }
   };
+
+  /**
+   * 根据审核信息自动生成检查项
+   */
+  function generateCheckDetailList(auditClause) {
+    if (!auditClause) return;
+    const arr = auditClause.split(/[^\d.]+/g); // 非数字和.
+    arr.forEach(clause => {
+      console.log(clause);
+      const item = ref<QmsAuditCheckDetailDto>({});
+      item.value.clauseNo = clause;
+      list.value.push(item);
+    });
+
+  }
+
+
   /** 校验通过后，读取要启动的流程模板 */
   function getBpmDefine() {
     formRef.value
@@ -214,6 +256,7 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
         proxy.$scrollToFirstErrorField(formRef, error);
       });
   }
+
   /** 保存并启动流程 */
   async function saveAndStartProcess(params) {
     // 点击保存并启动流程按钮触发
@@ -244,8 +287,8 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
               bpmButtonParams.value = { params, result: res.data };
             }
             bpmResult.value = res.data;
-            if (!form.value.id){
-              form.value.id=res.data.formId;
+            if (!form.value.id) {
+              form.value.id = res.data.formId;
             }
             uploadFile.value.upload(form.value.id || res.data); // 附件上传
           } else {
@@ -257,6 +300,7 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
         });
     }
   }
+
   /** 保存、保存并启动流程处理成功后的逻辑 */
   function successCallback() {
     if (props.bpmInstanceObject) {
@@ -278,6 +322,7 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
       emit('close');
     }
   }
+
   /** 数据保存失败的回调 */
   function errorCallback() {
     if (props.bpmInstanceObject) {
@@ -289,6 +334,7 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
       emit('close');
     }
   }
+
   /** 附件上传完之后的回调函数 */
   function afterUploadEvent(successFile, errorFile) {
     if (errorFile.length > 0) {
@@ -299,37 +345,44 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
       successCallback();
     }
   }
+
   /** 返回关闭事件 */
   function closeModal() {
     emit('close');
   }
+
   /** 点击流程按钮的前置事件 */
   function beforeClickBpmButtons() {
     return new Promise(resolve => {
       resolve(true);
     });
   }
+
   /** 点击流程按钮的后置事件 */
   function afterClickBpmButtons() {
     return new Promise(resolve => {
       resolve(true);
     });
   }
+
   /** 表单字段是否显示 */
   function fieldVisible(fieldName) {
     checkAuthJson();
     return getFieldVisible(authJson.value, fieldName);
   }
+
   /** 表单字段是否可编辑 */
   function fieldDisabled(fieldName) {
     checkAuthJson();
     return getFieldDisabled(authJson.value, fieldName, props.bpmInstanceObject);
   }
+
   /** 表单字段是否显示 */
   function fieldRequired(fieldName) {
     checkAuthJson();
     return getFieldRequired(authJson.value, fieldName, rules, props.bpmInstanceObject);
   }
+
   /** 校验表单附件密级 */
   function validateUploaderFileSecret() {
     const errorMessage = uploadFile.value.validateUploaderFileSecret(form.value.secretLevel);
@@ -339,11 +392,13 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
     }
     return true;
   }
+
   /** 表单附件是否必填(按elementId) */
   function attachmentRequired(fieldName) {
     const res = flowUtils.attachmentRequired(props.bpmInstanceObject, fieldName);
     return res;
   }
+
   function checkAuthJson() {
     if (authJson.value == null) {
       authJson.value = getFieldAuth(props.bpmInstanceObject);
@@ -391,7 +446,9 @@ export function useQmsAuditCheckRecordForm({ props: props, emit: emit }) {
     beforeClickBpmButtons,
     afterClickBpmButtons,
     qmsAuditCheckDetailEdit,
-    handlePlanSelect
+    handlePlanSelect,
+    list,
+    conformityResultList
   };
 }
 

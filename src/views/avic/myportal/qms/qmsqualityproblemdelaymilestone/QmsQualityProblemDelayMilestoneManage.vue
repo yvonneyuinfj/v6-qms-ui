@@ -30,6 +30,9 @@
         @refresh="getList"
       >
         <template #toolBarLeft>
+          <div class="aecc-leftbar-title">里程碑</div>
+        </template>
+        <template #toolBarRight>
           <a-space>
             <a-button
               danger
@@ -44,15 +47,13 @@
               删除
             </a-button>
           </a-space>
-        </template>
-        <template #toolBarRight>
-          <a-input-search
-            class="opt-btn-commonsearch"
-            style="width: 200px"
-            placeholder="请输入里程碑阶段;字典：01原因分析、02措施制定、03措施验证、04问题归零或是否涉及;Y/N"
-            :allow-clear="true"
-            @search="handleKeyWordQuery"
-          />
+          <!--<a-input-search-->
+          <!--  class="opt-btn-commonsearch"-->
+          <!--  style="width: 200px"-->
+          <!--  placeholder="请输入里程碑阶段;字典：01原因分析、02措施制定、03措施验证、04问题归零或是否涉及;Y/N"-->
+          <!--  :allow-clear="true"-->
+          <!--  @search="handleKeyWordQuery"-->
+          <!--/>-->
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex === 'id'">
@@ -93,7 +94,7 @@ const columns = [
     fixed: 'left'
   },
   {
-    title: '里程碑阶段;字典：01原因分析、02措施制定、03措施验证、04问题归零',
+    title: '里程碑阶段',
     dataIndex: 'milestoneStage',
     ellipsis: true,
     sorter: true,
@@ -102,7 +103,7 @@ const columns = [
     align: 'left'
   },
   {
-    title: '是否涉及;Y/N',
+    title: '是否涉及',
     dataIndex: 'ynApplicable',
     ellipsis: true,
     sorter: true,
@@ -125,32 +126,6 @@ const columns = [
     minWidth: 120,
     resizable: true,
     align: 'center'
-  },
-  {
-    title: '密级',
-    dataIndex: 'secretLevelName',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'center'
-  },
-
-  {
-    title: '备注',
-    dataIndex: 'remark',
-    ellipsis: true,
-    sorter: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'left'
-  },
-  {
-    title: '排序',
-    dataIndex: 'orderBy',
-    ellipsis: true,
-    minWidth: 120,
-    resizable: true,
-    align: 'right'
   },
   {
     title: '操作',

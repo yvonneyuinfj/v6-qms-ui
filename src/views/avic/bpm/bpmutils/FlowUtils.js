@@ -7,6 +7,7 @@ import { AvicBpmDetailList } from '../flowdetail/components/bpm-detail-list/inde
 import {
   start,
   getProcessDetailParameter,
+  getProcessDetailParameterAll,
   finishreader,
   getDefineIdByEntryId,
   getBpmButtonListBySelf,
@@ -378,16 +379,16 @@ const bpmUtils = {
               // 电子表单流程
               bpmUtils.openFlowDetail(
                 res.data.formUrl +
-                  '&viewCode=' + // 流程详情页url加入视图编码
-                  viewCode +
-                  '&defineId=' +
-                  res.data.defineId +
-                  '&deploymentId=' +
-                  res.data.deploymentId +
-                  '&title=' +
-                  title +
-                  '&timestamp=' +
-                  timestamp,
+                '&viewCode=' + // 流程详情页url加入视图编码
+                viewCode +
+                '&defineId=' +
+                res.data.defineId +
+                '&deploymentId=' +
+                res.data.deploymentId +
+                '&title=' +
+                title +
+                '&timestamp=' +
+                timestamp,
                 '',
                 null,
                 'FlowAdd-' + res.data.defineId + '-' + res.data.deploymentId
@@ -396,20 +397,20 @@ const bpmUtils = {
               if (res.data?.siteType == '1') {
                 bpmUtils.openFlowDetail(
                   res.data.formUrl +
-                    '?defineId=' +
-                    res.data.defineId +
-                    '&deploymentId=' +
-                    res.data.deploymentId +
-                    '&title=' +
-                    title +
-                    '&timestamp=' +
-                    timestamp +
-                    '&siteType=' +
-                    res.data.siteType +
-                    '&microAppUrl=' +
-                    res.data.microAppUrl +
-                    '&microAppName=' +
-                    res.data.microAppName,
+                  '?defineId=' +
+                  res.data.defineId +
+                  '&deploymentId=' +
+                  res.data.deploymentId +
+                  '&title=' +
+                  title +
+                  '&timestamp=' +
+                  timestamp +
+                  '&siteType=' +
+                  res.data.siteType +
+                  '&microAppUrl=' +
+                  res.data.microAppUrl +
+                  '&microAppName=' +
+                  res.data.microAppName,
                   '',
                   null,
                   'FlowAdd-' + res.data.defineId + '-' + res.data.deploymentId
@@ -417,14 +418,14 @@ const bpmUtils = {
               } else {
                 bpmUtils.openFlowDetail(
                   res.data.formUrl +
-                    '?defineId=' +
-                    res.data.defineId +
-                    '&deploymentId=' +
-                    res.data.deploymentId +
-                    '&title=' +
-                    title +
-                    '&timestamp=' +
-                    timestamp,
+                  '?defineId=' +
+                  res.data.defineId +
+                  '&deploymentId=' +
+                  res.data.deploymentId +
+                  '&title=' +
+                  title +
+                  '&timestamp=' +
+                  timestamp,
                   '',
                   null,
                   'FlowAdd-' + res.data.defineId + '-' + res.data.deploymentId
@@ -443,6 +444,20 @@ const bpmUtils = {
   },
   detailByOptions(options) {
     return this.detail(
+      options.bpmInstanceObject,
+      options.formId,
+      options.flowDetailUrl,
+      options.extType,
+      options.viewCode,
+      options.bpmOperatorRefresh,
+      options.viewMode,
+      options.formId,
+      options.formResourceName,
+      options.customStatus
+    );
+  },
+  detailByOptionsAll(options) {
+    return this.detailAll(
       options.bpmInstanceObject,
       options.formId,
       options.flowDetailUrl,
@@ -482,6 +497,104 @@ const bpmUtils = {
         postParam.manager = extType;
       }
       getProcessDetailParameter(postParam)
+        .then(res => {
+          if (res.success) {
+            if (res.data.length == 0) {
+              if (viewMode == 'detailForm') {
+                bpmUtils.executeTask(
+                  id, // processInstanceId
+                  '', //executionId
+                  '', // taskID
+                  formId, //formId
+                  formResourceName, //formResourceName
+                  '', // 展示流程标题
+                  '', //formResourceName
+                  flowDetailUrl,
+                  bpmOperatorRefresh,
+                  viewCode,
+                  viewMode,
+                  customStatus
+                );
+              } else {
+                message.error('非本人参与流程，无法查看详情');
+              }
+            } else if (res.data.length == 1) {
+              const n = res.data[0];
+              bpmUtils.executeTask(
+                n.processInstance, // processInstanceId
+                n.executionId, //executionId
+                n.dbid, // taskID
+                n.businessId, //formId
+                n.formResourceName, //formResourceName
+                n.processDefName || n.taskTitle, // 展示流程标题
+                n.taskType, //formResourceName
+                flowDetailUrl,
+                bpmOperatorRefresh,
+                viewCode,
+                viewMode,
+                customStatus
+              );
+            } else {
+              const callback = selectedTask => {
+                // 点击取消时，无已选待办
+                if (selectedTask) {
+                  const n = selectedTask;
+                  bpmUtils.executeTask(
+                    n.processInstance, // processInstanceId
+                    n.executionId, //executionId
+                    n.dbid, // taskID
+                    n.businessId, //formId
+                    n.formResourceName, //formResourceName
+                    n.processDefName || n.taskTitle, // 展示流程标题
+                    n.taskType, //formResourceName
+                    flowDetailUrl,
+                    bpmOperatorRefresh,
+                    viewCode,
+                    viewMode,
+                    customStatus
+                  );
+                }
+              };
+              selectBpmTask({ taskList: res.data, callback });
+            }
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        })
+        .catch(() => {
+          reject({ success: false });
+        });
+    });
+    return p;
+  },
+  /**
+   * 获取流程详情页面相关数据
+   * id 流程实例Id或者业务表单Id
+   */
+  detailAll: (
+    bpmInstanceObject,
+    id,
+    flowDetailUrl,
+    extType,
+    viewCode,
+    bpmOperatorRefresh,
+    viewMode,
+    formId,
+    formResourceName,
+    customStatus
+  ) => {
+    let p = new Promise(function (resolve, reject) {
+      // if (!bpmUtils.notNull(extType)) {
+      //   extType = '2';
+      // }
+      let postParam = {
+        id: id
+      };
+      if (bpmUtils.notNull(extType)) {
+        postParam.manager = extType;
+      }
+      getProcessDetailParameterAll(postParam)
         .then(res => {
           if (res.success) {
             if (res.data.length == 0) {
@@ -830,8 +943,8 @@ const bpmUtils = {
     let tips = !options
       ? '请输入'
       : typeof options === 'object'
-      ? options['tip'] || '请输入'
-      : options;
+        ? options['tip'] || '请输入'
+        : options;
     let dbRequired = typeof options === 'object' && options['dbRequired'] ? true : false;
     let result = [];
     if (bpmUtils.isEnable(bpmInstanceObject)) {
@@ -1222,7 +1335,6 @@ export function selectBpmTask({ taskList, callback }) {
 
 /**
  * 根据表单编码及启动条件查询并选择可启动的流程定义
- * @param {formCode:String, formData: Object, callback: Function} param0
  * formCode 表单编码
  * formData 校验启动条件所需的参数
  * callback 回调函数

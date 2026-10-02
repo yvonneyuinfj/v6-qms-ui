@@ -1,9 +1,9 @@
-QmsAuditCheckRecordEdit.vue<template>
+QmsAuditCheckRecordEdit.vue
+<template>
   <AvicModal
     :visible="true"
     title="编辑"
     width="95%"
-    height="90%"
     :centered="true"
     @cancel="closeModal"
   >
@@ -18,87 +18,70 @@ QmsAuditCheckRecordEdit.vue<template>
         :colon="false"
       >
         <a-row :gutter="0">
-          <a-col v-bind="colLayout.cols2">
-            <a-form-item name="planId" label="审核计划">
-              <AvicModalSelect
-                v-model:value="form.planId"
-                title="请选择实施计划"
-                placeholder="请选择实施计划"
-                valueField="id"
-                showField="auditeeDeptName"
-                :selectComponent="QmsAuditPlanSelect"
-                @selectConfirm="handlePlanSelect($event,form)"
-                :defaultShowValue="form.attribute01"
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="auditeeDeptName" label="受审核部门">
+              <a-input
+                v-model:value="form.auditeeDeptName"
+                disabled
               />
             </a-form-item>
           </a-col>
-          <template v-if="form.attribute01">
-            <a-col v-bind="colLayout.cols">
-              <a-form-item name="auditeeDeptName" label="受审核部门">
-                <a-input
-                  v-model:value="form.auditeeDeptName"
-                  disabled
-                />
-              </a-form-item>
-            </a-col>
-
-            <a-col v-bind="colLayout.cols">
-              <a-form-item name="auditTime" label="审核时间">
-                <a-date-picker
-                  v-model:value="form.auditTime"
-                  format="YYYY-MM-DD"
-                  value-format="YYYY-MM-DD"
-                  placeholder="请选择审核时间"
-                  disabled
-                />
-              </a-form-item>
-            </a-col>
-            <a-col v-bind="colLayout.cols">
-              <a-form-item name="auditorName" label="审核人员">
-                <a-input
-                  v-model:value="form.auditorName"
-                  disabled
-                />
-              </a-form-item>
-            </a-col>
-            <a-col v-bind="colLayout.cols">
-              <a-form-item name="auditeeUserName" label="陪同人员">
-                <a-input
-                  v-model:value="form.auditeeUserName"
-                  disabled
-                />
-              </a-form-item>
-            </a-col>
-            <a-col v-bind="colLayout.cols2">
-              <a-form-item name="auditClause" label="标准条款">
-                <a-input
-                  v-model:value="form.auditClause"
-                  disabled
-                />
-              </a-form-item>
-            </a-col>
-            <a-col v-bind="colLayout.cols">
-              <a-form-item name="secretLevel" label="密级" has-feedback>
-                <a-select
-                  v-model:value="form.secretLevel"
-                  :get-popup-container="triggerNode => triggerNode.parentNode"
-                  option-filter-prop="children"
-                  :show-search="true"
-                  :allow-clear="true"
-                  placeholder="请选择密级"
-                  disabled
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="auditTime" label="审核时间">
+              <a-date-picker
+                v-model:value="form.auditTime"
+                format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD"
+                placeholder="请选择审核时间"
+                disabled
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="auditorName" label="审核人员">
+              <a-input
+                v-model:value="form.auditorName"
+                disabled
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="auditeeUserName" label="陪同人员">
+              <a-input
+                v-model:value="form.auditeeUserName"
+                disabled
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols2">
+            <a-form-item name="auditClause" label="标准条款">
+              <a-input
+                v-model:value="form.auditClause"
+                disabled
+              />
+            </a-form-item>
+          </a-col>
+          <a-col v-bind="colLayout.cols">
+            <a-form-item name="secretLevel" label="密级" has-feedback>
+              <a-select
+                v-model:value="form.secretLevel"
+                :get-popup-container="triggerNode => triggerNode.parentNode"
+                option-filter-prop="children"
+                :show-search="true"
+                :allow-clear="true"
+                placeholder="请选择密级"
+                disabled
+              >
+                <a-select-option
+                  v-for="item in secretLevelList"
+                  :key="item.sysLookupTlId"
+                  :value="item.lookupCode"
                 >
-                  <a-select-option
-                    v-for="item in secretLevelList"
-                    :key="item.sysLookupTlId"
-                    :value="item.lookupCode"
-                  >
-                    {{ item.lookupName }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </template>
+                  {{ item.lookupName }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
           <a-col v-bind="colLayout.cols2">
             <a-form-item
               label="附件"
@@ -120,18 +103,27 @@ QmsAuditCheckRecordEdit.vue<template>
           </a-col>
         </a-row>
       </a-form>
-      <QmsAuditCheckDetailEdit ref="qmsAuditCheckDetailEdit" :mainId="formId || form.id" />
+      <QmsAuditCheckDetailEdit ref="qmsAuditCheckDetailEdit" :mainId="formId || form.id"/>
     </a-spin>
     <template #footer>
+      <a-button
+        title="保存并启动流程"
+        type="primary"
+        :loading="loading"
+        @click="saveAndStartProcess"
+        v-if="!form.dbid_"
+      >
+        保存并启动流程
+      </a-button>
       <a-button title="保存" type="primary" :loading="loading" @click="saveForm">保存</a-button>
       <a-button title="返回" type="primary" ghost @click="closeModal">返回</a-button>
     </template>
   </AvicModal>
 </template>
 <script lang="ts" setup>
-import { useQmsAuditCheckRecordForm, emits } from './ts/QmsAuditCheckRecordForm'; // 引入表单ts
-import QmsAuditCheckDetailEdit from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckdetail/QmsAuditCheckDetailRowEdit.vue'; // 引入子表组件
-import QmsAuditPlanSelect from '../qmsauditplan/QmsAuditPlanSelect.vue';
+import { emits, useQmsAuditCheckRecordForm } from './ts/QmsAuditCheckRecordForm'; // 引入表单ts
+import QmsAuditCheckDetailEdit
+  from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckdetail/QmsAuditCheckDetailRowEdit.vue'; // 引入子表组件
 const props = defineProps({
   formId: {
     type: String,
@@ -165,7 +157,8 @@ const {
   saveForm,
   closeModal,
   qmsAuditCheckDetailEdit,
-  handlePlanSelect
+  handlePlanSelect,
+  saveAndStartProcess
 } = useQmsAuditCheckRecordForm({
   props: props,
   emit: emit

@@ -1,14 +1,11 @@
 import type { QmsQualityObjectiveDto } from '@/api/avic/myportal/qms/QmsQualityObjectiveApi'; // 引入模块DTO
-import {
-  getQmsQualityObjective,
-  getTreeSortById,
-  saveQmsQualityObjective
-} from '@/api/avic/myportal/qms/QmsQualityObjectiveApi'; // 引入模块API
+import { getQmsQualityObjective, saveQmsQualityObjective } from '@/api/avic/myportal/qms/QmsQualityObjectiveApi'; // 引入模块API
 export const emits = ['reloadData', 'close'];
+
 export function useQmsQualityObjectiveForm({
-  props: props,
-  emit: emit
-}) {
+                                             props: props,
+                                             emit: emit
+                                           }) {
   const { proxy } = getCurrentInstance();
   const form = ref<QmsQualityObjectiveDto>({});
   const formRef = ref(null);
@@ -27,7 +24,8 @@ export function useQmsQualityObjectiveForm({
   const secretLevelList = ref([]); // 密级通用代码
   const lookupParams = [
     { fieldName: 'objectiveLevel', lookUpType: 'QMS_OBJECTIVE_LEVEL' },
-    { fieldName: 'dataStatCycle', lookUpType: 'QMS_OBJECT_DATA_STAT_CYCLE' }
+    { fieldName: 'dataStatCycle', lookUpType: 'QMS_OBJECT_DATA_STAT_CYCLE' },
+    { fieldName: 'indicatorType', lookUpType: 'QMS_INDICATOR_TYPE' }
   ];
   onMounted(() => {
     // 加载所需通用代码
@@ -37,7 +35,7 @@ export function useQmsQualityObjectiveForm({
     if (props.formId) {
       // 编辑、详情页面加载数据
       getFormData(props.formId);
-    }else {
+    } else {
       initFormData();
     }
   });
@@ -51,31 +49,36 @@ export function useQmsQualityObjectiveForm({
   };
   const objectiveLevelList = ref([]);
   const dataStatCycleList = ref([]);
+  const indicatorTypeList = ref([]);
+
   /** 获取通用代码  */
   function getLookupList() {
     proxy.$getLookupByType(lookupParams, result => {
       objectiveLevelList.value = result.objectiveLevel;
       dataStatCycleList.value = result.dataStatCycle;
+      indicatorTypeList.value = result.indicatorType;
     });
   }
+
   /** 获取当前用户对应的文档密级 */
-  function getUserFileSecretList () {
+  function getUserFileSecretList() {
     proxy.$getUserFileSecretLevelList(result => {
       secretLevelList.value = result;
     });
   }
+
   /**
    * 编辑、详情页面加载数据
    * @param {String} id 行数据的id
    */
-  function getFormData (id) {
+  function getFormData(id) {
     loading.value = true;
     getQmsQualityObjective(id)
       .then(async (res) => {
         if (res.success) {
           form.value = res.data;
           // 处理数据
- loading.value = false;
+          loading.value = false;
         }
       })
       .catch(() => {
@@ -83,11 +86,12 @@ export function useQmsQualityObjectiveForm({
         loading.value = false;
       });
   }
+
   /** 保存 */
-  function saveForm () {
+  function saveForm() {
     formRef.value
       .validate()
-      .then( () => {
+      .then(() => {
         // 附件密级校验 先判断
         const errorMessage = uploadFile.value.validateUploaderFileSecret(
           form.value.secretLevel
@@ -116,17 +120,20 @@ export function useQmsQualityObjectiveForm({
         proxy.$scrollToFirstErrorField(formRef, error);
       });
   }
+
   /** 数据保存成功的回调 */
-  function successCallback () {
+  function successCallback() {
     proxy.$message.success('保存成功！');
     emit('reloadData');
     emit('close');
   }
+
   /** 数据保存失败的回调 */
   function errorCallback() {
     emit('reloadData');
     emit('close');
   }
+
   /** 附件上传完之后的回调函数 */
   function afterUploadEvent(successFile, errorFile) {
     if (errorFile.length > 0) {
@@ -137,8 +144,9 @@ export function useQmsQualityObjectiveForm({
       successCallback();
     }
   }
+
   /** 返回关闭事件 */
-  function closeModal () {
+  function closeModal() {
     emit('close');
   }
 
@@ -168,6 +176,7 @@ export function useQmsQualityObjectiveForm({
     yearList,
     dataStatCycleList,
     objectiveLevelList,
+    indicatorTypeList
   };
 }
 

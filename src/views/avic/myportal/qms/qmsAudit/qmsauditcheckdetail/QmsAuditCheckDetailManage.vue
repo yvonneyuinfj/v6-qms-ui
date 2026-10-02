@@ -28,31 +28,27 @@
         </template>
         <template #toolBarRight>
           <div></div>
-          <!--<a-space>-->
-          <!--  <a-button-->
-          <!--    danger-->
-          <!--    :type="selectedRowKeys.length == 0 ? 'default' : 'primary'"-->
-          <!--    title="删除"-->
-          <!--    :loading="delLoading"-->
-          <!--    @click="handleDelete(selectedRowKeys, '')"-->
-          <!--  >-->
-          <!--    <template #icon>-->
-          <!--      <delete-outlined />-->
-          <!--    </template>-->
-          <!--    删除-->
-          <!--  </a-button>-->
-          <!--</a-space>-->
-          <!--<a-input-search-->
-          <!--  class="opt-btn-commonsearch"-->
-          <!--  style="width: 200px"-->
-          <!--  placeholder="请输入审核计划ID;关联年度计划或审核通知单ID;关联已批准通知单"-->
-          <!--  :allow-clear="true"-->
-          <!--  @search="handleKeyWordQuery"-->
-          <!--/>-->
+          <a-space>
+            <a-button
+              title="添加"
+              type="primary"
+              @click="handleAdd"
+            >
+              <template #icon>
+                <plus-outlined/>
+              </template>
+              添加
+            </a-button>
+          </a-space>
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex === 'id'">
             {{ index + 1 + queryParam.pageParameter.rows * (queryParam.pageParameter.page - 1) }}
+          </template>
+          <template v-else-if="column.dataIndex === 'checkContent'">
+            <a @click.stop="handleDetail(record)">
+              {{ record.checkContent }}
+            </a>
           </template>
           <template v-if="column.dataIndex === 'action'">
             <a-button
@@ -81,11 +77,23 @@
       @reloadData="getList"
       @close="showEditModal = false"
     />
+    <qms-audit-check-detail
+      v-if="showDetailModal"
+      :form-id="formId"
+      @close="showDetailModal = false"
+    />
+    <qms-audit-check-detail-add
+      v-if="showAddModal"
+      @close="showAddModal = false"
+      :mainId="mainId"
+    />
   </div>
 </template>
 <script lang="ts" setup>
-import { listQmsAuditCheckDetailByPage, delQmsAuditCheckDetail } from '@/api/avic/myportal/qms/QmsAuditCheckDetailApi'; // 引入模块API
-import QmsAuditCheckDetailEdit from './QmsAuditCheckDetailEdit.vue'; // 引入编辑页面组件
+import { delQmsAuditCheckDetail, listQmsAuditCheckDetailByPage } from '@/api/avic/myportal/qms/QmsAuditCheckDetailApi'; // 引入模块API
+import QmsAuditCheckDetailEdit from './QmsAuditCheckDetailEdit.vue';
+import QmsAuditCheckDetail from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckdetail/QmsAuditCheckDetail.vue';
+import QmsAuditCheckDetailAdd from '@/views/avic/myportal/qms/qmsAudit/qmsauditcheckdetail/QmsAuditCheckDetailAdd.vue'; // 引入编辑页面组件
 const { proxy } = getCurrentInstance();
 const props = defineProps({
   // 主表选中项的keys集合
@@ -195,7 +203,7 @@ onMounted(() => {
 });
 
 /** 查询数据  */
-function getList () {
+function getList() {
   selectedRowKeys.value = []; // 清空选中
   selectedRows.value = [];
   loading.value = true;
@@ -212,14 +220,16 @@ function getList () {
       loading.value = false;
     });
 }
+
 /** 获取当前用户对应的文档密级 */
-function getUserFileSecretList () {
+function getUserFileSecretList() {
   proxy.$getUserFileSecretLevelList(result => {
     secretLevelList.value = result;
   });
 }
+
 /** 快速查询逻辑 */
-function handleKeyWordQuery (value) {
+function handleKeyWordQuery(value) {
   const keyWord = {
     planId: value,
     noticeId: value
@@ -228,8 +238,9 @@ function handleKeyWordQuery (value) {
   queryParam.pageParameter.page = 1;
   getList();
 }
+
 /** 子表删除 */
-function handleDelete (ids, type) {
+function handleDelete(ids, type) {
   if (ids.length == 0) {
     proxy.$message.warning('请选择要删除的数据！');
     return;
@@ -257,13 +268,15 @@ function handleDelete (ids, type) {
     }
   });
 }
+
 /** 勾选复选框时触发 */
-function onSelectChange (rowKeys, rows) {
+function onSelectChange(rowKeys, rows) {
   selectedRowKeys.value = rowKeys;
   selectedRows.value = rows;
 }
+
 /** 表头排序 */
-function handleTableChange (pagination, _filters, sorter) {
+function handleTableChange(pagination, _filters, sorter) {
   queryParam.pageParameter.page = pagination.current;
   queryParam.pageParameter.rows = pagination.pageSize;
   if (proxy.$objIsNotBlank(sorter.field)) {
@@ -272,8 +285,9 @@ function handleTableChange (pagination, _filters, sorter) {
   }
   getList();
 }
+
 /** 表格行选中 */
-function handleRowSelection (record) {
+function handleRowSelection(record) {
   let selectIds = [...selectedRowKeys.value];
   // 多选
   if (!selectIds.includes(record.id)) {
@@ -287,9 +301,28 @@ function handleRowSelection (record) {
 
 const formId = ref('');
 const showEditModal = ref(false);
-function handleEdit (id) {
+
+function handleEdit(id) {
   formId.value = id;
   showEditModal.value = true;
+}
+
+const showDetailModal = ref(false);
+
+/** 详细 */
+function handleDetail(record) {
+  formId.value = record.id;
+  showDetailModal.value = true;
+}
+
+const showAddModal = ref(false); // 是否展示添加弹窗
+/** 添加 */
+function handleAdd() {
+  if(!props.mainId){
+    proxy.$message.error('请选择一条检查记录');
+    return;
+  }
+  showAddModal.value = true;
 }
 
 const mainId = ref('');
@@ -300,6 +333,7 @@ watch(
       mainId.value = newVal;
       getList(); // 查询表格数据
     } else {
+      mainId.value = '';
       selectedRowKeys.value = []; // 清空选中
       selectedRows.value = [];
       list.value = [];
