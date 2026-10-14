@@ -129,7 +129,7 @@
             @refresh="getList"
           >
             <template #toolBarLeft>
-              <div class="aecc-leftbar-title">{{ queryForm.forYear }}年动力所质量目标</div>
+              <div class="aecc-leftbar-title">{{ queryForm.forYear }}年部门质量目标</div>
             </template>
             <template #toolBarRight>
               <a-space>
